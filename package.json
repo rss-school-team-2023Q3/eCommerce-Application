@@ -12,7 +12,8 @@
     "prettier:fix": "npm run prettier -- --write",
     "style": "npx stylelint '**/*.css'",
     "format": "npm run prettier:fix && npm run lint:fix",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "editorconfig": "^2.0.0",
