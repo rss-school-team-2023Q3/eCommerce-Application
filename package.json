@@ -13,7 +13,8 @@
     "style": "npx stylelint '**/*.css'",
     "format": "npm run prettier:fix && npm run lint:fix",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "cm": "cz"
   },
   "dependencies": {
     "editorconfig": "^2.0.0",
@@ -23,20 +24,29 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cz-commitlint": "^19.2.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "husky": "^9.0.11",
+    "inquirer": "^9.2.20",
     "prettier": "3.2.5",
     "stylelint": "^16.5.0",
     "stylelint-config-standard": "^36.0.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
