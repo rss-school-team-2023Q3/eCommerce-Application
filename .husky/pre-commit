@@ -1,1 +1,1 @@
-git a
+git a && npm run format 

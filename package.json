@@ -10,8 +10,9 @@
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier src  --check",
     "prettier:fix": "npm run prettier -- --write",
-    "style": "npx stylelint '**/*.css'",
-    "format": "npm run prettier:fix && npm run lint:fix",
+    "style": "npx stylelint \"**/*.css\"",
+    "style:fix": "npx stylelint \"**/*.css\" --fix",
+    "format": "npm run prettier:fix && npm run lint:fix && npm run style:fix",
     "preview": "vite preview",
     "prepare": "husky",
     "cm": "cz"
