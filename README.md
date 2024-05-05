@@ -41,7 +41,7 @@ Launch ESLint autofix
 ### `npm run prettier`
 
 Launches the Prettier for a code style check.\
-See the section about [ESLint](https://eslint.org/) for more information.
+See the section about [Prettier](https://prettier.io/) for more information.
 
 ### `npm run prettier:fix`
 
@@ -74,10 +74,10 @@ Open [http://localhost:6007/](http://localhost:6007/) to view it in the browser.
 
 For setting up and running the project locally follow instruction:\
 
-- Fork repository with project to your github account;\
-- Clone repository to your IDE;\
-- Install all dependencies with `npm install`;\
-- Start project locally with `npm start`.\
+- Fork repository with project to your github account,
+- Clone repository to your IDE,
+- Install all dependencies with `npm install`,
+- Start project locally with `npm start`.
 
 ## Learn More
 
