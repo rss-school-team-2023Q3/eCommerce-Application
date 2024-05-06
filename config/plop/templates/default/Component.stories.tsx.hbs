@@ -1,0 +1,15 @@
+import { Meta, StoryFn } from '@storybook/react';
+import { {{pascalCase name}} } from './{{pascalCase name}}';
+
+export default {
+  title: '{{pascalCase name}}',
+  component: {{pascalCase name}},
+} as Meta<typeof {{pascalCase name}}>;
+
+const Template: StoryFn<typeof {{pascalCase name}}> = (args) => <{{pascalCase name}} {...args} />;
+
+export const Default = Template.bind({});
+Default.args = {
+  primary: true,
+  label: '{{pascalCase name}}',
+};
