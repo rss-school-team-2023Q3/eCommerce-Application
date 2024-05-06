@@ -70,6 +70,10 @@ Open storybook.\
 See the section about [Storybook](https://storybook.js.org/) for more information. \
 Open [http://localhost:6007/](http://localhost:6007/) to view it in the browser.
 
+### `npm run generate`
+
+Create a component folder using [Plop](https://plopjs.com/documentation/)
+
 ## Run locally
 
 For setting up and running the project locally follow instruction:\
