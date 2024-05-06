@@ -1,1 +1,10 @@
-{ "extends": ["stylelint-config-standard"] }
+{
+  "extends": ["stylelint-config-standard"],
+  "plugins": [
+  "stylelint-rem-over-px", "stylelint-color-format", "stylelint-selector-tag-no-without-class"
+],
+  "rules": {
+  "rem-over-px/rem-over-px": true,
+  "plugin/selector-tag-no-without-class": ["div", "span"]
+}
+}
