@@ -1,1 +1,1 @@
-git a && npm run format && npm test
+npm run format && npm test
