@@ -73,7 +73,10 @@
     "prettier": "3.2.5",
     "storybook": "^8.0.10",
     "stylelint": "^16.5.0",
+    "stylelint-color-format": "^1.1.0",
     "stylelint-config-standard": "^36.0.0",
+    "stylelint-rem-over-px": "^1.0.1",
+    "stylelint-selector-tag-no-without-class": "^3.0.1",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vitest": "^1.6.0"
