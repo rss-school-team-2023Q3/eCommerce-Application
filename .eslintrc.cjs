@@ -9,6 +9,8 @@ module.exports = {
     'prettier',
     'airbnb',
     'plugin:react/jsx-runtime',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -22,6 +24,5 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'no-shadow': 'off',
     'import/no-unresolved': 'off',
-    'import/extensions': ['never' | 'always' | 'ignorePackages'],
   },
 };

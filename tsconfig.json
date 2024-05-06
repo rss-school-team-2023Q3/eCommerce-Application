@@ -6,6 +6,10 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "noImplicitAny": true,
+    "baseUrl": "src",
+    "paths": {
+      "src/*": ["src/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -22,6 +26,6 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vitest", "node", "@testing-library/jest-dom"]
   },
-  "include": ["src", "@testing-library/jest-dom"],
+  "include": ["src", "@testing-library/jest-dom", "./**/*.ts", "./**/*.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

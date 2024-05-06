@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import App from './App';
-import { render, screen, userEvent } from '../../shared/utils/test-utils';
+import { render, screen, userEvent } from 'shared/utils/test-utils';
+import App from './App.tsx';
 
 describe('Simple working test', () => {
   it('the title is visible', () => {
