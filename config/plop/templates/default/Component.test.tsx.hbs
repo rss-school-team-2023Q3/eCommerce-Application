@@ -1,0 +1,12 @@
+import { render, screen } from '@testing-library/react';
+import { describe, it } from 'vitest'
+import '@testing-library/jest-dom/vitest';
+import { {{pascalCase name}} } from './{{pascalCase name}}';
+
+describe('<{{pascalCase name}} />', () => {
+  it('it should mount', () => {
+    render(<{{pascalCase name}} />);
+
+    screen.debug();
+  });
+});
