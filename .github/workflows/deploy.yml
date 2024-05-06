@@ -1,0 +1,26 @@
+name: Build and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [develop, develop/**, main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install,lint,build
+        run: |
+          npm install
+          npm run lint
+          npm run build
+          npm test
+          ls -la
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
