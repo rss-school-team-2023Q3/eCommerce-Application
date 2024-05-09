@@ -55,6 +55,7 @@
     "@storybook/react": "^8.0.10",
     "@storybook/react-vite": "^8.0.10",
     "@storybook/test": "^8.0.10",
+    "@stylistic/eslint-plugin-ts": "^2.1.0",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
     "@types/react": "^18.2.66",

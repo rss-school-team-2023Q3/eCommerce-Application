@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { render, screen, userEvent } from 'shared/utils/test-utils';
+import { describe, expect, it } from 'vitest';
+
 import App from './App.tsx';
 
 describe('Simple working test', () => {
