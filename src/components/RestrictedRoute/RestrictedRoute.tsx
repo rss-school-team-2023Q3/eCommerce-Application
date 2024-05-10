@@ -1,10 +1,7 @@
-// import { useAuth } from 'hooks';
 import isLoggedIn from 'constants/isLogedIn';
 
-import React from 'react';
+import RoutePropsType from 'interfaces/RoutePropsType';
 import { Navigate } from 'react-router-dom';
-
-type RoutePropsType = { component: React.FC; redirectTo: string };
 
 // eslint-disable-next-line max-len
 function RestrictedRoute({ component: Component, redirectTo = '/' }: RoutePropsType) {

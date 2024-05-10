@@ -1,3 +1,3 @@
-const isLoggedIn = true;
+const isLoggedIn = false;
 
 export default isLoggedIn;

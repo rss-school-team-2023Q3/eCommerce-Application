@@ -1,27 +1,41 @@
-import { useState } from 'react';
+/* eslint-disable max-len */
 import './App.css';
+import Loader from 'components/Loader/Loader';
+import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
+import RestrictedRoute from 'components/RestrictedRoute/RestrictedRoute';
+import SharedLayout from 'components/SharedLayout/SharedLayout';
+import { lazy } from 'react';
+import { Routes, Route } from 'react-router-dom';
+
+const NotFoundPage = lazy(() => import('pages/NotFound/NotFound'));
+const SignInPage = lazy(() => import('pages/SignIn/SignIn'));
+const SignUpPage = lazy(() => import('pages/SignUp/SignUp'));
+const MainPage = lazy(() => import('pages/Main/MainPage'));
+const StartPage = lazy(() => import('pages/StartPage/StartPage'));
 
 function App() {
-  const [count, setCount] = useState(0);
+  const isRefreshing = false;
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((cnt) => cnt + 1)}>
-          count is
-          {count}
-        </button>
-        <p>
-          Edit
-          {' '}
-          <code>src/App.tsx</code>
-          {' '}
-          and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos</p>
-    </>
+    <section>
+      {isRefreshing ? (
+        <Loader />
+      ) : (
+        <Routes>
+          <Route path="/" element={<SharedLayout />}>
+            <Route index element={<RestrictedRoute redirectTo="/main" component={<StartPage />} />} />
+
+            <Route path="/signup" element={<RestrictedRoute redirectTo="/main" component={<SignUpPage />} />} />
+
+            <Route path="/signin" element={<RestrictedRoute redirectTo="/main" component={<SignInPage />} />} />
+
+            <Route path="/main" element={<PrivateRoute redirectTo="/signin" component={<MainPage />} />} />
+
+            <Route path="*" element={<PrivateRoute redirectTo="/signin" component={<NotFoundPage />} />} />
+          </Route>
+        </Routes>
+      )}
+    </section>
   );
 }
 
