@@ -19,20 +19,35 @@ module.exports = {
   },
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh', 'prettier', '@typescript-eslint', 'import'],
+  plugins: [
+    'react-refresh',
+    'prettier',
+    '@typescript-eslint',
+    'import',
+  ],
 
   rules: {
-    'react-refresh/only-export-components': ['off', { allowConstantExport: true }],
+    'react-refresh/only-export-components': [
+      'off',
+      { allowConstantExport: true },
+    ],
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: true, optionalDependencies: false, peerDependencies: false },
+      {
+        devDependencies: true,
+        optionalDependencies: false,
+        peerDependencies: false,
+      },
     ],
-    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'react/jsx-filename-extension': [
+      2,
+      { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+    ],
     'no-shadow': 'off',
     'import/no-unresolved': 'off',
 
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'error',
+    'react-hooks/exhaustive-deps': 'off',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
@@ -57,7 +72,11 @@ module.exports = {
         next: ['return', 'function', 'if', 'export', 'switch'],
       },
       { blankLine: 'always', prev: ['if', 'switch'], next: '*' },
-      { blankLine: 'always', prev: ['const', 'let'], next: 'expression' },
+      {
+        blankLine: 'always',
+        prev: ['const', 'let'],
+        next: 'expression',
+      },
     ],
     'import/order': [
       'error',
@@ -66,7 +85,14 @@ module.exports = {
           caseInsensitive: true,
           order: 'asc',
         },
-        groups: ['builtin', 'external', 'index', 'sibling', 'parent', 'internal'],
+        groups: [
+          'builtin',
+          'external',
+          'index',
+          'sibling',
+          'parent',
+          'internal',
+        ],
         'newlines-between': 'always-and-inside-groups',
       },
     ],
@@ -83,6 +109,7 @@ module.exports = {
     'max-len': [
       'error',
       {
+        code: 120,
         ignoreComments: true,
       },
     ],

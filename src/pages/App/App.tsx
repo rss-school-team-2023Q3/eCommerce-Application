@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import './App.css';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
@@ -22,13 +21,39 @@ function App() {
       ) : (
         <Routes>
           <Route path="/" element={<SharedLayout />}>
-            <Route index element={<PrivateRoute redirectTo="/signin" component={<MainPage />} />} />
+            <Route
+              index
+              element={
+                <PrivateRoute redirectTo="/signin" component={<MainPage />} />
+              }
+            />
 
-            <Route path="/signup" element={<RestrictedRoute redirectTo="/main" component={<SignUpPage />} />} />
+            <Route
+              path="/signup"
+              element={(
+                <RestrictedRoute
+                  redirectTo="/main"
+                  component={<SignUpPage />}
+                />
+              )}
+            />
 
-            <Route path="/signin" element={<RestrictedRoute redirectTo="/main" component={<SignInPage />} />} />
+            <Route
+              path="/signin"
+              element={(
+                <RestrictedRoute
+                  redirectTo="/main"
+                  component={<SignInPage />}
+                />
+              )}
+            />
 
-            <Route path="/main" element={<PrivateRoute redirectTo="/signin" component={<MainPage />} />} />
+            <Route
+              path="/main"
+              element={
+                <PrivateRoute redirectTo="/signin" component={<MainPage />} />
+              }
+            />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>
