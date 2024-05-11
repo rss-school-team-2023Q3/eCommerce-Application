@@ -1,7 +1,6 @@
-import isLoggedIn from 'constants/isLogedIn';
-
 import RoutePropsType from 'pages/App/types/RoutePropsType';
 import { Navigate } from 'react-router-dom';
+import isLoggedIn from 'shared/constants/isLogedIn';
 
 // eslint-disable-next-line max-len
 function PrivateRoute({ component: Component, redirectTo = '/' }: RoutePropsType) {
