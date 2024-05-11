@@ -11,7 +11,8 @@ function SignIn() {
     password,
   });
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const passwordRegexp =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
   const validate = (regexp: RegExp, inputValue: string) => {
     if (regexp.test(inputValue)) {
       setValid(true);
@@ -24,7 +25,7 @@ function SignIn() {
     return false;
   };
 
-  const signUp = async (event: { preventDefault: () => void }) => {
+  const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     if (isValid) {
@@ -71,14 +72,14 @@ function SignIn() {
         <Button
           variant="contained"
           color={isValid ? 'primary' : 'error'}
-          onClick={signUp}
+          onClick={submitLogInData}
         >
           Sign In
         </Button>
       </form>
       <div>
         <a className="login-link" href="/sign_up">
-          Don&apos;t have an account? Sign Up
+          Don&apos;t have an account? Sign In
         </a>
       </div>
     </div>
