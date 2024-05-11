@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 import './App.css';
 import Loader from 'components/Loader/Loader';
-import PrivateRoute from 'components/PrivateRoute/PrivateRoute';
-import RestrictedRoute from 'components/RestrictedRoute/RestrictedRoute';
-import SharedLayout from 'components/SharedLayout/SharedLayout';
+import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
+import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
+import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
 import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
 

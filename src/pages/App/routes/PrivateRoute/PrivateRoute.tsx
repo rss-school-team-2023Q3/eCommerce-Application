@@ -1,6 +1,6 @@
 import isLoggedIn from 'constants/isLogedIn';
 
-import RoutePropsType from 'interfaces/RoutePropsType';
+import RoutePropsType from 'pages/App/types/RoutePropsType';
 import { Navigate } from 'react-router-dom';
 
 // eslint-disable-next-line max-len
