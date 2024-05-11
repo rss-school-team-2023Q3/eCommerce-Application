@@ -25,7 +25,7 @@ function SignIn() {
     return false;
   };
 
-  const submitLogInData = async (event: { preventDefault: () => void }) => {
+  const signUp = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     if (isValid) {
@@ -72,14 +72,14 @@ function SignIn() {
         <Button
           variant="contained"
           color={isValid ? 'primary' : 'error'}
-          onClick={submitLogInData}
+          onClick={signUp}
         >
           Sign In
         </Button>
       </form>
       <div>
         <a className="login-link" href="/sign_up">
-          Don&apos;t have an account? Sign In
+          Don&apos;t have an account? Sign Up
         </a>
       </div>
     </div>
