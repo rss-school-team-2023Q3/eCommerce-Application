@@ -1,128 +1,76 @@
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {
-  TextField, InputAdornment, IconButton, Button,
-} from '@mui/material';
-import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import AdressForm from 'shared/components/AdressForm';
-import DateInput from 'shared/components/DateInput';
 import './SignUp.modules.css';
+import { Button } from '@mui/material';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import CityInput from 'shared/components/CityInput';
+import CountryInput from 'shared/components/CountryInput';
+import DateInput from 'shared/components/DateInput';
+import EmailInput from 'shared/components/EmailInput';
+import FirstNameInput from 'shared/components/FirstNameInput';
+import LastNameInput from 'shared/components/LastNameInput';
+import PasswordInput from 'shared/components/PasswordInput';
+import PostalCodeInput from 'shared/components/PostalCodeInput';
+import StreetInput from 'shared/components/StreetInput';
 
 function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [date, setDate] = useState(dayjs);
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [code, setCode] = useState('');
   const [isValid, setValid] = useState(false);
-  const [user, setUser] = useState({
-    email,
-    password,
-  });
-  const [isShowPassword, setShowPassword] = useState(false);
-  const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const [country, setCountry] = useState('');
 
-  const validate = (regexp: RegExp, inputValue: string) => {
-    if (regexp.test(inputValue)) {
-      setValid(true);
-
-      return true;
-    }
-
-    setValid(false);
-
-    return false;
-  };
+  function validateForm() {
+    setValid(
+      !!email
+        && !!password
+        && !!name
+        && !!lastName
+        && !!date
+        && !!street
+        && !!city
+        && !!code
+        && !!country,
+    );
+  }
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     if (isValid) {
-      setUser({
-        email,
-        password,
-      });
-      const data = user;
-
-      return data;
+      return true;
     }
 
-    return true;
+    return false;
   };
 
   useEffect(() => {
-    validate(emailRegexp, email);
-    validate(passwordRegexp, password);
-  }, [password, email]);
+    validateForm();
+  }, [email, password, name, lastName, date, street, city, code, country]);
 
   return (
     <div className="login-wrapper">
       <form className="login-form" action="registration">
-        <TextField
-          autoComplete="off"
-          type="email"
-          style={{ marginBottom: '10px' }}
-          required
-          size="small"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          id="email"
-          label="Email"
-        />
-        <TextField
-          autoComplete="off"
-          type="Text"
-          style={{ marginBottom: '10px' }}
-          required
-          size="small"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          id="first_name"
-          label="First Name"
-        />
-        <TextField
-          autoComplete="off"
-          type="Text"
-          style={{ marginBottom: '10px' }}
-          required
-          size="small"
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          id="last_name"
-          label="Last Name"
-        />
-        <DateInput />
-        <TextField
-          autoComplete="off"
-          style={{ marginBottom: '10px' }}
-          value={password}
-          size="small"
-          type={isShowPassword ? 'text' : 'password'}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          id="password"
-          label="Password"
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  edge="end"
-                >
-                  {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <AdressForm />
+        <EmailInput returnEmail={setEmail} />
+        <FirstNameInput returnName={setName} />
+        <LastNameInput returnLastName={setLastName} />
+        <DateInput returnDate={setDate} />
+        <PasswordInput returnPassword={setPassword} />
+        <StreetInput returnStreet={setStreet} />
+        <CityInput returnCity={setCity} />
+        <PostalCodeInput returnCode={setCode} />
+        <CountryInput returnCountry={setCountry} />
         <Button
           variant="contained"
           color={isValid ? 'primary' : 'error'}
           onClick={submitLogInData}
         >
-          Sign In
+          Sign Up
         </Button>
       </form>
       <div>

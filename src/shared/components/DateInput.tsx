@@ -2,21 +2,36 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
-import React from 'react';
+import DateInterface from 'pages/App/types/DateInterface';
+import { useState } from 'react';
 
-function DateInput() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
-  const tomorrow = dayjs().add(1, 'day');
+function DateInput({ returnDate }: DateInterface) {
+  const minAge = dayjs().subtract(15, 'y');
+  const [isValid, setIsValid] = useState(true);
+
+  function checkDate(date: Dayjs) {
+    setIsValid(date > dayjs().subtract(15, 'y') && date < dayjs());
+
+    if (isValid) {
+      returnDate(date);
+    }
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateField
         style={{ marginBottom: '10px' }}
         label="Date of birth"
-        value={value}
-        minDate={tomorrow}
+        required
+        minDate={minAge}
+        helperText={isValid ? '' : 'You must be 15 Y.O.'}
+        FormHelperTextProps={{
+          sx: {
+            color: 'red',
+          },
+        }}
         size="small"
-        onChange={(newValue) => setValue(newValue)}
+        onChange={(value) => checkDate(value as Dayjs)}
       />
     </LocalizationProvider>
   );
