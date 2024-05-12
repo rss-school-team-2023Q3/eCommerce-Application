@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
+import Header from 'widgets/Header/Header';
 import Loader from 'widgets/Loader/Loader';
 
 // import { Footer } from 'components/Footer/Footer';
@@ -7,15 +8,15 @@ import Loader from 'widgets/Loader/Loader';
 
 function SharedLayout() {
   return (
-    <>
-      {/* {isLoggedIn ? <Header onTheme={onTheme} /> : null} */}
+    <div>
+      <Header />
       <Suspense fallback={<Loader />}>
         <main>
           <Outlet />
         </main>
       </Suspense>
-      {/* {isLoggedIn ? <Footer /> : null} */}
-    </>
+      {/* <Footer /> */}
+    </div>
   );
 }
 

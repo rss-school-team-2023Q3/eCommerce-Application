@@ -1,6 +1,5 @@
 import './App.css';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
-import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
 import { lazy } from 'react';
 import { Routes, Route } from 'react-router-dom';
@@ -21,12 +20,9 @@ function App() {
       ) : (
         <Routes>
           <Route path="/" element={<SharedLayout />}>
-            <Route
-              index
-              element={
-                <PrivateRoute redirectTo="/signin" component={<MainPage />} />
-              }
-            />
+            <Route index element={<MainPage />} />
+
+            <Route path="/main" element={<MainPage />} />
 
             <Route
               path="/signup"
@@ -46,13 +42,6 @@ function App() {
                   component={<SignInPage />}
                 />
               )}
-            />
-
-            <Route
-              path="/main"
-              element={
-                <PrivateRoute redirectTo="/signin" component={<MainPage />} />
-              }
             />
 
             <Route path="*" element={<NotFoundPage />} />
