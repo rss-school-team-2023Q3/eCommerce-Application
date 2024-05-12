@@ -12,7 +12,7 @@ function DateInput({ returnDate }: DateInterface) {
   function checkDate(date: Dayjs) {
     setIsValid(date < dayjs().subtract(15, 'y'));
 
-    if (isValid) {
+    if (isValid && date.isValid()) {
       returnDate(date);
     }
   }

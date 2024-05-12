@@ -10,7 +10,7 @@ function EmailInput({ returnEmail }: EmailInterface) {
   function checkEmail(email: string) {
     setIsValid(validate(emailRegexp, email));
 
-    if (isValid) {
+    if (isValid && email.length > 1) {
       returnEmail(email);
     }
   }

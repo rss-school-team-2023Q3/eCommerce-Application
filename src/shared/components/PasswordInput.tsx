@@ -8,7 +8,8 @@ import validate from 'shared/utils/validate';
 function PasswordInput({ returnPassword }: PasswordInterface) {
   const [isShowPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(true);
-  const regexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const regexp =
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
@@ -17,7 +18,7 @@ function PasswordInput({ returnPassword }: PasswordInterface) {
   function checkPassword(pass: string) {
     setIsValid(validate(regexp, pass));
 
-    if (isValid) {
+    if (isValid && pass.length > 1) {
       returnPassword(pass);
     }
   }
