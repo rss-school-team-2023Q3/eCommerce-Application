@@ -1,8 +1,7 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import InputAdornment from '@mui/material/InputAdornment';
 import { Button, IconButton, TextField } from '@mui/material';
-
+import InputAdornment from '@mui/material/InputAdornment';
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
 import { NavLink } from 'react-router-dom';
@@ -17,29 +16,34 @@ function SignIn() {
   });
   const [isShowPassword, setShowPassword] = useState(false);
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  const passwordRegexp =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
+
   const validate = (regexp: RegExp, inputValue: string) => {
     if (regexp.test(inputValue)) {
       setValid(true);
+
       return true;
     }
+
     setValid(false);
+
     return false;
   };
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
     if (isValid) {
       setUser({
         email,
         password,
       });
       const data = user;
+
       return data;
     }
+
     return true;
   };
 
