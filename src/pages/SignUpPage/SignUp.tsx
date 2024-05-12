@@ -3,15 +3,15 @@ import { Button } from '@mui/material';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import CityInput from 'shared/components/CityInput';
-import CountryInput from 'shared/components/CountryInput';
-import DateInput from 'shared/components/DateInput';
-import EmailInput from 'shared/components/EmailInput';
-import FirstNameInput from 'shared/components/FirstNameInput';
-import LastNameInput from 'shared/components/LastNameInput';
-import PasswordInput from 'shared/components/PasswordInput';
-import PostalCodeInput from 'shared/components/PostalCodeInput';
-import StreetInput from 'shared/components/StreetInput';
+import CityInput from 'widgets/InputComponents/CityInput';
+import CountryInput from 'widgets/InputComponents/CountryInput';
+import DateInput from 'widgets/InputComponents/DateInput';
+import EmailInput from 'widgets/InputComponents/EmailInput';
+import FirstNameInput from 'widgets/InputComponents/FirstNameInput';
+import LastNameInput from 'widgets/InputComponents/LastNameInput';
+import PasswordInput from 'widgets/InputComponents/PasswordInput';
+import PostalCodeInput from 'widgets/InputComponents/PostalCodeInput';
+import StreetInput from 'widgets/InputComponents/StreetInput';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -28,15 +28,15 @@ function SignUp() {
 
   function validateForm() {
     setValid(
-      !!email
-        && !!password
-        && !!name
-        && !!lastName
-        && !!date
-        && !!street
-        && !!city
-        && !!code
-        && !!country,
+      !!email &&
+        !!password &&
+        !!name &&
+        !!lastName &&
+        !!date &&
+        !!street &&
+        !!city &&
+        !!code &&
+        !!country
     );
   }
 

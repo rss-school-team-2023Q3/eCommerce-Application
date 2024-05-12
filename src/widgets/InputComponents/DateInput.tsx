@@ -10,9 +10,11 @@ function DateInput({ returnDate }: DateInterface) {
   const [isValid, setIsValid] = useState(true);
 
   function checkDate(date: Dayjs) {
-    setIsValid(date < dayjs().subtract(15, 'y'));
+    setIsValid(
+      date < dayjs().subtract(15, 'y') && date > dayjs().subtract(100, 'y')
+    );
 
-    if (isValid && date.isValid()) {
+    if (date < dayjs().subtract(15, 'y') && date.isValid()) {
       returnDate(date);
     }
   }

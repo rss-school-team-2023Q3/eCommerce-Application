@@ -10,7 +10,7 @@ function CityInput({ returnCity }: CityInterface) {
   function checkCity(name: string) {
     setIsValid(validate(regexp, name));
 
-    if (isValid) {
+    if (validate(regexp, name)) {
       returnCity(name);
     }
   }

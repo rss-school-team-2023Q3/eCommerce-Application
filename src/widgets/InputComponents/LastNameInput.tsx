@@ -10,7 +10,7 @@ function LastNameInput({ returnLastName }: LastNameInterface) {
   function checkLastName(name: string) {
     setIsValid(validate(regexp, name));
 
-    if (isValid) {
+    if (validate(regexp, name)) {
       returnLastName(name);
     }
   }

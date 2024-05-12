@@ -18,7 +18,7 @@ function PasswordInput({ returnPassword }: PasswordInterface) {
   function checkPassword(pass: string) {
     setIsValid(validate(regexp, pass));
 
-    if (isValid && pass.length > 1) {
+    if (validate(regexp, pass) && pass.length > 1) {
       returnPassword(pass);
     }
   }
