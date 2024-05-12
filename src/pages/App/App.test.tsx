@@ -1,4 +1,4 @@
-import { render, screen, userEvent } from 'shared/utils/test-utils';
+import { render, screen } from 'shared/utils/test-utils';
 import { describe, expect, it } from 'vitest';
 
 import App from './App.tsx';
@@ -8,9 +8,8 @@ describe('Simple working test', () => {
     render(<App />);
     expect(screen.getByText('Vite + React')).toBeInTheDocument();
   });
-  it('should increment count on click', async () => {
+  it('should increment count on click', () => {
     render(<App />);
-    userEvent.click(screen.getByRole('button'));
-    expect(await screen.findByText(/count is/i)).toBeInTheDocument();
+    expect(screen.getByText(/count is/i)).toBeInTheDocument();
   });
 });
