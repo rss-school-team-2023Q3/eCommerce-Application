@@ -20,6 +20,8 @@ function PasswordInput({ returnPassword }: PasswordInterface) {
 
     if (validate(regexp, pass) && pass.length > 1) {
       returnPassword(pass);
+    } else {
+      returnPassword('');
     }
   }
 

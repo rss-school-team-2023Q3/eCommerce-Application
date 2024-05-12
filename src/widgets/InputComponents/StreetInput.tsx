@@ -12,6 +12,8 @@ function StreetInput({ returnStreet }: StreetInterface) {
 
     if (validate(regexp, name)) {
       returnStreet(name);
+    } else {
+      returnStreet('');
     }
   }
 

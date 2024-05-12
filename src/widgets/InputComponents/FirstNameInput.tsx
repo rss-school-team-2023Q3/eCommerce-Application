@@ -12,6 +12,8 @@ function FirstNameInput({ returnName }: NameInterface) {
 
     if (validate(regexp, name)) {
       returnName(name);
+    } else {
+      returnName('');
     }
   }
 

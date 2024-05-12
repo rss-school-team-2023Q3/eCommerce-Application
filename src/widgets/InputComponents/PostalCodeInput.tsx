@@ -16,10 +16,11 @@ function PostalCodeInput({ returnCode, isCountryChange }: IPostCodeInterface) {
       const countryCode = selectCountryCode(country);
 
       setIsValid(postcodeValidator(value, countryCode));
-    }
-
-    if (isValid) {
-      returnCode(code);
+      if (postcodeValidator(value, countryCode)) {
+        returnCode(code);
+      } else {
+        returnCode('');
+      }
     }
   }
 

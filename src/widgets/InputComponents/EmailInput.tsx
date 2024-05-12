@@ -12,6 +12,8 @@ function EmailInput({ returnEmail }: EmailInterface) {
 
     if (validate(emailRegexp, email) && email.length > 1) {
       returnEmail(email);
+    } else {
+      returnEmail('');
     }
   }
 

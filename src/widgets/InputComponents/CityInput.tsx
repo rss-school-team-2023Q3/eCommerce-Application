@@ -12,6 +12,8 @@ function CityInput({ returnCity }: CityInterface) {
 
     if (validate(regexp, name)) {
       returnCity(name);
+    } else {
+      returnCity('');
     }
   }
 

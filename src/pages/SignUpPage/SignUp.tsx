@@ -57,7 +57,18 @@ function SignUp() {
 
   useEffect(() => {
     validateForm();
-  }, [email, password, name, lastName, date, street, city, code, country]);
+  }, [
+    email,
+    password,
+    name,
+    lastName,
+    date,
+    street,
+    city,
+    code,
+    country,
+    isValid,
+  ]);
 
   return (
     <div className="login-wrapper">
