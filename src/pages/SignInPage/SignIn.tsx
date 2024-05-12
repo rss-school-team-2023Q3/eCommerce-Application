@@ -1,4 +1,8 @@
-import { Button, TextField } from '@mui/material';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import InputAdornment from '@mui/material/InputAdornment';
+import { Button, IconButton, TextField } from '@mui/material';
+
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
 
@@ -10,34 +14,31 @@ function SignIn() {
     email,
     password,
   });
+  const [isShowPassword, setShowPassword] = useState(false);
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const passwordRegexp =
     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  
   const validate = (regexp: RegExp, inputValue: string) => {
     if (regexp.test(inputValue)) {
       setValid(true);
-
       return true;
     }
-
     setValid(false);
-
     return false;
   };
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-
     if (isValid) {
       setUser({
         email,
         password,
       });
       const data = user;
-
       return data;
     }
-
     return true;
   };
 
@@ -63,11 +64,24 @@ function SignIn() {
           autoComplete="off"
           style={{ marginBottom: '10px' }}
           value={password}
-          type="password"
+          type={isShowPassword ? 'text' : 'password'}
           onChange={(e) => setPassword(e.target.value)}
           required
           id="password"
           label="Password"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                >
+                  {isShowPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <Button
           variant="contained"
@@ -79,7 +93,7 @@ function SignIn() {
       </form>
       <div>
         <a className="login-link" href="/sign_up">
-          Don&apos;t have an account? Sign In
+          Don&apos;t have an account? Sign Up
         </a>
       </div>
     </div>
