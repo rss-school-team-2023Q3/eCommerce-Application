@@ -5,6 +5,7 @@ import { Button, IconButton, TextField } from '@mui/material';
 
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
+import { NavLink } from 'react-router-dom';
 
 function SignIn() {
   const [email, setEmail] = useState('');
@@ -92,9 +93,9 @@ function SignIn() {
         </Button>
       </form>
       <div>
-        <a className="login-link" href="/sign_up">
+        <NavLink className="login-link" to="/signup">
           Don&apos;t have an account? Sign Up
-        </a>
+        </NavLink>
       </div>
     </div>
   );
