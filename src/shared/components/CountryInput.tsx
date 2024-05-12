@@ -6,19 +6,19 @@ import CountryInterface from 'pages/App/types/CountryInterface';
 function CountryInput({ returnCountry }: CountryInterface) {
   return (
     <FormControl size="small">
-      <InputLabel id="demo-select-small-label">Country</InputLabel>
+      <InputLabel id="country_select">Country</InputLabel>
       <Select
         id="country"
         style={{ marginBottom: '10px' }}
-        labelId="demo-select-small-label"
+        labelId="country_select"
         label="Country"
-        defaultValue={""}
+        defaultValue=""
         required
         onChange={(e) => returnCountry(e.target.value as string)}
       >
-        <MenuItem value="GB">Great Britain</MenuItem>
-        <MenuItem value="germany">Germany</MenuItem>
-        <MenuItem value="canada">Canada</MenuItem>
+        <MenuItem value="Great Britain">Great Britain</MenuItem>
+        <MenuItem value="Germany">Germany</MenuItem>
+        <MenuItem value="Canada">Canada</MenuItem>
         <MenuItem value="USA">USA</MenuItem>
       </Select>
     </FormControl>

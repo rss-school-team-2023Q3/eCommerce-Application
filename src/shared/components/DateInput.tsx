@@ -10,7 +10,7 @@ function DateInput({ returnDate }: DateInterface) {
   const [isValid, setIsValid] = useState(true);
 
   function checkDate(date: Dayjs) {
-    setIsValid(date > dayjs().subtract(15, 'y') && date < dayjs());
+    setIsValid(date < dayjs().subtract(15, 'y'));
 
     if (isValid) {
       returnDate(date);
@@ -23,7 +23,7 @@ function DateInput({ returnDate }: DateInterface) {
         style={{ marginBottom: '10px' }}
         label="Date of birth"
         required
-        minDate={minAge}
+        maxDate={minAge}
         helperText={isValid ? '' : 'You must be 15 Y.O.'}
         FormHelperTextProps={{
           sx: {

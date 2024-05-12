@@ -24,6 +24,7 @@ function SignUp() {
   const [code, setCode] = useState('');
   const [isValid, setValid] = useState(false);
   const [country, setCountry] = useState('');
+  const [isCountryChange, setCountryChange] = useState(false);
 
   function validateForm() {
     setValid(
@@ -49,6 +50,11 @@ function SignUp() {
     return false;
   };
 
+  const updateCountry = (value: string) => {
+    setCountry(value);
+    setCountryChange(!isCountryChange);
+  };
+
   useEffect(() => {
     validateForm();
   }, [email, password, name, lastName, date, street, city, code, country]);
@@ -63,8 +69,11 @@ function SignUp() {
         <PasswordInput returnPassword={setPassword} />
         <StreetInput returnStreet={setStreet} />
         <CityInput returnCity={setCity} />
-        <PostalCodeInput returnCode={setCode} />
-        <CountryInput returnCountry={setCountry} />
+        <PostalCodeInput
+          returnCode={setCode}
+          isCountryChange={isCountryChange}
+        />
+        <CountryInput returnCountry={updateCountry} />
         <Button
           variant="contained"
           color={isValid ? 'primary' : 'error'}

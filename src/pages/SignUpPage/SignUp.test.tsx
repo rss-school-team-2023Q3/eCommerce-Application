@@ -9,17 +9,17 @@ describe('Simple working test', () => {
     render(
       <BrowserRouter basename="/">
         <SignUp />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     expect(
-      screen.getByText('Already have an account? Sign In')
+      screen.getByText('Already have an account? Sign In'),
     ).toBeInTheDocument();
   });
   it('the input is visible', () => {
     render(
       <BrowserRouter basename="/">
         <SignUp />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     expect(screen.getByText('Password')).toBeInTheDocument();
   });
