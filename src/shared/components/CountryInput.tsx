@@ -12,6 +12,7 @@ function CountryInput({ returnCountry }: CountryInterface) {
         style={{ marginBottom: '10px' }}
         labelId="demo-select-small-label"
         label="Country"
+        defaultValue={""}
         required
         onChange={(e) => returnCountry(e.target.value as string)}
       >

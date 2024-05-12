@@ -39,7 +39,7 @@ function SignUp() {
     );
   }
 
-  const submitLogInData = async (event: { preventDefault: () => void }) => {
+  const submitSignUpData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     if (isValid) {
@@ -68,7 +68,7 @@ function SignUp() {
         <Button
           variant="contained"
           color={isValid ? 'primary' : 'error'}
-          onClick={submitLogInData}
+          onClick={submitSignUpData}
         >
           Sign Up
         </Button>
