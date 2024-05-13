@@ -1,11 +1,37 @@
 import {
   FormControl, InputLabel, Select, MenuItem,
 } from '@mui/material';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext } from 'react';
 
-import ICountryInterface from './InputComponentInterface/CountryInterface.ts';
+interface ICountryInterface {
+  countryProps: {
+    isUpdate: (type: string) => void;
+    type: string;
+  };
+}
 
-function CountryInput({ returnCountry }: ICountryInterface) {
+function CountryInput({ countryProps }: ICountryInterface) {
   const countries = ['Great Britain', 'Germany', 'Canada', 'USA'];
+  const formData = useContext(formContext);
+
+  function selectCountry(country: string) {
+    countryProps.isUpdate(countryProps.type);
+
+    switch (countryProps.type) {
+      case 'billing': {
+        formData.billingCountry.value = country;
+        break;
+      }
+      case 'shipping': {
+        formData.shippingCountry.value = country;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
 
   return (
     <FormControl size="small">
@@ -17,7 +43,7 @@ function CountryInput({ returnCountry }: ICountryInterface) {
         label="Country"
         defaultValue=""
         required
-        onChange={(e) => returnCountry(e.target.value as string)}
+        onChange={(e) => selectCountry(e.target.value as string)}
       >
         {countries.map((item) => (
           <MenuItem key={item} value={item}>

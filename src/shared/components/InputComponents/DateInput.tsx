@@ -2,21 +2,28 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext, useState } from 'react';
 
-import IDateInterface from './InputComponentInterface/DateInterface.ts';
-
-function DateInput({ returnDate }: IDateInterface) {
+function DateInput() {
   const minAge = dayjs().subtract(15, 'y');
   const [isValid, setIsValid] = useState(true);
+  const formData = useContext(formContext);
 
   function checkDate(date: Dayjs) {
     setIsValid(
       date < dayjs().subtract(15, 'y') && date > dayjs().subtract(100, 'y'),
     );
 
-    if (date < dayjs().subtract(15, 'y') && date.isValid()) {
-      returnDate(date);
+    if (
+      date < dayjs().subtract(15, 'y')
+      && date.isValid()
+      && date > dayjs().subtract(100, 'y')
+    ) {
+      formData.date.value = date;
+      formData.date.isValid = true;
+    } else {
+      formData.date.isValid = false;
     }
   }
 

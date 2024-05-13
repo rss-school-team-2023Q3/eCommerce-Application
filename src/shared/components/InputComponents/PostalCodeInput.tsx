@@ -1,34 +1,58 @@
 import { TextField } from '@mui/material';
+import formContext from 'pages/SignUpPage/formContext';
 import { postcodeValidator } from 'postcode-validator';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import selectCountryCode from 'shared/utils/selectCountryCode';
 
-import IPostCodeInterface from './InputComponentInterface/PostCodeInterface.ts';
+interface IPostalPropsInterface {
+  postalProps: { type: string; isChange: boolean };
+}
 
-function PostalCodeInput({ returnCode, isCountryChange }: IPostCodeInterface) {
+function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
+  const formData = useContext(formContext);
   const [isValid, setIsValid] = useState(true);
+  const country = postalProps.type === 'shipping'
+    ? formData.shippingCountry.value
+    : formData.billingCountry.value;
   const [code, setCode] = useState('1');
 
   function checkCode(value: string) {
     setCode(value);
-    const country = document.getElementById('country')?.innerText;
 
     if (typeof country === 'string' && country.length > 1) {
       const countryCode = selectCountryCode(country);
 
       setIsValid(postcodeValidator(value, countryCode));
 
-      if (postcodeValidator(value, countryCode)) {
-        returnCode(code);
-      } else {
-        returnCode('');
+      if (
+        postcodeValidator(value, countryCode)
+        && postalProps.type === 'shipping'
+      ) {
+        formData.shippingCode.value = value;
+        formData.shippingCode.isValid = true;
+      } else if (
+        postcodeValidator(value, countryCode)
+        && postalProps.type === 'billing'
+      ) {
+        formData.billingCode.value = value;
+        formData.billingCode.isValid = true;
+      } else if (
+        !postcodeValidator(value, countryCode)
+        && postalProps.type === 'billing'
+      ) {
+        formData.billingCode.isValid = false;
+      } else if (
+        !postcodeValidator(value, countryCode)
+        && postalProps.type === 'shipping'
+      ) {
+        formData.shippingCode.isValid = false;
       }
     }
   }
 
   useEffect(() => {
     checkCode(code);
-  }, [isCountryChange]);
+  }, [postalProps.isChange]);
 
   return (
     <TextField

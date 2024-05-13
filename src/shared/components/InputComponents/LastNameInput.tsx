@@ -1,20 +1,21 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-import ILastNameInterface from './InputComponentInterface/LastNameInterface.ts';
-
-function LastNameInput({ returnLastName }: ILastNameInterface) {
+function LastNameInput() {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
+  const formData = useContext(formContext);
 
   function checkLastName(name: string) {
     setIsValid(validate(regexp, name));
 
     if (validate(regexp, name)) {
-      returnLastName(name);
+      formData.lastName.value = name;
+      formData.lastName.isValid = true;
     } else {
-      returnLastName('');
+      formData.lastName.isValid = false;
     }
   }
 

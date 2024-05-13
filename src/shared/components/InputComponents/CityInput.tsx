@@ -1,20 +1,21 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-import ICityInterface from './InputComponentInterface/CityInterface.ts';
-
-function CityInput({ returnCity }: ICityInterface) {
+function CityInput() {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
+  const formData = useContext(formContext);
 
-  function checkCity(name: string) {
-    setIsValid(validate(regexp, name));
+  function checkCity(city: string) {
+    setIsValid(validate(regexp, city));
 
-    if (validate(regexp, name)) {
-      returnCity(name);
+    if (validate(regexp, city)) {
+      formData.city.value = city;
+      formData.city.isValid = true;
     } else {
-      returnCity('');
+      formData.city.isValid = false;
     }
   }
 
@@ -28,7 +29,7 @@ function CityInput({ returnCity }: ICityInterface) {
       onChange={(e) => checkCity(e.target.value)}
       id="city"
       label="City"
-      helperText={isValid ? '' : 'Enter street name'}
+      helperText={isValid ? '' : 'Enter City name'}
       FormHelperTextProps={{
         sx: {
           color: 'red',

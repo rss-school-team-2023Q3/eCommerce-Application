@@ -1,20 +1,21 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-import INameInterface from './InputComponentInterface/NameInterface.ts';
-
-function FirstNameInput({ returnName }: INameInterface) {
+function FirstNameInput() {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
+  const formData = useContext(formContext);
 
   function checkName(name: string) {
     setIsValid(validate(regexp, name));
 
     if (validate(regexp, name)) {
-      returnName(name);
+      formData.name.value = name;
+      formData.name.isValid = true;
     } else {
-      returnName('');
+      formData.name.isValid = false;
     }
   }
 

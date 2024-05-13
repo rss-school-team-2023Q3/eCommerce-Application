@@ -26,11 +26,13 @@
     0 0 0.8rem #1342fe;
   margin-bottom: 1.25rem;
 }
+
 .registration-form-field {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 0.625rem;
 }
+
 .data-field {
   display: flex;
   flex-direction: column;
