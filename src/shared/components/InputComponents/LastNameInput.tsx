@@ -1,0 +1,42 @@
+import { TextField } from '@mui/material';
+import { useState } from 'react';
+import validate from 'shared/utils/validate';
+
+import ILastNameInterface from './InputComponentInterface/LastNameInterface.ts';
+
+function LastNameInput({ returnLastName }: ILastNameInterface) {
+  const [isValid, setIsValid] = useState(true);
+  const regexp = /^[a-zA-Z]+$/;
+
+  function checkLastName(name: string) {
+    setIsValid(validate(regexp, name));
+
+    if (validate(regexp, name)) {
+      returnLastName(name);
+    } else {
+      returnLastName('');
+    }
+  }
+
+  return (
+    <TextField
+      id="last_name"
+      label="Last Name"
+      autoComplete="off"
+      type="Text"
+      style={{ marginBottom: '10px' }}
+      helperText={isValid ? '' : 'Enter your Last name'}
+      FormHelperTextProps={{
+        sx: {
+          color: 'red',
+        },
+      }}
+      color={isValid ? 'primary' : 'error'}
+      required
+      size="small"
+      onChange={(e) => checkLastName(e.target.value)}
+    />
+  );
+}
+
+export default LastNameInput;

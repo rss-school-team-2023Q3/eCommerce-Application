@@ -1,0 +1,28 @@
+.sign-link {
+  text-decoration: none;
+  color: blue;
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 10rem);
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2.5rem;
+  border: 0.0063rem solid #1342fe;
+  border-radius: 0.3125rem;
+  box-shadow:
+    0 0 0.2rem #1342fe,
+    0 0 0.2rem #1342fe,
+    0 0 2rem #1342fe,
+    0 0 0.8rem #1342fe;
+  margin-bottom: 1.25rem;
+}
