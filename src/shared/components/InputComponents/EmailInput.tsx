@@ -1,9 +1,10 @@
 import { TextField } from '@mui/material';
-import EmailInterface from 'pages/App/types/EmailInterface';
 import { useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function EmailInput({ returnEmail }: EmailInterface) {
+import IEmailInterface from './InputComponentInterface/EmailInterface.ts';
+
+function EmailInput({ returnEmail }: IEmailInterface) {
   const [isValid, setIsValid] = useState(true);
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 

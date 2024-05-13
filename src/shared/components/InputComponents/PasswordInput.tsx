@@ -1,15 +1,15 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
-import PasswordInterface from 'pages/App/types/PasswordInterface';
 import { useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function PasswordInput({ returnPassword }: PasswordInterface) {
+import IPasswordInterface from './InputComponentInterface/PasswordInterface.ts';
+
+function PasswordInput({ returnPassword }: IPasswordInterface) {
   const [isShowPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(true);
-  const regexp =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const regexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
 
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);

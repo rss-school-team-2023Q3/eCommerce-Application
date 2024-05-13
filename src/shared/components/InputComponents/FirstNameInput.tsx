@@ -1,41 +1,42 @@
 import { TextField } from '@mui/material';
-import StreetInterface from 'pages/App/types/StreetInterface';
 import { useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function StreetInput({ returnStreet }: StreetInterface) {
+import INameInterface from './InputComponentInterface/NameInterface.ts';
+
+function FirstNameInput({ returnName }: INameInterface) {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
 
-  function checkStreet(name: string) {
+  function checkName(name: string) {
     setIsValid(validate(regexp, name));
 
     if (validate(regexp, name)) {
-      returnStreet(name);
+      returnName(name);
     } else {
-      returnStreet('');
+      returnName('');
     }
   }
 
   return (
     <TextField
+      id="first_name"
+      label="First Name"
       autoComplete="off"
       type="Text"
-      size="small"
       style={{ marginBottom: '10px' }}
       required
-      onChange={(e) => checkStreet(e.target.value)}
-      id="street"
-      label="Street"
-      helperText={isValid ? '' : 'Enter street name'}
+      helperText={isValid ? '' : 'Enter your Name'}
       FormHelperTextProps={{
         sx: {
           color: 'red',
         },
       }}
       color={isValid ? 'primary' : 'error'}
+      size="small"
+      onChange={(e) => checkName(e.target.value)}
     />
   );
 }
 
-export default StreetInput;
+export default FirstNameInput;

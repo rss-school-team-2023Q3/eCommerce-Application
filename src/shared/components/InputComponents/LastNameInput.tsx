@@ -1,9 +1,10 @@
 import { TextField } from '@mui/material';
-import LastNameInterface from 'pages/App/types/LastNameInterface';
 import { useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function LastNameInput({ returnLastName }: LastNameInterface) {
+import ILastNameInterface from './InputComponentInterface/LastNameInterface.ts';
+
+function LastNameInput({ returnLastName }: ILastNameInterface) {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
 

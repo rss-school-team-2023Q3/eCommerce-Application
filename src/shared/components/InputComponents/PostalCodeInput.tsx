@@ -1,8 +1,9 @@
 import { TextField } from '@mui/material';
-import IPostCodeInterface from 'pages/App/types/PostCodeInterface';
 import { postcodeValidator } from 'postcode-validator';
 import { useEffect, useState } from 'react';
 import selectCountryCode from 'shared/utils/selectCountryCode';
+
+import IPostCodeInterface from './InputComponentInterface/PostCodeInterface.ts';
 
 function PostalCodeInput({ returnCode, isCountryChange }: IPostCodeInterface) {
   const [isValid, setIsValid] = useState(true);
@@ -16,6 +17,7 @@ function PostalCodeInput({ returnCode, isCountryChange }: IPostCodeInterface) {
       const countryCode = selectCountryCode(country);
 
       setIsValid(postcodeValidator(value, countryCode));
+
       if (postcodeValidator(value, countryCode)) {
         returnCode(code);
       } else {

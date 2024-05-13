@@ -1,9 +1,12 @@
 import {
   FormControl, InputLabel, Select, MenuItem,
 } from '@mui/material';
-import CountryInterface from 'pages/App/types/CountryInterface';
 
-function CountryInput({ returnCountry }: CountryInterface) {
+import ICountryInterface from './InputComponentInterface/CountryInterface.ts';
+
+function CountryInput({ returnCountry }: ICountryInterface) {
+  const countries = ['Great Britain', 'Germany', 'Canada', 'USA'];
+
   return (
     <FormControl size="small">
       <InputLabel id="country_select">Country</InputLabel>
@@ -16,10 +19,9 @@ function CountryInput({ returnCountry }: CountryInterface) {
         required
         onChange={(e) => returnCountry(e.target.value as string)}
       >
-        <MenuItem value="Great Britain">Great Britain</MenuItem>
-        <MenuItem value="Germany">Germany</MenuItem>
-        <MenuItem value="Canada">Canada</MenuItem>
-        <MenuItem value="USA">USA</MenuItem>
+        {countries.map((item) => (
+          <MenuItem value={item}>{item}</MenuItem>
+        ))}
       </Select>
     </FormControl>
   );

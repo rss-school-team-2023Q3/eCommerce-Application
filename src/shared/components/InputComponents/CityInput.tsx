@@ -1,9 +1,10 @@
 import { TextField } from '@mui/material';
-import CityInterface from 'pages/App/types/CityInterface';
 import { useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function CityInput({ returnCity }: CityInterface) {
+import ICityInterface from './InputComponentInterface/CityInterface.ts';
+
+function CityInput({ returnCity }: ICityInterface) {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
 
