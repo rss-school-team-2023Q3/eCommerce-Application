@@ -28,15 +28,15 @@ function SignUp() {
 
   function validateForm() {
     setValid(
-      !!email
-        && !!password
-        && !!name
-        && !!lastName
-        && !!date
-        && !!street
-        && !!city
-        && !!code
-        && !!country,
+      !!email &&
+        !!password &&
+        !!name &&
+        !!lastName &&
+        !!date &&
+        !!street &&
+        !!city &&
+        !!code &&
+        !!country
     );
   }
 
@@ -71,20 +71,38 @@ function SignUp() {
   ]);
 
   return (
-    <div className="login-wrapper">
-      <form className="login-form" action="registration">
-        <EmailInput returnEmail={setEmail} />
-        <FirstNameInput returnName={setName} />
-        <LastNameInput returnLastName={setLastName} />
-        <DateInput returnDate={setDate} />
-        <PasswordInput returnPassword={setPassword} />
-        <StreetInput returnStreet={setStreet} />
-        <CityInput returnCity={setCity} />
-        <PostalCodeInput
-          returnCode={setCode}
-          isCountryChange={isCountryChange}
-        />
-        <CountryInput returnCountry={updateCountry} />
+    <div className="registration-wrapper">
+      <form className="registration-form" action="registration">
+        <div className="registration-form-field">
+          <div className="data-field">
+            User Data
+            <EmailInput returnEmail={setEmail} />
+            <FirstNameInput returnName={setName} />
+            <LastNameInput returnLastName={setLastName} />
+            <DateInput returnDate={setDate} />
+            <PasswordInput returnPassword={setPassword} />
+          </div>
+          <div className="data-field">
+            Billing Adress
+            <StreetInput returnStreet={setStreet} />
+            <CityInput returnCity={setCity} />
+            <PostalCodeInput
+              returnCode={setCode}
+              isCountryChange={isCountryChange}
+            />
+            <CountryInput returnCountry={updateCountry} />
+          </div>
+          <div className="data-field">
+            Shipping Adress
+            <StreetInput returnStreet={setStreet} />
+            <CityInput returnCity={setCity} />
+            <PostalCodeInput
+              returnCode={setCode}
+              isCountryChange={isCountryChange}
+            />
+            <CountryInput returnCountry={updateCountry} />
+          </div>
+        </div>
         <Button
           variant="contained"
           color={isValid ? 'primary' : 'error'}

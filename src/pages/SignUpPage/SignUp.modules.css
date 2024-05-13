@@ -3,7 +3,7 @@
   color: blue;
 }
 
-.login-wrapper {
+.registration-wrapper {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 10rem);
@@ -12,7 +12,7 @@
   font-size: 1.5rem;
 }
 
-.login-form {
+.registration-form {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -25,4 +25,14 @@
     0 0 2rem #1342fe,
     0 0 0.8rem #1342fe;
   margin-bottom: 1.25rem;
+}
+.registration-form-field {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.data-field {
+  display: flex;
+  flex-direction: column;
+  color: #1342fe;
 }
