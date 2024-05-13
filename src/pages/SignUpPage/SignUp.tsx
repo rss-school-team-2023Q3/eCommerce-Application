@@ -1,7 +1,7 @@
 import './SignUp.modules.css';
 import { Button } from '@mui/material';
 import dayjs from 'dayjs';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import CityInput from 'shared/components/InputComponents/CityInput';
 import CountryInput from 'shared/components/InputComponents/CountryInput';
@@ -12,8 +12,6 @@ import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
-
-import formContext from './formContext.ts';
 
 function SignUp() {
   const [email, setEmail] = useState('');
@@ -27,7 +25,6 @@ function SignUp() {
   const [isValid, setValid] = useState(false);
   const [country, setCountry] = useState('');
   const [isCountryChange, setCountryChange] = useState(false);
-  const formData = useContext(formContext);
 
   function validateForm() {
     setValid(
@@ -75,29 +72,27 @@ function SignUp() {
 
   return (
     <div className="login-wrapper">
-      <formContext.Provider value={formData}>
-        <form className="login-form" action="registration">
-          <EmailInput returnEmail={setEmail} />
-          <FirstNameInput returnName={setName} />
-          <LastNameInput returnLastName={setLastName} />
-          <DateInput returnDate={setDate} />
-          <PasswordInput returnPassword={setPassword} />
-          <StreetInput returnStreet={setStreet} />
-          <CityInput returnCity={setCity} />
-          <PostalCodeInput
-            returnCode={setCode}
-            isCountryChange={isCountryChange}
-          />
-          <CountryInput returnCountry={updateCountry} />
-          <Button
-            variant="contained"
-            color={isValid ? 'primary' : 'error'}
-            onClick={submitSignUpData}
-          >
-            Sign Up
-          </Button>
-        </form>
-      </formContext.Provider>
+      <form className="login-form" action="registration">
+        <EmailInput returnEmail={setEmail} />
+        <FirstNameInput returnName={setName} />
+        <LastNameInput returnLastName={setLastName} />
+        <DateInput returnDate={setDate} />
+        <PasswordInput returnPassword={setPassword} />
+        <StreetInput returnStreet={setStreet} />
+        <CityInput returnCity={setCity} />
+        <PostalCodeInput
+          returnCode={setCode}
+          isCountryChange={isCountryChange}
+        />
+        <CountryInput returnCountry={updateCountry} />
+        <Button
+          variant="contained"
+          color={isValid ? 'primary' : 'error'}
+          onClick={submitSignUpData}
+        >
+          Sign Up
+        </Button>
+      </form>
       <div>
         <NavLink className="login-link" to="/signin">
           Already have an account? Sign In
