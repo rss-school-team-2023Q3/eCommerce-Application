@@ -1,6 +1,6 @@
 import './SignUp.modules.css';
 import { Button } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import CityInput from 'shared/components/InputComponents/CityInput';
 import CountryInput from 'shared/components/InputComponents/CountryInput';
@@ -21,7 +21,7 @@ function SignUp() {
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
 
   function validateForm() {
-    setValid(formData.email.isValid);
+    setValid(Object.values(formData).every((value) => value.isValid));
   }
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
@@ -49,6 +49,10 @@ function SignUp() {
       }
     }
   };
+
+  useEffect(() => {
+    validateForm();
+  }, [isBillingCountryChange, isShippingCountryChange]);
 
   return (
     <div className="registration-wrapper">

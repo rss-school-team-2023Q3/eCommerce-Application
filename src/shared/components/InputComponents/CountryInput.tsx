@@ -21,10 +21,12 @@ function CountryInput({ countryProps }: ICountryInterface) {
     switch (countryProps.type) {
       case 'billing': {
         formData.billingCountry.value = country;
+        formData.billingCountry.isValid = true;
         break;
       }
       case 'shipping': {
         formData.shippingCountry.value = country;
+        formData.shippingCountry.isValid = true;
         break;
       }
       default: {

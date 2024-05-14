@@ -9,7 +9,6 @@ function PasswordInput() {
   const [isShowPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(true);
   const formData = useContext(formContext);
-
   const regexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
 
   const handleClickShowPassword = () => {
