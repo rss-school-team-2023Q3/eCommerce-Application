@@ -11,11 +11,28 @@ interface IPostalPropsInterface {
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   const formData = useContext(formContext);
   const [isValid, setIsValid] = useState(true);
-  const country =
-    postalProps.type === 'shipping'
-      ? formData.shippingCountry.value
-      : formData.billingCountry.value;
+  const country = postalProps.type === 'shipping'
+    ? formData.shippingCountry.value
+    : formData.billingCountry.value;
   const [code, setCode] = useState('1');
+
+  function setPostalPropsContext(
+    value: string,
+    countryCode: string,
+    type: string,
+  ) {
+    if (postcodeValidator(value, countryCode) && type === 'shipping') {
+      formData.shippingCode.value = value;
+      formData.shippingCode.isValid = true;
+    } else if (postcodeValidator(value, countryCode) && type === 'billing') {
+      formData.billingCode.value = value;
+      formData.billingCode.isValid = true;
+    } else if (!postcodeValidator(value, countryCode) && type === 'billing') {
+      formData.billingCode.isValid = false;
+    } else if (!postcodeValidator(value, countryCode) && type === 'shipping') {
+      formData.shippingCode.isValid = false;
+    }
+  }
 
   function checkCode(value: string) {
     setCode(value);
@@ -24,30 +41,7 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
       const countryCode = selectCountryCode(country);
 
       setIsValid(postcodeValidator(value, countryCode));
-
-      if (
-        postcodeValidator(value, countryCode) &&
-        postalProps.type === 'shipping'
-      ) {
-        formData.shippingCode.value = value;
-        formData.shippingCode.isValid = true;
-      } else if (
-        postcodeValidator(value, countryCode) &&
-        postalProps.type === 'billing'
-      ) {
-        formData.billingCode.value = value;
-        formData.billingCode.isValid = true;
-      } else if (
-        !postcodeValidator(value, countryCode) &&
-        postalProps.type === 'billing'
-      ) {
-        formData.billingCode.isValid = false;
-      } else if (
-        !postcodeValidator(value, countryCode) &&
-        postalProps.type === 'shipping'
-      ) {
-        formData.shippingCode.isValid = false;
-      }
+      setPostalPropsContext(value, countryCode, postalProps.type);
     }
   }
 
