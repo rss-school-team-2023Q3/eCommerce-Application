@@ -1,20 +1,21 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext.ts';
+import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-import IEmailInterface from './InputComponentInterface/EmailInterface.ts';
-
-function EmailInput({ returnEmail }: IEmailInterface) {
+function EmailInput() {
   const [isValid, setIsValid] = useState(true);
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const formData = useContext(formContext);
 
   function checkEmail(email: string) {
     setIsValid(validate(emailRegexp, email));
 
     if (validate(emailRegexp, email) && email.length > 1) {
-      returnEmail(email);
+      formData.email.value = email;
+      formData.email.isValid = true;
     } else {
-      returnEmail('');
+      formData.email.isValid = false;
     }
   }
 

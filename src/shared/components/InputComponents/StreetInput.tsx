@@ -1,20 +1,21 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-import IStreetInterface from './InputComponentInterface/StreetInterface.ts';
-
-function StreetInput({ returnStreet }: IStreetInterface) {
+function StreetInput() {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
+  const formData = useContext(formContext);
 
-  function checkStreet(name: string) {
-    setIsValid(validate(regexp, name));
+  function checkStreet(street: string) {
+    setIsValid(validate(regexp, street));
 
-    if (validate(regexp, name)) {
-      returnStreet(name);
+    if (validate(regexp, street)) {
+      formData.street.value = street;
+      formData.street.isValid = true;
     } else {
-      returnStreet('');
+      formData.street.isValid = false;
     }
   }
 
@@ -26,7 +27,6 @@ function StreetInput({ returnStreet }: IStreetInterface) {
       style={{ marginBottom: '10px' }}
       required
       onChange={(e) => checkStreet(e.target.value)}
-      id="street"
       label="Street"
       helperText={isValid ? '' : 'Enter street name'}
       FormHelperTextProps={{

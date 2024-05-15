@@ -1,14 +1,14 @@
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
-import { useState } from 'react';
+import formContext from 'pages/SignUpPage/formContext';
+import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-import IPasswordInterface from './InputComponentInterface/PasswordInterface.ts';
-
-function PasswordInput({ returnPassword }: IPasswordInterface) {
+function PasswordInput() {
   const [isShowPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(true);
+  const formData = useContext(formContext);
   const regexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
 
   const handleClickShowPassword = () => {
@@ -19,9 +19,10 @@ function PasswordInput({ returnPassword }: IPasswordInterface) {
     setIsValid(validate(regexp, pass));
 
     if (validate(regexp, pass) && pass.length > 1) {
-      returnPassword(pass);
+      formData.password.value = pass;
+      formData.password.isValid = true;
     } else {
-      returnPassword('');
+      formData.password.isValid = false;
     }
   }
 

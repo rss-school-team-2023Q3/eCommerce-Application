@@ -3,16 +3,16 @@
   color: blue;
 }
 
-.login-wrapper {
+.registration-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 10rem);
   align-items: center;
-  justify-content: center;
   font-size: 1.5rem;
+  max-width: 47.8125rem;
+  max-height: 34.375rem;
 }
 
-.login-form {
+.registration-form {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -25,4 +25,17 @@
     0 0 2rem #1342fe,
     0 0 0.8rem #1342fe;
   margin-bottom: 1.25rem;
+}
+
+.registration-form-field {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.data-field {
+  display: flex;
+  flex-direction: column;
+  color: #1342fe;
+  width: 32%;
 }
