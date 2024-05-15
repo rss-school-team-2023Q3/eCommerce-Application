@@ -5,6 +5,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
 import { NavLink } from 'react-router-dom';
+import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
+// import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 function SignIn() {
   const [email, setEmail] = useState('');
@@ -39,7 +41,12 @@ function SignIn() {
         email,
         password,
       });
+
       const data = user;
+
+      await new ApiBuilder().loginUser(email, password);
+      // const tokensObject = tokenCache.get();
+      // console.log(tokensObject);
 
       return data;
     }
