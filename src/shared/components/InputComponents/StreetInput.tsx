@@ -27,7 +27,6 @@ function StreetInput() {
       style={{ marginBottom: '10px' }}
       required
       onChange={(e) => checkStreet(e.target.value)}
-      id="street"
       label="Street"
       helperText={isValid ? '' : 'Enter street name'}
       FormHelperTextProps={{

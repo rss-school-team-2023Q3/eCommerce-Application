@@ -27,9 +27,8 @@ function CityInput() {
       style={{ marginBottom: '10px' }}
       required
       onChange={(e) => checkCity(e.target.value)}
-      id="city"
       label="City"
-      helperText={isValid ? '' : 'Enter City name'}
+      helperText={isValid ? '' : 'Enter city name'}
       FormHelperTextProps={{
         sx: {
           color: 'red',

@@ -1,6 +1,4 @@
-import {
-  FormControl, InputLabel, Select, MenuItem,
-} from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import formContext from 'pages/SignUpPage/formContext';
 import { useContext } from 'react';
 
@@ -39,7 +37,6 @@ function CountryInput({ countryProps }: ICountryInterface) {
     <FormControl size="small">
       <InputLabel id="country_select">Country</InputLabel>
       <Select
-        id="country"
         style={{ marginBottom: '10px' }}
         labelId="country_select"
         label="Country"

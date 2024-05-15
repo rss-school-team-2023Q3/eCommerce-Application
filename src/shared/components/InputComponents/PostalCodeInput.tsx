@@ -11,9 +11,10 @@ interface IPostalPropsInterface {
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   const formData = useContext(formContext);
   const [isValid, setIsValid] = useState(true);
-  const country = postalProps.type === 'shipping'
-    ? formData.shippingCountry.value
-    : formData.billingCountry.value;
+  const country =
+    postalProps.type === 'shipping'
+      ? formData.shippingCountry.value
+      : formData.billingCountry.value;
   const [code, setCode] = useState('1');
 
   function checkCode(value: string) {
@@ -25,25 +26,25 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
       setIsValid(postcodeValidator(value, countryCode));
 
       if (
-        postcodeValidator(value, countryCode)
-        && postalProps.type === 'shipping'
+        postcodeValidator(value, countryCode) &&
+        postalProps.type === 'shipping'
       ) {
         formData.shippingCode.value = value;
         formData.shippingCode.isValid = true;
       } else if (
-        postcodeValidator(value, countryCode)
-        && postalProps.type === 'billing'
+        postcodeValidator(value, countryCode) &&
+        postalProps.type === 'billing'
       ) {
         formData.billingCode.value = value;
         formData.billingCode.isValid = true;
       } else if (
-        !postcodeValidator(value, countryCode)
-        && postalProps.type === 'billing'
+        !postcodeValidator(value, countryCode) &&
+        postalProps.type === 'billing'
       ) {
         formData.billingCode.isValid = false;
       } else if (
-        !postcodeValidator(value, countryCode)
-        && postalProps.type === 'shipping'
+        !postcodeValidator(value, countryCode) &&
+        postalProps.type === 'shipping'
       ) {
         formData.shippingCode.isValid = false;
       }
@@ -63,7 +64,6 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
       size="small"
       onChange={(e) => checkCode(e.target.value)}
       label="Postal Code"
-      id="postal_code"
       helperText={isValid ? '' : 'Enter valid postal code'}
       FormHelperTextProps={{
         sx: {
