@@ -45,6 +45,7 @@ function SignIn() {
       const data = user;
 
       await new ApiBuilder().loginUser(email, password);
+      // TODO: access to tokens
       // const tokensObject = tokenCache.get();
       // console.log(tokensObject);
 
