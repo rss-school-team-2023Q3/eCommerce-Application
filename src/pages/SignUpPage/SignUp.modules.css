@@ -9,6 +9,7 @@
   align-items: center;
   font-size: 1.25rem;
   width: 100%;
+  max-width: 75rem;
   max-height: 34.375rem;
 }
 
@@ -30,18 +31,20 @@
 .registration-form-field {
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  gap: 0.3125rem;
 }
+
 .adress-field {
   display: flex;
   flex-direction: column;
   width: 67%;
   color: #1342fe;
 }
+
 .adress-input-field {
   display: flex;
   flex-direction: row;
-  gap: 5px;
+  gap: 0.3125rem;
 }
 
 .user-field {
@@ -50,18 +53,22 @@
   color: #1342fe;
   width: 33%;
 }
+
 .data-field {
   display: flex;
   flex-direction: column;
   width: 50%;
 }
+
 .adress-switch-field {
   display: flex;
   flex-direction: column;
 }
+
 .switch-field {
   margin-left: 0;
 }
+
 .adress-switch-field:has(span) {
   text-align: left;
 }

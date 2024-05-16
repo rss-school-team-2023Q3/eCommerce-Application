@@ -14,8 +14,7 @@ function SignIn() {
   const [isValid, setValid] = useState(false);
   const [isShowPassword, setShowPassword] = useState(false);
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  const passwordRegexp =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const navigate = useNavigate();
 

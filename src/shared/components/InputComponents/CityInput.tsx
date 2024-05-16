@@ -3,7 +3,11 @@ import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function CityInput() {
+interface ICityInterface {
+  cityProps: { type: string };
+}
+
+function CityInput({ cityProps }: ICityInterface) {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
   const formData = useContext(formContext);
@@ -11,11 +15,27 @@ function CityInput() {
   function checkCity(city: string) {
     setIsValid(validate(regexp, city));
 
-    if (validate(regexp, city)) {
-      formData.city.value = city;
-      formData.city.isValid = true;
-    } else {
-      formData.city.isValid = false;
+    switch (validate(regexp, city)) {
+      case true: {
+        if (cityProps.type === 'shipping') {
+          formData.shippingCity.value = city;
+          formData.shippingCity.isValid = true;
+        } else {
+          formData.billingCity.value = city;
+          formData.billingCity.isValid = true;
+        }
+
+        break;
+      }
+      default: {
+        if (cityProps.type === 'shipping') {
+          formData.shippingCity.isValid = false;
+        } else {
+          formData.billingCity.isValid = false;
+        }
+
+        break;
+      }
     }
   }
 

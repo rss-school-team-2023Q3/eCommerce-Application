@@ -20,9 +20,43 @@ function SignUp() {
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
   const [isSameAdress, setSameAdress] = useState(false);
+  const [isShippingDefaut, setShippingDefault] = useState(false);
+  const [isBillingDefaut, setBillingDefault] = useState(false);
 
   function validateForm() {
     setValid(Object.values(formData).every((value) => value.isValid));
+  }
+
+  function toogleSameAdress() {
+    switch (isSameAdress) {
+      case true: {
+        formData.shippingCode.value = ' ';
+        formData.shippingCode.isValid = false;
+        formData.shippingStreet.value = ' ';
+        formData.shippingStreet.isValid = false;
+        formData.shippingCity.value = ' ';
+        formData.shippingCity.isValid = false;
+        formData.shippingCountry.value = ' ';
+        formData.shippingCountry.isValid = false;
+        break;
+      }
+      case false: {
+        formData.shippingCode.value = formData.billingCode.value;
+        formData.shippingCode.isValid = true;
+        formData.shippingStreet.value = formData.billingStreet.value;
+        formData.shippingStreet.isValid = true;
+        formData.shippingCity.value = formData.billingCity.value;
+        formData.shippingCity.isValid = true;
+        formData.shippingCountry.value = formData.billingCountry.value;
+        formData.shippingCountry.isValid = true;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    setSameAdress(!isSameAdress);
   }
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
@@ -87,9 +121,19 @@ function SignUp() {
                   className="data-field"
                   style={{ width: isSameAdress ? '100%' : '' }}
                 >
-                  Billing Adress
-                  <StreetInput />
-                  <CityInput />
+                  {isSameAdress
+                    ? 'Billing & Shipping Adress'
+                    : 'Billing Adress'}
+                  <StreetInput
+                    streetProps={{
+                      type: 'billing',
+                    }}
+                  />
+                  <CityInput
+                    cityProps={{
+                      type: 'billing',
+                    }}
+                  />
                   <PostalCodeInput
                     postalProps={{
                       isChange: isBillingCountryChange,
@@ -104,8 +148,8 @@ function SignUp() {
                     control={(
                       <Checkbox
                         size="small"
-                        checked={isSameAdress}
-                        onChange={() => setSameAdress(!isSameAdress)}
+                        checked={isBillingDefaut}
+                        onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
                     )}
                     label="Use as default adress"
@@ -114,8 +158,16 @@ function SignUp() {
                 {isSameAdress !== true ? (
                   <div className="data-field">
                     Shipping Adress
-                    <StreetInput />
-                    <CityInput />
+                    <StreetInput
+                      streetProps={{
+                        type: 'shipping',
+                      }}
+                    />
+                    <CityInput
+                      cityProps={{
+                        type: 'shipping',
+                      }}
+                    />
                     <PostalCodeInput
                       postalProps={{
                         isChange: isShippingCountryChange,
@@ -133,8 +185,8 @@ function SignUp() {
                       control={(
                         <Checkbox
                           size="small"
-                          checked={isSameAdress}
-                          onChange={() => setSameAdress(!isSameAdress)}
+                          checked={isShippingDefaut}
+                          onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
                       )}
                       label="Use as default adress"
@@ -151,7 +203,7 @@ function SignUp() {
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
-                      onChange={() => setSameAdress(!isSameAdress)}
+                      onChange={() => toogleSameAdress()}
                     />
                   )}
                   label="Use same billing & shipping adress"
