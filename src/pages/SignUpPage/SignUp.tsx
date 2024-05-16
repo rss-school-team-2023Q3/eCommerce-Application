@@ -99,8 +99,9 @@ function SignUp() {
         >
           <div className="registration-form-field">
             <div
-              className="user-field"
-              style={{ width: isSameAdress ? '50%' : '' }}
+              className={
+                isSameAdress ? 'user-field fifty-percent' : 'user-field'
+              }
             >
               User Data
               <EmailInput />
@@ -110,16 +111,21 @@ function SignUp() {
               <PasswordInput />
             </div>
             <div
-              className="adress-field"
-              style={{ width: isSameAdress ? '50%' : '' }}
+              className={
+                isSameAdress ? 'adress-field fifty-percent' : 'adress-field'
+              }
             >
               <div
-                className="adress-input-field"
-                style={{ width: isSameAdress ? '100%' : '' }}
+                className={
+                  isSameAdress
+                    ? 'adress-input-field hundred-percent'
+                    : 'adress-input-field'
+                }
               >
                 <div
-                  className="data-field"
-                  style={{ width: isSameAdress ? '100%' : '' }}
+                  className={
+                    isSameAdress ? 'data-field hundred-percent' : 'data-field'
+                  }
                 >
                   {isSameAdress
                     ? 'Billing & Shipping Adress'
@@ -145,13 +151,13 @@ function SignUp() {
                   />
                   <FormControlLabel
                     className="switch-field"
-                    control={(
+                    control={
                       <Checkbox
                         size="small"
                         checked={isBillingDefaut}
                         onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
-                    )}
+                    }
                     label="Use as default adress"
                   />
                 </div>
@@ -182,13 +188,13 @@ function SignUp() {
                     />
                     <FormControlLabel
                       className="switch-field"
-                      control={(
+                      control={
                         <Checkbox
                           size="small"
                           checked={isShippingDefaut}
                           onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
-                      )}
+                      }
                       label="Use as default adress"
                     />
                   </div>
@@ -199,13 +205,13 @@ function SignUp() {
               <div className="adress-switch-field">
                 <FormControlLabel
                   className="switch-field"
-                  control={(
+                  control={
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
                       onChange={() => toogleSameAdress()}
                     />
-                  )}
+                  }
                   label="Use same billing & shipping adress"
                 />
               </div>

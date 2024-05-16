@@ -72,3 +72,31 @@
 .adress-switch-field:has(span) {
   text-align: left;
 }
+.fifty-percent {
+  width: 50%;
+}
+
+.hundred-percent {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .data-field {
+    width: 100%;
+  }
+  .user-field {
+    width: 100%;
+  }
+  .adress-input-field {
+    flex-direction: column;
+  }
+  .adress-field {
+    width: 100%;
+  }
+  .registration-form-field {
+    flex-direction: column;
+  }
+  .registration-form {
+    padding: 1rem;
+  }
+}
