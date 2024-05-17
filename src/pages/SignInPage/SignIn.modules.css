@@ -5,11 +5,13 @@
 
 .login-wrapper {
   display: flex;
-  flex-direction: column;
   min-height: calc(100vh - 10rem);
-  align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.25rem;
+  width: 60%;
+  max-width: 75rem;
 }
 
 .login-form {
@@ -25,4 +27,10 @@
     0 0 2rem #1342fe,
     0 0 0.8rem #1342fe;
   margin-bottom: 1.25rem;
+}
+
+@media (width <= 600px) {
+  .login-wrapper {
+    width: 100%;
+  }
 }
