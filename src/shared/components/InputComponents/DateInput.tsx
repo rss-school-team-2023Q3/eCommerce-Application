@@ -4,8 +4,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
+import 'dayjs/locale/ru';
 
 function DateInput() {
+  dayjs.locale('ru');
   const minAge = dayjs().subtract(15, 'y');
   const [isValid, setIsValid] = useState(true);
   const formData = useContext(formContext);
@@ -28,7 +30,7 @@ function DateInput() {
   }
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
       <DateField
         style={{ marginBottom: '10px' }}
         label="Date of birth"
