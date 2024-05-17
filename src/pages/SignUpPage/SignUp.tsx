@@ -12,9 +12,11 @@ import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
 
+import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
+
 import formContext from './formContext.ts';
 
-function SignUp() {
+function SignUp({ client }: { client: ApiBuilder }) {
   const [isValid, setValid] = useState(false);
   const formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
@@ -63,6 +65,35 @@ function SignUp() {
     event.preventDefault();
 
     if (isValid) {
+      const userDate = {
+        email: formData.email.value,
+        password: formData.password.value,
+        firstName: formData.name.value,
+        lastName: formData.lastName.value,
+        dateOfBirth: formData.date.value.format('YYYY-MM-DD'),
+        addresses: [
+          {
+            country: 'UK',
+            city: formData.billingCity.value,
+            postalCode: formData.billingCode.value,
+            streetName: formData.billingStreet.value,
+          },
+          {
+            country: 'UK',
+            city: formData.shippingCity.value,
+            postalCode: formData.shippingCode.value,
+            streetName: formData.shippingStreet.value,
+          },
+        ],
+        defaultShippingAddress: 1,
+        defaultBillingAddress: 0,
+      };
+
+      // console.log(userDate);
+
+      await client.registerUser(userDate);
+      await new ApiBuilder().loginUser(userDate.email, userDate.password);
+
       return true;
     }
 
@@ -151,13 +182,13 @@ function SignUp() {
                   />
                   <FormControlLabel
                     className="switch-field"
-                    control={
+                    control={(
                       <Checkbox
                         size="small"
                         checked={isBillingDefaut}
                         onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
-                    }
+                    )}
                     label="Use as default adress"
                   />
                 </div>
@@ -188,13 +219,13 @@ function SignUp() {
                     />
                     <FormControlLabel
                       className="switch-field"
-                      control={
+                      control={(
                         <Checkbox
                           size="small"
                           checked={isShippingDefaut}
                           onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
-                      }
+                      )}
                       label="Use as default adress"
                     />
                   </div>
@@ -205,13 +236,13 @@ function SignUp() {
               <div className="adress-switch-field">
                 <FormControlLabel
                   className="switch-field"
-                  control={
+                  control={(
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
                       onChange={() => toogleSameAdress()}
                     />
-                  }
+                  )}
                   label="Use same billing & shipping adress"
                 />
               </div>

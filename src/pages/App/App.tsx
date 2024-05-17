@@ -1,8 +1,9 @@
 import './App.css';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import Loader from 'widgets/Loader/Loader';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
@@ -12,6 +13,16 @@ const MainPage = lazy(() => import('pages/MainPage/Main'));
 
 function App() {
   const isRefreshing = false;
+  const currentClient = new ApiBuilder();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await currentClient.createAnonymousClient();
+      await currentClient.getProducts();
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -29,7 +40,7 @@ function App() {
               element={(
                 <RestrictedRoute
                   redirectTo="/main"
-                  component={<SignUpPage />}
+                  component={<SignUpPage client={currentClient} />}
                 />
               )}
             />
