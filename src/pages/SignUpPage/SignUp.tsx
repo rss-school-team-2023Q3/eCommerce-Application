@@ -13,6 +13,7 @@ import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
+import { toastSuccess } from 'shared/utils/notifications.ts';
 
 import formContext from './formContext.ts';
 
@@ -102,6 +103,8 @@ function SignUp({ client }: ISignupInterface) {
 
       await client.registerUser(userDate);
       await new ApiBuilder().loginUser(userDate.email, userDate.password);
+
+      toastSuccess('User created');
 
       return true;
     }
