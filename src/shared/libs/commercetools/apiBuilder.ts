@@ -66,10 +66,10 @@ export class ApiBuilder {
 
   public async loginUser(email: string, password: string) {
     this.createWithPasswordClient(email, password);
-
+    let resp;
     try {
       tokenCache.clear();
-      await this.apiRoot
+      resp = await this.apiRoot
         ?.me()
         .login()
         .post({
@@ -80,8 +80,13 @@ export class ApiBuilder {
         })
         .execute();
     } catch (error) {
-      if (error instanceof Error) throw new Error(error.message);
+      if (error instanceof Error) {
+        resp = error.message;
+        throw new Error(error.message);
+      }
     }
+
+    return resp;
   }
 
   public async getProducts() {

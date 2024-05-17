@@ -1,6 +1,5 @@
 import './SignUp.modules.css';
-import { Button } from '@mui/material';
-// import IUserSignUp from 'pages/App/types/interfaces/IUserSignUp.ts';
+import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import CityInput from 'shared/components/InputComponents/CityInput';
@@ -23,9 +22,44 @@ function SignUp() {
   const formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
+  const [isSameAdress, setSameAdress] = useState(false);
+  const [isShippingDefaut, setShippingDefault] = useState(false);
+  const [isBillingDefaut, setBillingDefault] = useState(false);
 
   function validateForm() {
     setValid(Object.values(formData).every((value) => value.isValid));
+  }
+
+  function toogleSameAdress() {
+    switch (isSameAdress) {
+      case true: {
+        formData.shippingCode.value = ' ';
+        formData.shippingCode.isValid = false;
+        formData.shippingStreet.value = ' ';
+        formData.shippingStreet.isValid = false;
+        formData.shippingCity.value = ' ';
+        formData.shippingCity.isValid = false;
+        formData.shippingCountry.value = ' ';
+        formData.shippingCountry.isValid = false;
+        break;
+      }
+      case false: {
+        formData.shippingCode.value = formData.billingCode.value;
+        formData.shippingCode.isValid = true;
+        formData.shippingStreet.value = formData.billingStreet.value;
+        formData.shippingStreet.isValid = true;
+        formData.shippingCity.value = formData.billingCity.value;
+        formData.shippingCity.isValid = true;
+        formData.shippingCountry.value = formData.billingCountry.value;
+        formData.shippingCountry.isValid = true;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    setSameAdress(!isSameAdress);
   }
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
@@ -76,7 +110,11 @@ function SignUp() {
           onChange={validateForm}
         >
           <div className="registration-form-field">
-            <div className="data-field">
+            <div
+              className={
+                isSameAdress ? 'user-field fifty-percent' : 'user-field'
+              }
+            >
               User Data
               <EmailInput />
               <FirstNameInput />
@@ -84,33 +122,111 @@ function SignUp() {
               <DateInput />
               <PasswordInput />
             </div>
-            <div className="data-field">
-              Billing Adress
-              <StreetInput />
-              <CityInput />
-              <PostalCodeInput
-                postalProps={{
-                  isChange: isBillingCountryChange,
-                  type: 'billing',
-                }}
-              />
-              <CountryInput
-                countryProps={{ isUpdate: updateCountry, type: 'billing' }}
-              />
-            </div>
-            <div className="data-field">
-              Shipping Adress
-              <StreetInput />
-              <CityInput />
-              <PostalCodeInput
-                postalProps={{
-                  isChange: isShippingCountryChange,
-                  type: 'shipping',
-                }}
-              />
-              <CountryInput
-                countryProps={{ isUpdate: updateCountry, type: 'shipping' }}
-              />
+            <div
+              className={
+                isSameAdress ? 'adress-field fifty-percent' : 'adress-field'
+              }
+            >
+              <div
+                className={
+                  isSameAdress
+                    ? 'adress-input-field hundred-percent'
+                    : 'adress-input-field'
+                }
+              >
+                <div
+                  className={
+                    isSameAdress ? 'data-field hundred-percent' : 'data-field'
+                  }
+                >
+                  {isSameAdress
+                    ? 'Billing & Shipping Adress'
+                    : 'Billing Adress'}
+                  <StreetInput
+                    streetProps={{
+                      type: 'billing',
+                    }}
+                  />
+                  <CityInput
+                    cityProps={{
+                      type: 'billing',
+                    }}
+                  />
+                  <PostalCodeInput
+                    postalProps={{
+                      isChange: isBillingCountryChange,
+                      type: 'billing',
+                    }}
+                  />
+                  <CountryInput
+                    countryProps={{ isUpdate: updateCountry, type: 'billing' }}
+                  />
+                  <FormControlLabel
+                    className="switch-field"
+                    control={(
+                      <Checkbox
+                        size="small"
+                        checked={isBillingDefaut}
+                        onChange={() => setBillingDefault(!isBillingDefaut)}
+                      />
+                    )}
+                    label="Use as default adress"
+                  />
+                </div>
+                {isSameAdress !== true ? (
+                  <div className="data-field">
+                    Shipping Adress
+                    <StreetInput
+                      streetProps={{
+                        type: 'shipping',
+                      }}
+                    />
+                    <CityInput
+                      cityProps={{
+                        type: 'shipping',
+                      }}
+                    />
+                    <PostalCodeInput
+                      postalProps={{
+                        isChange: isShippingCountryChange,
+                        type: 'shipping',
+                      }}
+                    />
+                    <CountryInput
+                      countryProps={{
+                        isUpdate: updateCountry,
+                        type: 'shipping',
+                      }}
+                    />
+                    <FormControlLabel
+                      className="switch-field"
+                      control={(
+                        <Checkbox
+                          size="small"
+                          checked={isShippingDefaut}
+                          onChange={() => setShippingDefault(!isShippingDefaut)}
+                        />
+                      )}
+                      label="Use as default adress"
+                    />
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+              <div className="adress-switch-field">
+                <FormControlLabel
+                  className="switch-field"
+                  control={(
+                    <Checkbox
+                      size="small"
+                      checked={isSameAdress}
+                      onChange={() => toogleSameAdress()}
+                    />
+                  )}
+                  label="Use same billing & shipping adress"
+                />
+              </div>
             </div>
           </div>
           <Button

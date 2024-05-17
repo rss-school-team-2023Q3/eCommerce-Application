@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 // import { toast } from 'react-toastify';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
+// import { NavLink, useNavigate } from 'react-router-dom';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
@@ -16,14 +17,11 @@ function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValid, setValid] = useState(false);
-  const [user, setUser] = useState({
-    email,
-    password,
-  });
   const [isShowPassword, setShowPassword] = useState(false);
   const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
   const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  // const navigate = useNavigate();
 
   const validate = (regexp: RegExp, inputValue: string) => {
     if (regexp.test(inputValue)) {
@@ -39,21 +37,16 @@ function SignIn() {
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    let resp;
 
     if (isValid) {
-      setUser({
-        email,
-        password,
-      });
-
-      const data = user;
-
       try {
-        await new ApiBuilder().loginUser(email, password);
-        // const res = await new ApiBuilder().loginUser(email, password);
-
-        // console.log(res);
-
+        resp = await new ApiBuilder().loginUser(email, password);
+        //   ? navigate('/main')
+        //   : '';
+        // TODO: access to tokens
+        // const tokensObject = tokenCache.get();
+        // console.log(tokensObject);
         const tokensObject = tokenCache.get();
 
         if (tokensObject.refreshToken) {
@@ -61,16 +54,12 @@ function SignIn() {
             setCredentials({ token: tokensObject.token, isLoggedIn: true }),
           );
         }
-
-        return data;
-      } catch (err) {
-        // () => toast(err.message);
-
-        return false;
+      } catch (e) {
+        // console.error(e);
       }
     }
 
-    return true;
+    return resp;
   };
 
   useEffect(() => {

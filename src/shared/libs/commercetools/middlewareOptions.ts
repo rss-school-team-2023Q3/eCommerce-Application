@@ -22,7 +22,7 @@ export const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
       password: '',
     },
   },
-  scopes: [import.meta.env.VITE_CTP_SCOPES_USER_MANAGE],
+  scopes: [import.meta.env.VITE_CTP_SCOPES],
   tokenCache,
   fetch,
 };
