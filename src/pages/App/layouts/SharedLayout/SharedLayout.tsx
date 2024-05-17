@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import Header from 'widgets/Header/Header';
 import Loader from 'widgets/Loader/Loader';
 import './SharedLayout.modules.css';
@@ -14,6 +15,7 @@ function SharedLayout() {
       <Suspense fallback={<Loader />}>
         <main className="main">
           <Outlet />
+          <ToastContainer />
         </main>
       </Suspense>
       {/* <Footer /> */}

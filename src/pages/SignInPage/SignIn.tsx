@@ -4,11 +4,15 @@ import { Button, IconButton, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+// import { toast } from 'react-toastify';
+import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
-// import { tokenCache } from 'shared/libs/commercetools/tokenCache';
+import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 function SignIn() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValid, setValid] = useState(false);
@@ -44,12 +48,24 @@ function SignIn() {
 
       const data = user;
 
-      await new ApiBuilder().loginUser(email, password);
-      // TODO: access to tokens
-      // const tokensObject = tokenCache.get();
-      // console.log(tokensObject);
+      try {
+        await new ApiBuilder().loginUser(email, password);
+        // const res = await new ApiBuilder().loginUser(email, password);
 
-      return data;
+        // console.log(res);
+
+        const tokensObject = tokenCache.get();
+
+        if (tokensObject.refreshToken) {
+          dispatch(setCredentials({ token: tokensObject.token, isLoggedIn: true }));
+        }
+
+        return data;
+      } catch (err) {
+        // () => toast(err.message);
+
+        return false;
+      }
     }
 
     return true;
