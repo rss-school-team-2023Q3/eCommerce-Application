@@ -9,13 +9,15 @@ interface IStreetInterface {
 
 function StreetInput({ streetProps }: IStreetInterface) {
   const [isValid, setIsValid] = useState(true);
-  const regexp = /^[a-zA-Z]+$/;
+  const [streetErrorMessage, setStreetErrorMessage] = useState('');
+
   const formData = useContext(formContext);
 
   function checkStreet(street: string) {
-    setIsValid(validate(regexp, street));
+    setIsValid(!validate('street', street));
+    setStreetErrorMessage(validate('street', street));
 
-    switch (validate(regexp, street)) {
+    switch (!validate('street', street)) {
       case true: {
         if (streetProps.type === 'shipping') {
           formData.shippingStreet.value = street;
@@ -46,7 +48,7 @@ function StreetInput({ streetProps }: IStreetInterface) {
       required
       onChange={(e) => checkStreet(e.target.value)}
       label="Street"
-      helperText={isValid ? '' : 'Enter street name'}
+      helperText={isValid ? '' : streetErrorMessage}
       FormHelperTextProps={{
         sx: {
           color: 'red',
