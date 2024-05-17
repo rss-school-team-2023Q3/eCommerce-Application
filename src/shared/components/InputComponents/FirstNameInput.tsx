@@ -5,13 +5,14 @@ import validate from 'shared/utils/validate';
 
 function FirstNameInput() {
   const [isValid, setIsValid] = useState(true);
-  const regexp = /^[a-zA-Z]+$/;
+  const [nameErrorMessage, setNameErrorMessage] = useState('');
   const formData = useContext(formContext);
 
   function checkName(name: string) {
-    setIsValid(validate(regexp, name));
+    setIsValid(!validate('name', name));
+    setNameErrorMessage(validate('name', name));
 
-    if (validate(regexp, name)) {
+    if (validate('name', name)) {
       formData.name.value = name;
       formData.name.isValid = true;
     } else {
@@ -27,7 +28,7 @@ function FirstNameInput() {
       type="Text"
       style={{ marginBottom: '10px' }}
       required
-      helperText={isValid ? '' : 'Enter your Name'}
+      helperText={isValid ? '' : nameErrorMessage}
       FormHelperTextProps={{
         sx: {
           color: 'red',

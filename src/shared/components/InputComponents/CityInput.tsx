@@ -9,13 +9,14 @@ interface ICityInterface {
 
 function CityInput({ cityProps }: ICityInterface) {
   const [isValid, setIsValid] = useState(true);
-  const regexp = /^[a-zA-Z]+$/;
+  const [cityErrorMessage, setCityErrorMessage] = useState('');
   const formData = useContext(formContext);
 
   function checkCity(city: string) {
-    setIsValid(validate(regexp, city));
+    setIsValid(!validate('city', city));
+    setCityErrorMessage(validate('city', city));
 
-    switch (validate(regexp, city)) {
+    switch (!validate('city', city)) {
       case true: {
         if (cityProps.type === 'shipping') {
           formData.shippingCity.value = city;
@@ -48,7 +49,7 @@ function CityInput({ cityProps }: ICityInterface) {
       required
       onChange={(e) => checkCity(e.target.value)}
       label="City"
-      helperText={isValid ? '' : 'Enter city name'}
+      helperText={isValid ? '' : cityErrorMessage}
       FormHelperTextProps={{
         sx: {
           color: 'red',

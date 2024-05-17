@@ -16,8 +16,8 @@ function SignIn() {
   const [isShowPassword, setShowPassword] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(true);
   const [isFormValid, setFormValid] = useState(false);
-  const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const navigate = useNavigate();
 
@@ -47,12 +47,14 @@ function SignIn() {
 
   function validatePassword(value: string) {
     setPassword(value);
-    setPasswordValid(validate(passwordRegexp, value));
+    setPasswordValid(!validate('password', value));
+    setPasswordErrorMessage(validate('password', value));
   }
 
   function validateEmail(value: string) {
     setEmail(value);
-    setEmailValid(validate(emailRegexp, value));
+    setEmailValid(!validate('email', value));
+    setEmailErrorMessage(validate('email', value));
   }
 
   useEffect(() => {
@@ -69,7 +71,7 @@ function SignIn() {
           required
           onChange={(e) => validateEmail(e.target.value)}
           value={email}
-          helperText={isEmailValid ? '' : 'Enter valid eMail'}
+          helperText={isEmailValid ? '' : emailErrorMessage}
           FormHelperTextProps={{
             sx: {
               color: 'red',
@@ -89,11 +91,7 @@ function SignIn() {
           id="password"
           label="Password"
           color={isPasswordValid ? 'primary' : 'error'}
-          helperText={
-            isPasswordValid
-              ? ''
-              : 'Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 number & 1 special character'
-          }
+          helperText={isPasswordValid ? '' : passwordErrorMessage}
           FormHelperTextProps={{
             sx: {
               color: 'red',
