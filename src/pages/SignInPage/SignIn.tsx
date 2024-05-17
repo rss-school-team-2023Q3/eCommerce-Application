@@ -57,7 +57,9 @@ function SignIn() {
         const tokensObject = tokenCache.get();
 
         if (tokensObject.refreshToken) {
-          dispatch(setCredentials({ token: tokensObject.token, isLoggedIn: true }));
+          dispatch(
+            setCredentials({ token: tokensObject.token, isLoggedIn: true }),
+          );
         }
 
         return data;
