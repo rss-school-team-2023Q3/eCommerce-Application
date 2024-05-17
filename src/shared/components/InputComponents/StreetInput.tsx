@@ -3,7 +3,11 @@ import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 
-function StreetInput() {
+interface IStreetInterface {
+  streetProps: { type: string };
+}
+
+function StreetInput({ streetProps }: IStreetInterface) {
   const [isValid, setIsValid] = useState(true);
   const regexp = /^[a-zA-Z]+$/;
   const formData = useContext(formContext);
@@ -11,11 +15,25 @@ function StreetInput() {
   function checkStreet(street: string) {
     setIsValid(validate(regexp, street));
 
-    if (validate(regexp, street)) {
-      formData.street.value = street;
-      formData.street.isValid = true;
-    } else {
-      formData.street.isValid = false;
+    switch (validate(regexp, street)) {
+      case true: {
+        if (streetProps.type === 'shipping') {
+          formData.shippingStreet.value = street;
+          formData.shippingStreet.isValid = true;
+        } else {
+          formData.billingStreet.value = street;
+          formData.billingStreet.isValid = true;
+        }
+
+        break;
+      }
+      default: {
+        if (streetProps.type === 'shipping') {
+          formData.shippingStreet.isValid = false;
+        } else {
+          formData.billingStreet.isValid = false;
+        }
+      }
     }
   }
 
