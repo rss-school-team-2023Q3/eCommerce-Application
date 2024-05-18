@@ -86,7 +86,7 @@ function SignUp({ client }: ISignupInterface) {
     ];
 
     if (isValid) {
-      const userDate = {
+      const userData = {
         email: formData.email.value,
         password: formData.password.value,
         firstName: formData.name.value,
@@ -101,8 +101,8 @@ function SignUp({ client }: ISignupInterface) {
           : isShippingDefaut && { defaultShippingAddress: 1 }),
       };
 
-      await client.registerUser(userDate);
-      await new ApiBuilder().loginUser(userDate.email, userDate.password);
+      await client.registerUser(userData);
+      await new ApiBuilder().loginUser(userData.email, userData.password);
 
       toastSuccess('User created');
 
