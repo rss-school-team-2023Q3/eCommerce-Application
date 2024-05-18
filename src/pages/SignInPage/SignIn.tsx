@@ -1,16 +1,21 @@
+import { Customer } from '@commercetools/platform-sdk';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button, IconButton, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
+import IUser from 'pages/App/types/interfaces/IUser';
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
-import validate from 'shared/utils/validate';
+import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 import { toastError } from 'shared/utils/notifications';
-// import { tokenCache } from 'shared/libs/commercetools/tokenCache';
+import validate from 'shared/utils/validate';
 
 function SignIn() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setEmailValid] = useState(true);
@@ -20,7 +25,7 @@ function SignIn() {
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -28,9 +33,32 @@ function SignIn() {
 
     if (isEmailValid && isPasswordValid) {
       try {
-        resp = (await new ApiBuilder().loginUser(email, password))
-          ? navigate('/main')
-          : '';
+        resp = await new ApiBuilder().loginUser(email, password);
+        const tokensObject = tokenCache.get();
+
+        if (tokensObject.refreshToken) {
+          const customer: Customer | undefined = resp?.body.customer;
+
+          if (
+            customer
+            && 'email' in customer
+            && 'firstName' in customer
+            && 'lastName' in customer
+          ) {
+            if (
+              typeof customer.firstName === 'string'
+              && typeof customer.lastName === 'string'
+            ) {
+              const user: IUser = {
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+              };
+
+              dispatch(setCredentials({ token: tokensObject.token, user }));
+            }
+          }
+        }
 
         // TODO: access to tokens
         // const tokensObject = tokenCache.get();
