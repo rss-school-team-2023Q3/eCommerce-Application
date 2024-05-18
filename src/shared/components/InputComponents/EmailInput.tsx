@@ -13,7 +13,7 @@ function EmailInput() {
     setIsValid(!validate('email', email));
     setEmailErrorMessage(validate('email', email));
 
-    if (validate('email', email) && email.length > 1) {
+    if (!validate('email', email) && email.length > 1) {
       formData.email.value = email;
       formData.email.isValid = true;
     } else {

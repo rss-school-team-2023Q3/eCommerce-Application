@@ -76,6 +76,7 @@ export default function validate(inputType: string, value: string) {
 
       break;
     }
+
     default: {
       errorMessage = '';
       break;

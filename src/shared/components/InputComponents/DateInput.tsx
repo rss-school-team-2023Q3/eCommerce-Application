@@ -5,23 +5,20 @@ import dayjs, { Dayjs } from 'dayjs';
 import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
 import 'dayjs/locale/ru';
+import validateDate from 'shared/utils/validateDate';
 
 function DateInput() {
   dayjs.locale('ru');
   const minAge = dayjs().subtract(15, 'y');
   const [isValid, setIsValid] = useState(true);
+  const [dateErrorMessage, setDateErrorMessage] = useState('');
   const formData = useContext(formContext);
 
   function checkDate(date: Dayjs) {
-    setIsValid(
-      date < dayjs().subtract(15, 'y') && date > dayjs().subtract(100, 'y'),
-    );
+    setIsValid(!validateDate(date));
+    setDateErrorMessage(validateDate(date));
 
-    if (
-      date < dayjs().subtract(15, 'y')
-      && date.isValid()
-      && date > dayjs().subtract(100, 'y')
-    ) {
+    if (!dateErrorMessage) {
       formData.date.value = date;
       formData.date.isValid = true;
     } else {
@@ -36,7 +33,7 @@ function DateInput() {
         label="Date of birth"
         required
         maxDate={minAge}
-        helperText={isValid ? '' : 'You must be 15 Y.O.'}
+        helperText={isValid ? '' : dateErrorMessage}
         FormHelperTextProps={{
           sx: {
             color: 'red',
