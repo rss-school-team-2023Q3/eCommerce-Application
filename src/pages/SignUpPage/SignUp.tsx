@@ -11,10 +11,17 @@ import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
+import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
+import { createAddress } from 'shared/utils/createAddress.ts';
+import { toastSuccess } from 'shared/utils/notifications.ts';
 
 import formContext from './formContext.ts';
 
-function SignUp() {
+interface ISignupInterface {
+  client: ApiBuilder;
+}
+
+function SignUp({ client }: ISignupInterface) {
   const [isValid, setValid] = useState(false);
   const formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
@@ -62,7 +69,43 @@ function SignUp() {
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
+    const addressData = {
+      billingCountry: { value: formData.billingCountry.value },
+      billingCity: { value: formData.billingCity.value },
+      billingCode: { value: formData.billingCode.value },
+      billingStreet: { value: formData.billingStreet.value },
+      shippingCountry: { value: formData.shippingCountry.value },
+      shippingCity: { value: formData.shippingCity.value },
+      shippingCode: { value: formData.shippingCode.value },
+      shippingStreet: { value: formData.shippingStreet.value },
+    };
+
+    const addresses = [
+      createAddress(addressData, 'billing'),
+      ...(isSameAdress ? [] : [createAddress(addressData, 'shipping')]),
+    ];
+
     if (isValid) {
+      const userData = {
+        email: formData.email.value,
+        password: formData.password.value,
+        firstName: formData.name.value,
+        lastName: formData.lastName.value,
+        dateOfBirth: formData.date.value.format('YYYY-MM-DD'),
+        addresses,
+        billingAddresses: [0],
+        shippingAddresses: isSameAdress ? [0] : [1],
+        ...(isBillingDefaut && { defaultBillingAddress: 0 }),
+        ...(isSameAdress
+          ? isBillingDefaut && { defaultShippingAddress: 0 }
+          : isShippingDefaut && { defaultShippingAddress: 1 }),
+      };
+
+      await client.registerUser(userData);
+      await new ApiBuilder().loginUser(userData.email, userData.password);
+
+      toastSuccess('User created');
+
       return true;
     }
 

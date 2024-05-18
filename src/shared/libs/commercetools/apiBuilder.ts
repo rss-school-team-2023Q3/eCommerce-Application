@@ -62,6 +62,8 @@ export class ApiBuilder {
 
     this.client = this.buildClient().withAnonymousSessionFlow(options).build();
     this.apiRoot = this.createApiRoot(this.client);
+
+    // return this.apiRoot;
   }
 
   public async loginUser(email: string, password: string) {
