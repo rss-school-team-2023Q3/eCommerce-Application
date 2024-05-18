@@ -1,70 +1,96 @@
+import { Customer } from '@commercetools/platform-sdk';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button, IconButton, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
+import IUser from 'pages/App/types/interfaces/IUser';
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-// import { toast } from 'react-toastify';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
-// import { NavLink, useNavigate } from 'react-router-dom';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import { tokenCache } from 'shared/libs/commercetools/tokenCache';
+import { toastError } from 'shared/utils/notifications';
+import validate from 'shared/utils/validate';
 
 function SignIn() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isValid, setValid] = useState(false);
+  const [isEmailValid, setEmailValid] = useState(true);
   const [isShowPassword, setShowPassword] = useState(false);
-  const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-  const passwordRegexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
+  const [isPasswordValid, setPasswordValid] = useState(true);
+  const [isFormValid, setFormValid] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   // const navigate = useNavigate();
-
-  const validate = (regexp: RegExp, inputValue: string) => {
-    if (regexp.test(inputValue)) {
-      setValid(true);
-
-      return true;
-    }
-
-    setValid(false);
-
-    return false;
-  };
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     let resp;
 
-    if (isValid) {
+    if (isEmailValid && isPasswordValid) {
       try {
         resp = await new ApiBuilder().loginUser(email, password);
-        //   ? navigate('/main')
-        //   : '';
-        // TODO: access to tokens
-        // const tokensObject = tokenCache.get();
-        // console.log(tokensObject);
         const tokensObject = tokenCache.get();
 
         if (tokensObject.refreshToken) {
-          dispatch(
-            setCredentials({ token: tokensObject.token, isLoggedIn: true }),
-          );
+          const customer: Customer | undefined = resp?.body.customer;
+
+          if (
+            customer
+            && 'email' in customer
+            && 'firstName' in customer
+            && 'lastName' in customer
+          ) {
+            if (
+              typeof customer.firstName === 'string'
+              && typeof customer.lastName === 'string'
+            ) {
+              const user: IUser = {
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+              };
+
+              dispatch(setCredentials({ token: tokensObject.token, user }));
+            }
+          }
         }
-      } catch (e) {
-        // console.error(e);
+
+        // TODO: access to tokens
+        // const tokensObject = tokenCache.get();
+        // console.log(tokensObject);
+      } catch (error) {
+        if (error instanceof Error) {
+          toastError(error.message);
+        }
       }
     }
 
     return resp;
   };
 
+  function validateForm() {
+    setFormValid(isEmailValid && isPasswordValid);
+  }
+
+  function validatePassword(value: string) {
+    setPassword(value);
+    setPasswordValid(!validate('password', value));
+    setPasswordErrorMessage(validate('password', value));
+  }
+
+  function validateEmail(value: string) {
+    setEmail(value);
+    setEmailValid(!validate('email', value));
+    setEmailErrorMessage(validate('email', value));
+  }
+
   useEffect(() => {
-    validate(emailRegexp, email);
-    validate(passwordRegexp, password);
+    validateForm();
   }, [password, email]);
 
   return (
@@ -75,20 +101,34 @@ function SignIn() {
           type="email"
           style={{ marginBottom: '10px' }}
           required
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => validateEmail(e.target.value)}
           value={email}
+          helperText={isEmailValid ? '' : emailErrorMessage}
+          FormHelperTextProps={{
+            sx: {
+              color: 'red',
+            },
+          }}
           id="email"
           label="Email"
+          color={isEmailValid ? 'primary' : 'error'}
         />
         <TextField
           autoComplete="off"
           style={{ marginBottom: '10px' }}
           value={password}
           type={isShowPassword ? 'text' : 'password'}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => validatePassword(e.target.value)}
           required
           id="password"
           label="Password"
+          color={isPasswordValid ? 'primary' : 'error'}
+          helperText={isPasswordValid ? '' : passwordErrorMessage}
+          FormHelperTextProps={{
+            sx: {
+              color: 'red',
+            },
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -105,7 +145,7 @@ function SignIn() {
         />
         <Button
           variant="contained"
-          color={isValid ? 'primary' : 'error'}
+          color={isFormValid ? 'primary' : 'error'}
           onClick={submitLogInData}
         >
           Sign In

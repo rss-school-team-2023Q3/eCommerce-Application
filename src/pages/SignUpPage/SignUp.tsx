@@ -1,7 +1,11 @@
 import './SignUp.modules.css';
+import { Customer } from '@commercetools/platform-sdk';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import IUser from 'pages/App/types/interfaces/IUser.ts';
 import { useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { setCredentials } from 'shared/api/authApi/store/authSlice.ts';
 import CityInput from 'shared/components/InputComponents/CityInput';
 import CountryInput from 'shared/components/InputComponents/CountryInput';
 import DateInput from 'shared/components/InputComponents/DateInput';
@@ -11,13 +15,19 @@ import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
-
-// import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
+import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
+import { tokenCache } from 'shared/libs/commercetools/tokenCache.ts';
+import { createAddress } from 'shared/utils/createAddress.ts';
+import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
 import formContext from './formContext.ts';
-// import { CustomerDraft } from '@commercetools/platform-sdk';
 
-function SignUp() {
+interface ISignupInterface {
+  client: ApiBuilder;
+}
+
+function SignUp({ client }: ISignupInterface) {
+  const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
   const formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
@@ -25,6 +35,7 @@ function SignUp() {
   const [isSameAdress, setSameAdress] = useState(false);
   const [isShippingDefaut, setShippingDefault] = useState(false);
   const [isBillingDefaut, setBillingDefault] = useState(false);
+  const [isDateChange, setDateChange] = useState(false);
 
   function validateForm() {
     setValid(Object.values(formData).every((value) => value.isValid));
@@ -64,21 +75,77 @@ function SignUp() {
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    let resp;
+    const addressData = {
+      billingCountry: { value: formData.billingCountry.value },
+      billingCity: { value: formData.billingCity.value },
+      billingCode: { value: formData.billingCode.value },
+      billingStreet: { value: formData.billingStreet.value },
+      shippingCountry: { value: formData.shippingCountry.value },
+      shippingCity: { value: formData.shippingCity.value },
+      shippingCode: { value: formData.shippingCode.value },
+      shippingStreet: { value: formData.shippingStreet.value },
+    };
+
+    const addresses = [
+      createAddress(addressData, 'billing'),
+      ...(isSameAdress ? [] : [createAddress(addressData, 'shipping')]),
+    ];
 
     if (isValid) {
-      // const [email, password, firstName, lastName] = Object.values(formData).map((el) => el.value);
+      const userData = {
+        email: formData.email.value,
+        password: formData.password.value,
+        firstName: formData.name.value,
+        lastName: formData.lastName.value,
+        dateOfBirth: formData.date.value.format('YYYY-MM-DD'),
+        addresses,
+        billingAddresses: [0],
+        shippingAddresses: isSameAdress ? [0] : [1],
+        ...(isBillingDefaut && { defaultBillingAddress: 0 }),
+        ...(isSameAdress
+          ? isBillingDefaut && { defaultShippingAddress: 0 }
+          : isShippingDefaut && { defaultShippingAddress: 1 }),
+      };
+      try {
+        await client.registerUser(userData);
+        resp = await new ApiBuilder().loginUser(
+          userData.email,
+          userData.password,
+        );
+        const tokensObject = tokenCache.get();
 
-      // const signUpData: CustomerDraft = {
-      //   email, password, firstName, lastName,
-      // };
+        if (tokensObject.refreshToken) {
+          const customer: Customer | undefined = resp?.body.customer;
 
-      // await new ApiBuilder().registerUser(signUpData);
-      // console.log(signUpData);
+          if (
+            customer
+            && 'email' in customer
+            && 'firstName' in customer
+            && 'lastName' in customer
+          ) {
+            if (
+              typeof customer.firstName === 'string'
+              && typeof customer.lastName === 'string'
+            ) {
+              const user: IUser = {
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+              };
 
-      return true;
+              dispatch(setCredentials({ token: tokensObject.token, user }));
+            }
+          }
+        }
+
+        toastSuccess('User created');
+      } catch (error) {
+        if (error instanceof Error) {
+          toastError(error.message);
+        }
+      }
     }
-
-    return false;
   };
 
   const updateCountry = (type: string) => {
@@ -97,9 +164,13 @@ function SignUp() {
     }
   };
 
+  function dateChange() {
+    setDateChange(!isDateChange);
+  }
+
   useEffect(() => {
     validateForm();
-  }, [isBillingCountryChange, isShippingCountryChange]);
+  }, [isBillingCountryChange, isShippingCountryChange, isDateChange]);
 
   return (
     <div className="registration-wrapper">
@@ -119,7 +190,11 @@ function SignUp() {
               <EmailInput />
               <FirstNameInput />
               <LastNameInput />
-              <DateInput />
+              <DateInput
+                dateProps={{
+                  isChange: dateChange,
+                }}
+              />
               <PasswordInput />
             </div>
             <div

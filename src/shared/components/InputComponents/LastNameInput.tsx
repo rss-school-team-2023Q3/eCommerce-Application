@@ -5,13 +5,14 @@ import validate from 'shared/utils/validate';
 
 function LastNameInput() {
   const [isValid, setIsValid] = useState(true);
-  const regexp = /^[a-zA-Z]+$/;
+  const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
   const formData = useContext(formContext);
 
   function checkLastName(name: string) {
-    setIsValid(validate(regexp, name));
+    setIsValid(!validate('lastName', name));
+    setLastNameErrorMessage(validate('lastName', name));
 
-    if (validate(regexp, name)) {
+    if (!validate('lastName', name)) {
       formData.lastName.value = name;
       formData.lastName.isValid = true;
     } else {
@@ -26,7 +27,7 @@ function LastNameInput() {
       autoComplete="off"
       type="Text"
       style={{ marginBottom: '10px' }}
-      helperText={isValid ? '' : 'Enter your Last name'}
+      helperText={isValid ? '' : lastNameErrorMessage}
       FormHelperTextProps={{
         sx: {
           color: 'red',

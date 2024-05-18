@@ -4,37 +4,43 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
+import 'dayjs/locale/ru';
+import validateDate from 'shared/utils/validateDate';
 
-function DateInput() {
+interface IDateInterface {
+  dateProps: { isChange: (type: boolean) => void };
+}
+
+function DateInput({ dateProps }: IDateInterface) {
+  dayjs.locale('ru');
   const minAge = dayjs().subtract(15, 'y');
   const [isValid, setIsValid] = useState(true);
+  const [dateErrorMessage, setDateErrorMessage] = useState('');
   const formData = useContext(formContext);
 
   function checkDate(date: Dayjs) {
-    setIsValid(
-      date < dayjs().subtract(15, 'y') && date > dayjs().subtract(100, 'y'),
-    );
+    dateProps.isChange(true);
+    setIsValid(!validateDate(date));
+    setDateErrorMessage(validateDate(date));
 
-    if (
-      date < dayjs().subtract(15, 'y')
-      && date.isValid()
-      && date > dayjs().subtract(100, 'y')
-    ) {
+    if (!validateDate(date)) {
       formData.date.value = date;
       formData.date.isValid = true;
     } else {
       formData.date.isValid = false;
     }
+
+    dateProps.isChange(false);
   }
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
       <DateField
         style={{ marginBottom: '10px' }}
         label="Date of birth"
         required
         maxDate={minAge}
-        helperText={isValid ? '' : 'You must be 15 Y.O.'}
+        helperText={isValid ? '' : dateErrorMessage}
         FormHelperTextProps={{
           sx: {
             color: 'red',

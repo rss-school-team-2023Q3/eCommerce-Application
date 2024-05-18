@@ -9,16 +9,16 @@ function PasswordInput() {
   const [isShowPassword, setShowPassword] = useState(false);
   const [isValid, setIsValid] = useState(true);
   const formData = useContext(formContext);
-  const regexp = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])(?!.*\s).{8,}$/;
-
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const handleClickShowPassword = () => {
     setShowPassword((show) => !show);
   };
 
   function checkPassword(pass: string) {
-    setIsValid(validate(regexp, pass));
+    setIsValid(!validate('password', pass));
+    setPasswordErrorMessage(validate('password', pass));
 
-    if (validate(regexp, pass) && pass.length > 1) {
+    if (!validate('password', pass) && pass.length > 1) {
       formData.password.value = pass;
       formData.password.isValid = true;
     } else {
@@ -36,11 +36,7 @@ function PasswordInput() {
       required
       id="password"
       label="Password"
-      helperText={
-        isValid
-          ? ''
-          : 'Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 number & 1 special character'
-      }
+      helperText={isValid ? '' : passwordErrorMessage}
       FormHelperTextProps={{
         sx: {
           color: 'red',

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import IAuthState from 'pages/App/types/interfaces/IAuthState';
+import IUser from 'pages/App/types/interfaces/IUser';
 
 const initialState: IAuthState = {
   token: localStorage.getItem('token'),
@@ -13,11 +14,12 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (
       preState,
-      action: PayloadAction<{ token: string; isLoggedIn: boolean }>,
+      action: PayloadAction<{ token: string; user: IUser }>,
     ) => {
-      const { token } = action.payload;
+      const { token, user } = action.payload;
       const state = preState;
 
+      state.user = user;
       state.token = token;
       state.isLoggedIn = true;
       localStorage.setItem('token', token);

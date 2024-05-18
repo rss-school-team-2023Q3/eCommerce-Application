@@ -5,13 +5,15 @@ import validate from 'shared/utils/validate';
 
 function EmailInput() {
   const [isValid, setIsValid] = useState(true);
-  const emailRegexp = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+
   const formData = useContext(formContext);
 
   function checkEmail(email: string) {
-    setIsValid(validate(emailRegexp, email));
+    setIsValid(!validate('email', email));
+    setEmailErrorMessage(validate('email', email));
 
-    if (validate(emailRegexp, email) && email.length > 1) {
+    if (!validate('email', email) && email.length > 1) {
       formData.email.value = email;
       formData.email.isValid = true;
     } else {
@@ -27,7 +29,7 @@ function EmailInput() {
       autoComplete="off"
       style={{ marginBottom: '10px' }}
       required
-      helperText={isValid ? '' : 'Enter valid eMail'}
+      helperText={isValid ? '' : emailErrorMessage}
       FormHelperTextProps={{
         sx: {
           color: 'red',
