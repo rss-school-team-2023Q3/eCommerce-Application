@@ -29,8 +29,10 @@ function SignUp({ client }: ISignupInterface) {
   const [isSameAdress, setSameAdress] = useState(false);
   const [isShippingDefaut, setShippingDefault] = useState(false);
   const [isBillingDefaut, setBillingDefault] = useState(false);
+  const [isDateChange, setDateChange] = useState(false);
 
   function validateForm() {
+    console.log('change');
     setValid(Object.values(formData).every((value) => value.isValid));
   }
 
@@ -126,10 +128,13 @@ function SignUp({ client }: ISignupInterface) {
       }
     }
   };
+  function dateChange() {
+    setDateChange(!isDateChange);
+  }
 
   useEffect(() => {
     validateForm();
-  }, [isBillingCountryChange, isShippingCountryChange]);
+  }, [isBillingCountryChange, isShippingCountryChange, isDateChange]);
 
   return (
     <div className="registration-wrapper">
@@ -149,7 +154,11 @@ function SignUp({ client }: ISignupInterface) {
               <EmailInput />
               <FirstNameInput />
               <LastNameInput />
-              <DateInput />
+              <DateInput
+                dateProps={{
+                  isChange: dateChange,
+                }}
+              />
               <PasswordInput />
             </div>
             <div

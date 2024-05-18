@@ -6,8 +6,10 @@ import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
 import 'dayjs/locale/ru';
 import validateDate from 'shared/utils/validateDate';
-
-function DateInput() {
+interface IDateInterface {
+  dateProps: { isChange: (type: boolean) => void };
+}
+function DateInput({ dateProps }: IDateInterface) {
   dayjs.locale('ru');
   const minAge = dayjs().subtract(15, 'y');
   const [isValid, setIsValid] = useState(true);
@@ -15,15 +17,16 @@ function DateInput() {
   const formData = useContext(formContext);
 
   function checkDate(date: Dayjs) {
+    dateProps.isChange(true);
     setIsValid(!validateDate(date));
     setDateErrorMessage(validateDate(date));
-
-    if (!dateErrorMessage) {
+    if (!validateDate(date)) {
       formData.date.value = date;
       formData.date.isValid = true;
     } else {
       formData.date.isValid = false;
     }
+    dateProps.isChange(false);
   }
 
   return (
