@@ -106,7 +106,7 @@ function SignUp({ client }: ISignupInterface) {
         await client.registerUser(userData);
         resp = (await new ApiBuilder().loginUser(
           userData.email,
-          userData.password
+          userData.password,
         ))
           ? navigate('/main')
           : '';
@@ -118,6 +118,8 @@ function SignUp({ client }: ISignupInterface) {
         }
       }
     }
+
+    return resp;
   };
 
   const updateCountry = (type: string) => {
@@ -210,13 +212,13 @@ function SignUp({ client }: ISignupInterface) {
                   />
                   <FormControlLabel
                     className="switch-field"
-                    control={
+                    control={(
                       <Checkbox
                         size="small"
                         checked={isBillingDefaut}
                         onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
-                    }
+                    )}
                     label="Use as default adress"
                   />
                 </div>
@@ -247,13 +249,13 @@ function SignUp({ client }: ISignupInterface) {
                     />
                     <FormControlLabel
                       className="switch-field"
-                      control={
+                      control={(
                         <Checkbox
                           size="small"
                           checked={isShippingDefaut}
                           onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
-                      }
+                      )}
                       label="Use as default adress"
                     />
                   </div>
@@ -264,13 +266,13 @@ function SignUp({ client }: ISignupInterface) {
               <div className="adress-switch-field">
                 <FormControlLabel
                   className="switch-field"
-                  control={
+                  control={(
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
                       onChange={() => toogleSameAdress()}
                     />
-                  }
+                  )}
                   label="Use same billing & shipping adress"
                 />
               </div>

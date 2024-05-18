@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
-import validate from 'shared/utils/validate';
 import { toastError } from 'shared/utils/notifications';
+import validate from 'shared/utils/validate';
 // import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 function SignIn() {
