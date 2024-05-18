@@ -1,7 +1,7 @@
 import './SignUp.modules.css';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import CityInput from 'shared/components/InputComponents/CityInput';
 import CountryInput from 'shared/components/InputComponents/CountryInput';
 import DateInput from 'shared/components/InputComponents/DateInput';
@@ -13,7 +13,7 @@ import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
-import { toastSuccess } from 'shared/utils/notifications.ts';
+import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
 import formContext from './formContext.ts';
 
@@ -24,6 +24,7 @@ interface ISignupInterface {
 function SignUp({ client }: ISignupInterface) {
   const [isValid, setValid] = useState(false);
   const formData = useContext(formContext);
+  const navigate = useNavigate();
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
   const [isSameAdress, setSameAdress] = useState(false);
@@ -32,7 +33,6 @@ function SignUp({ client }: ISignupInterface) {
   const [isDateChange, setDateChange] = useState(false);
 
   function validateForm() {
-    console.log('change');
     setValid(Object.values(formData).every((value) => value.isValid));
   }
 
@@ -70,6 +70,7 @@ function SignUp({ client }: ISignupInterface) {
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+    let resp;
     const addressData = {
       billingCountry: { value: formData.billingCountry.value },
       billingCity: { value: formData.billingCity.value },
@@ -101,16 +102,22 @@ function SignUp({ client }: ISignupInterface) {
           ? isBillingDefaut && { defaultShippingAddress: 0 }
           : isShippingDefaut && { defaultShippingAddress: 1 }),
       };
+      try {
+        await client.registerUser(userData);
+        resp = (await new ApiBuilder().loginUser(
+          userData.email,
+          userData.password
+        ))
+          ? navigate('/main')
+          : '';
 
-      await client.registerUser(userData);
-      await new ApiBuilder().loginUser(userData.email, userData.password);
-
-      toastSuccess('User created');
-
-      return true;
+        toastSuccess('User created');
+      } catch (error) {
+        if (error instanceof Error) {
+          toastError(error.message);
+        }
+      }
     }
-
-    return false;
   };
 
   const updateCountry = (type: string) => {
@@ -128,6 +135,7 @@ function SignUp({ client }: ISignupInterface) {
       }
     }
   };
+
   function dateChange() {
     setDateChange(!isDateChange);
   }

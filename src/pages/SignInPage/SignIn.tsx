@@ -7,6 +7,7 @@ import './SignIn.modules.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import validate from 'shared/utils/validate';
+import { toastError } from 'shared/utils/notifications';
 // import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 function SignIn() {
@@ -34,8 +35,10 @@ function SignIn() {
         // TODO: access to tokens
         // const tokensObject = tokenCache.get();
         // console.log(tokensObject);
-      } catch (e) {
-        // console.error(e);
+      } catch (error) {
+        if (error instanceof Error) {
+          toastError(error.message);
+        }
       }
     }
 
