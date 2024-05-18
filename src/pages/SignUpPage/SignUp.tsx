@@ -68,7 +68,6 @@ function SignUp({ client }: ISignupInterface) {
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-
     const addressData = {
       billingCountry: { value: formData.billingCountry.value },
       billingCity: { value: formData.billingCity.value },
@@ -194,13 +193,13 @@ function SignUp({ client }: ISignupInterface) {
                   />
                   <FormControlLabel
                     className="switch-field"
-                    control={(
+                    control={
                       <Checkbox
                         size="small"
                         checked={isBillingDefaut}
                         onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
-                    )}
+                    }
                     label="Use as default adress"
                   />
                 </div>
@@ -231,13 +230,13 @@ function SignUp({ client }: ISignupInterface) {
                     />
                     <FormControlLabel
                       className="switch-field"
-                      control={(
+                      control={
                         <Checkbox
                           size="small"
                           checked={isShippingDefaut}
                           onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
-                      )}
+                      }
                       label="Use as default adress"
                     />
                   </div>
@@ -248,13 +247,13 @@ function SignUp({ client }: ISignupInterface) {
               <div className="adress-switch-field">
                 <FormControlLabel
                   className="switch-field"
-                  control={(
+                  control={
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
                       onChange={() => toogleSameAdress()}
                     />
-                  )}
+                  }
                   label="Use same billing & shipping adress"
                 />
               </div>

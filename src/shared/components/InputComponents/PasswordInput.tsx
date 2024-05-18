@@ -18,7 +18,7 @@ function PasswordInput() {
     setIsValid(!validate('password', pass));
     setPasswordErrorMessage(validate('password', pass));
 
-    if (validate('password', pass) && pass.length > 1) {
+    if (!validate('password', pass) && pass.length > 1) {
       formData.password.value = pass;
       formData.password.isValid = true;
     } else {

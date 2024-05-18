@@ -12,7 +12,7 @@ function FirstNameInput() {
     setIsValid(!validate('name', name));
     setNameErrorMessage(validate('name', name));
 
-    if (validate('name', name)) {
+    if (!validate('name', name)) {
       formData.name.value = name;
       formData.name.isValid = true;
     } else {
