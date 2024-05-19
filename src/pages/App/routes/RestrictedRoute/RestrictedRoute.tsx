@@ -1,11 +1,14 @@
-import RoutePropsType from 'pages/App/types/RoutePropsType';
+import RoutePropsType from 'pages/App/types/types/RoutePropsType';
+import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import isLoggedIn from 'shared/constants/isLogedIn';
+import { RootState } from 'shared/api/authApi/store/store';
 
 function RestrictedRoute({
   component: Component,
   redirectTo = '/',
 }: RoutePropsType) {
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
   return isLoggedIn ? <Navigate to={redirectTo} /> : Component;
 }
 

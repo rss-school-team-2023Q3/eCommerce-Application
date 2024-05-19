@@ -1,7 +1,11 @@
 import './SignUp.modules.css';
+import { Customer } from '@commercetools/platform-sdk';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import IUser from 'pages/App/types/interfaces/IUser.ts';
 import { useContext, useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+import { setCredentials } from 'shared/api/authApi/store/authSlice.ts';
 import CityInput from 'shared/components/InputComponents/CityInput';
 import CountryInput from 'shared/components/InputComponents/CountryInput';
 import DateInput from 'shared/components/InputComponents/DateInput';
@@ -12,6 +16,7 @@ import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
+import { tokenCache } from 'shared/libs/commercetools/tokenCache.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
 import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
@@ -22,9 +27,9 @@ interface ISignupInterface {
 }
 
 function SignUp({ client }: ISignupInterface) {
+  const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
   const formData = useContext(formContext);
-  const navigate = useNavigate();
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
   const [isSameAdress, setSameAdress] = useState(false);
@@ -104,12 +109,35 @@ function SignUp({ client }: ISignupInterface) {
       };
       try {
         await client.registerUser(userData);
-        resp = (await new ApiBuilder().loginUser(
+        resp = await new ApiBuilder().loginUser(
           userData.email,
           userData.password,
-        ))
-          ? navigate('/main')
-          : '';
+        );
+        const tokensObject = tokenCache.get();
+
+        if (tokensObject.refreshToken) {
+          const customer: Customer | undefined = resp?.body.customer;
+
+          if (
+            customer
+            && 'email' in customer
+            && 'firstName' in customer
+            && 'lastName' in customer
+          ) {
+            if (
+              typeof customer.firstName === 'string'
+              && typeof customer.lastName === 'string'
+            ) {
+              const user: IUser = {
+                email: customer.email,
+                firstName: customer.firstName,
+                lastName: customer.lastName,
+              };
+
+              dispatch(setCredentials({ token: tokensObject.token, user }));
+            }
+          }
+        }
 
         toastSuccess('User created');
       } catch (error) {
