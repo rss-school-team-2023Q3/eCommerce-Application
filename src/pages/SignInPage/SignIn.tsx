@@ -98,7 +98,7 @@ function SignIn() {
       <form className="login-form" action="registration">
         <TextField
           autoComplete="off"
-          type="email"
+          type="text"
           style={{ marginBottom: '10px' }}
           required
           onChange={(e) => validateEmail(e.target.value)}
