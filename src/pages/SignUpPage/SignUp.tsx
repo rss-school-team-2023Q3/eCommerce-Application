@@ -146,6 +146,8 @@ function SignUp({ client }: ISignupInterface) {
         }
       }
     }
+
+    return resp;
   };
 
   const updateCountry = (type: string) => {
