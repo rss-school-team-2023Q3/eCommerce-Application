@@ -22,11 +22,7 @@ export default function UserMenu() {
         <Box>
           <p>
             Hi,
-            {user ? ` ${user.firstName} ${user.lastName}!` : ''}
-          </p>
-          <p>
-            Email:
-            {user ? ` ${user.email}` : ''}
+            {user ? ` ${user.firstName}!` : ''}
           </p>
         </Box>
         <Button
