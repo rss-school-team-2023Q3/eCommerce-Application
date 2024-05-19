@@ -1,8 +1,13 @@
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Button, Box } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'shared/api/authApi/store/store';
+
+import logoutUser from './utils/logoutUser.ts';
 
 export default function UserMenu() {
-  const user = { name: 'someUser', email: 'someEmail' };
+  const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -17,13 +22,11 @@ export default function UserMenu() {
         <Box>
           <p>
             Hi,
-            {user.name}
-            {' '}
-            !
+            {user ? ` ${user.firstName} ${user.lastName}!` : ''}
           </p>
           <p>
             Email:
-            {user.email}
+            {user ? ` ${user.email}` : ''}
           </p>
         </Box>
         <Button
@@ -32,7 +35,7 @@ export default function UserMenu() {
           color="error"
           type="button"
           sx={{ height: 'max-content' }}
-          // onClick={() => dispatch(logOut())}
+          onClick={() => logoutUser(dispatch)}
         >
           Log Out
         </Button>

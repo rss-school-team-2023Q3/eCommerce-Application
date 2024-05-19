@@ -24,6 +24,7 @@ function SignIn() {
 
   const submitLogInData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
     if (isEmailValid && isPasswordValid) {
       await signInStoreLogic(email, password, dispatch);
     }
@@ -48,6 +49,7 @@ function SignIn() {
   useEffect(() => {
     validateForm();
   }, [password, email]);
+
   return (
     <div className="login-wrapper">
       <form className="login-form" action="registration">

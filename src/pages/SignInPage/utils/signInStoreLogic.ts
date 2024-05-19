@@ -17,7 +17,6 @@ export default async function signInStoreLogic(
   try {
     resp = await new ApiBuilder().loginUser(email, password);
 
-    // const tokensObject = tokenCache.get();
     if (resp?.statusCode === 200) {
       const customer: Customer = resp?.body.customer;
       const isStringProps = typeof customer.firstName === 'string'
@@ -33,8 +32,6 @@ export default async function signInStoreLogic(
         dispatch(setCredentials({ token: tokenCache.get().token, user }));
       }
     }
-
-    // TODO: access to tokens
   } catch (error) {
     if (error instanceof Error) {
       toastError(error.message);

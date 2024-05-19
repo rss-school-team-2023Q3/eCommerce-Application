@@ -3,7 +3,7 @@ import IAuthState from 'pages/App/types/interfaces/IAuthState';
 import IUser from 'pages/App/types/interfaces/IUser';
 
 const initialState: IAuthState = {
-  token: localStorage.getItem('token'),
+  token: localStorage.getItem('tokenGG'),
   isLoggedIn: false,
   user: null,
 };
@@ -22,14 +22,15 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
       state.isLoggedIn = true;
-      localStorage.setItem('token', token);
+      localStorage.setItem('tokenGG', token);
     },
     logout: (preState) => {
       const state = preState;
 
       state.token = null;
       state.isLoggedIn = false;
-      localStorage.removeItem('token');
+      state.user = null;
+      localStorage.removeItem('tokenGG');
     },
   },
 });
