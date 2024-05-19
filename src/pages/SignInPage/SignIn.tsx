@@ -73,8 +73,6 @@ function SignIn() {
   };
 
   function validateForm() {
-    console.log(isEmailValid);
-    console.log(isPasswordValid);
     setFormValid(isEmailValid && isPasswordValid);
   }
 
