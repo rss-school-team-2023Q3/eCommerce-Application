@@ -23,7 +23,9 @@ describe('validate', () => {
     const value = 'invalid1Password';
     const errorMessage = validate(inputType, value);
 
-    expect(errorMessage).toBe('Password must contain at least one special character');
+    expect(errorMessage).toBe(
+      'Password must contain at least one special character',
+    );
   });
 
   it('should return empty string for valid password', () => {
@@ -39,7 +41,9 @@ describe('validate', () => {
     const value = 'InvalidCity123';
     const errorMessage = validate(inputType, value);
 
-    expect(errorMessage).toBe("City name mustn't contain special characters or numbers");
+    expect(errorMessage).toBe(
+      "City name mustn't contain special characters or numbers",
+    );
   });
 
   it('should return error message for invalid street name', () => {
