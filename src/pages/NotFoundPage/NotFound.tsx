@@ -6,7 +6,7 @@ export default function NotFound() {
     <>
       <h2>Not found</h2>
       <NavLink to="/main">
-        <Button variant="contained" color={'primary'}>
+        <Button variant="contained" color="primary">
           Go home
         </Button>
       </NavLink>
