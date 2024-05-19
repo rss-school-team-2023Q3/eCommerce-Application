@@ -2,13 +2,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button, IconButton, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
+import signInStoreLogic from 'pages/SignInPage/utils/SignInStoreLogic';
 import { useEffect, useState } from 'react';
 import './SignIn.modules.css';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import validate from 'shared/utils/validate';
-
-import signInStoreLogic from './utils/signInStoreLogic.ts';
 
 function SignIn() {
   const dispatch = useDispatch();

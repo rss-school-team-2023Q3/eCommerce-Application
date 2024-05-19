@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import IAuthState from 'pages/App/types/interfaces/IAuthState';
 import IUser from 'pages/App/types/interfaces/IUser';
+// import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 
 const initialState: IAuthState = {
   token: localStorage.getItem('tokenGG'),
@@ -30,6 +31,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isLoggedIn = false;
       state.user = null;
+      // new ApiBuilder().createAnonymousClient();
       localStorage.removeItem('tokenGG');
     },
   },
