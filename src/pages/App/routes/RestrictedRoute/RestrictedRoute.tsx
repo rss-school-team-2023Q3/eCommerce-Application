@@ -5,7 +5,7 @@ import { RootState } from 'shared/api/authApi/store/store';
 
 function RestrictedRoute({
   component: Component,
-  redirectTo = '/',
+  redirectTo = '/main',
 }: RoutePropsType) {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 

@@ -1,9 +1,10 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate } from 'react-router-dom';
 import './Main.modules.css';
 
 export default function Main() {
   return (
     <>
+      <Navigate to="/main" />
       <h2>Main page</h2>
       <div className="main-links">
         <NavLink className="login-link" to="/signin">
