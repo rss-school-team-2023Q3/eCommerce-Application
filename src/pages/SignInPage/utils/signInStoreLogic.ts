@@ -16,24 +16,22 @@ export default async function signInStoreLogic(
   let resp;
   try {
     resp = await new ApiBuilder().loginUser(email, password);
-    const tokensObject = tokenCache.get();
-    const customer: Customer | undefined = resp?.body.customer;
-    const isCustomer = customer
-      && 'email' in customer
-      && 'firstName' in customer
-      && 'lastName' in customer;
-    const isStringProps = isCustomer
-      && typeof customer.firstName === 'string'
-      && typeof customer.lastName === 'string';
 
-    if (tokensObject.refreshToken && isStringProps) {
-      const user: IUser = {
-        email: customer.email,
-        firstName: customer.firstName,
-        lastName: customer.lastName,
-      };
+    // const tokensObject = tokenCache.get();
+    if (resp?.statusCode === 200) {
+      const customer: Customer = resp?.body.customer;
+      const isStringProps = typeof customer.firstName === 'string'
+        && typeof customer.lastName === 'string';
 
-      dispatch(setCredentials({ token: tokensObject.token, user }));
+      if (isStringProps) {
+        const user: IUser = {
+          email: customer.email,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+        };
+
+        dispatch(setCredentials({ token: tokenCache.get().token, user }));
+      }
     }
 
     // TODO: access to tokens

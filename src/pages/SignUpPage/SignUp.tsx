@@ -106,13 +106,13 @@ function SignUp({ client }: ISignupInterface) {
       };
       try {
         await client.registerUser(userData);
+        await signInStoreLogic(userData.email, userData.password, dispatch);
+        toastSuccess('User created');
       } catch (error) {
         if (error instanceof Error) {
           toastError(error.message);
         }
       }
-      await signInStoreLogic(userData.email, userData.password, dispatch);
-      toastSuccess('User created');
     }
 
     return resp;
