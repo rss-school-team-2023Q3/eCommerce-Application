@@ -4,7 +4,7 @@ import 'index.css';
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter basename="/">
+  <BrowserRouter basename="/eCommerce-Application">
     <AppWrapper />
-  </BrowserRouter>,
+  </BrowserRouter>
 );
