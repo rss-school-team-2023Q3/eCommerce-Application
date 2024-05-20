@@ -4,7 +4,6 @@ import IUser from 'pages/App/types/interfaces/IUser';
 
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
-import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 import { toastError } from 'shared/utils/notifications';
 
@@ -29,7 +28,7 @@ export default async function signInStoreLogic(
           lastName: customer.lastName,
         };
 
-        dispatch(setCredentials({ token: tokenCache.get().token, user }));
+        dispatch(setCredentials({ user }));
       }
     }
   } catch (error) {

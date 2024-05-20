@@ -1,9 +1,12 @@
 import './App.css';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
+import IUser from 'pages/App/types/interfaces/IUser';
 import { lazy, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import Loader from 'widgets/Loader/Loader';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,13 +17,28 @@ const SignUpPage = lazy(() => import('pages/SignUpPage/SignUp'));
 const MainPage = lazy(() => import('pages/MainPage/Main'));
 
 function App() {
+  const dispatch = useDispatch();
   const isRefreshing = false;
   const currentClient = new ApiBuilder();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (localStorage.getItem('tokenCache')) {
-        await currentClient.createRefreshTokenClient();
+      if (localStorage.getItem('tokenCacheGG')) {
+        const body = await currentClient.createRefreshTokenClient();
+
+        if (body) {
+          const { email, firstName, lastName } = body;
+
+          if (
+            typeof email === 'string'
+            && typeof firstName === 'string'
+            && typeof lastName === 'string'
+          ) {
+            const user: IUser = { email, firstName, lastName };
+
+            dispatch(setCredentials({ user }));
+          }
+        }
       } else {
         await currentClient.createAnonymousClient();
       }

@@ -5,6 +5,8 @@ import {
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 
+import { toastError } from 'shared/utils/notifications.ts';
+
 import {
   anonymousAuthMiddlewareOptions,
   httpMiddlewareOptions,
@@ -45,15 +47,25 @@ export class ApiBuilder {
     this.apiRoot = this.createApiRoot(this.client);
   }
 
-  public createRefreshTokenClient() {
+  public async createRefreshTokenClient() {
     const options = refreshAuthMiddlewareOptions;
 
     options.refreshToken = JSON.parse(
-      localStorage.getItem('tokenCache') as string,
+      localStorage.getItem('tokenCacheGG') as string,
     ).refreshToken;
+    try {
+      this.client = this.buildClient().withRefreshTokenFlow(options).build();
+      this.apiRoot = this.createApiRoot(this.client);
+      const resp = await this.apiRoot.me().get().execute();
 
-    this.client = this.buildClient().withRefreshTokenFlow(options).build();
-    this.apiRoot = this.createApiRoot(this.client);
+      return resp.body;
+    } catch (error) {
+      if (error instanceof Error) {
+        toastError(error.message);
+      }
+
+      return null;
+    }
   }
 
   public async createAnonymousClient() {
@@ -91,6 +103,7 @@ export class ApiBuilder {
           },
         })
         .execute();
+      localStorage.setItem('tokenCacheGG', JSON.stringify(tokenCache.get()));
     } catch (error) {
       if (error instanceof Error) {
         resp = error.message;
