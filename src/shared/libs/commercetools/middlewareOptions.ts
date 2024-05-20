@@ -2,12 +2,25 @@ import {
   PasswordAuthMiddlewareOptions,
   AnonymousAuthMiddlewareOptions,
   HttpMiddlewareOptions,
+  RefreshAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
 import { tokenCache } from './tokenCache.ts';
 
 export const httpMiddlewareOptions: HttpMiddlewareOptions = {
   host: import.meta.env.VITE_CTP_API_URL,
+  fetch,
+};
+
+export const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
+  host: import.meta.env.VITE_CTP_AUTH_URL,
+  projectKey: import.meta.env.VITE_CTP_PROJECT_KEY,
+  credentials: {
+    clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+    clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
+  },
+  refreshToken: '',
+  tokenCache,
   fetch,
 };
 

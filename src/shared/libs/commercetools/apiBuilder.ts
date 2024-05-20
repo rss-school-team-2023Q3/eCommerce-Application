@@ -9,6 +9,7 @@ import {
   anonymousAuthMiddlewareOptions,
   httpMiddlewareOptions,
   passwordAuthMiddlewareOptions,
+  refreshAuthMiddlewareOptions,
 } from './middlewareOptions.ts';
 import { tokenCache } from './tokenCache.ts';
 
@@ -44,6 +45,22 @@ export class ApiBuilder {
     this.apiRoot = this.createApiRoot(this.client);
   }
 
+  public createRefreshTokenClient(refreshToken: string) {
+    const options = refreshAuthMiddlewareOptions;
+
+    options.refreshToken = refreshToken;
+
+    this.client = this.buildClient().withRefreshTokenFlow(options).build();
+    this.apiRoot = this.createApiRoot(this.client);
+  }
+
+  public async createAnonymousClient() {
+    const options = anonymousAuthMiddlewareOptions;
+
+    this.client = this.buildClient().withAnonymousSessionFlow(options).build();
+    this.apiRoot = this.createApiRoot(this.client);
+  }
+
   public async registerUser(user: CustomerDraft) {
     try {
       await this.apiRoot
@@ -55,15 +72,6 @@ export class ApiBuilder {
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
-  }
-
-  public async createAnonymousClient() {
-    const options = anonymousAuthMiddlewareOptions;
-
-    this.client = this.buildClient().withAnonymousSessionFlow(options).build();
-    this.apiRoot = this.createApiRoot(this.client);
-
-    // return this.apiRoot;
   }
 
   public async loginUser(email: string, password: string) {

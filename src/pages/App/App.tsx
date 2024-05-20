@@ -19,7 +19,14 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      await currentClient.createAnonymousClient();
+      if (localStorage.getItem('tokenCache')) {
+        const savedtokenCache = localStorage.getItem('tokenCache')!;
+
+        await currentClient.createRefreshTokenClient(savedtokenCache);
+      } else {
+        await currentClient.createAnonymousClient();
+      }
+
       await currentClient.getProducts();
     };
 
