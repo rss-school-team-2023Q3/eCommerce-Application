@@ -44,6 +44,7 @@
     "@vitest/ui": "^1.6.0",
     "dayjs": "^1.11.11",
     "editorconfig": "^2.0.0",
+    "esbuild-plugins-node-modules-polyfill": "^1.6.4",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
