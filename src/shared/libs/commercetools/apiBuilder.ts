@@ -48,7 +48,9 @@ export class ApiBuilder {
   public createRefreshTokenClient() {
     const options = refreshAuthMiddlewareOptions;
 
-    options.refreshToken = JSON.parse(localStorage.getItem('tokenCache') as string).refreshToken;
+    options.refreshToken = JSON.parse(
+      localStorage.getItem('tokenCache') as string,
+    ).refreshToken;
 
     this.client = this.buildClient().withRefreshTokenFlow(options).build();
     this.apiRoot = this.createApiRoot(this.client);

@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import IAuthState from 'pages/App/types/interfaces/IAuthState';
 import IUser from 'pages/App/types/interfaces/IUser';
-import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 const initialState: IAuthState = {
-  token: tokenCache.get().token, // or localstorage may be
+  token: localStorage.getItem('tokenGG'),
   isLoggedIn: false,
-  user: null,
+  user: JSON.parse(localStorage.getItem('userGG')!),
 };
+
+if (initialState.token) {
+  initialState.isLoggedIn = true;
+}
 
 const authSlice = createSlice({
   name: 'auth',
@@ -24,6 +27,7 @@ const authSlice = createSlice({
       state.token = token;
       state.isLoggedIn = true;
       localStorage.setItem('tokenGG', state.token);
+      localStorage.setItem('userGG', JSON.stringify(state.user));
     },
     logout: (preState) => {
       const state = preState;
@@ -32,6 +36,7 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       localStorage.removeItem('tokenGG');
+      localStorage.removeItem('userGG');
     },
   },
 });
