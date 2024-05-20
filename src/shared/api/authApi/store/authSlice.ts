@@ -1,14 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import IAuthState from 'pages/App/types/interfaces/IAuthState';
 import IUser from 'pages/App/types/interfaces/IUser';
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
-// import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 
 const initialState: IAuthState = {
   token: localStorage.getItem('tokenGG'),
   isLoggedIn: false,
-  user: null,
+  user: JSON.parse(localStorage.getItem('userGG')!),
 };
+
+if (initialState.token) {
+  initialState.isLoggedIn = true;
+}
 
 const authSlice = createSlice({
   name: 'auth',
@@ -24,7 +26,8 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
       state.isLoggedIn = true;
-      localStorage.setItem('tokenGG', token);
+      localStorage.setItem('tokenGG', state.token);
+      localStorage.setItem('userGG', JSON.stringify(state.user));
     },
     logout: (preState) => {
       const state = preState;
@@ -32,11 +35,8 @@ const authSlice = createSlice({
       state.token = null;
       state.isLoggedIn = false;
       state.user = null;
-      const currentClient = new ApiBuilder();
-
-      currentClient.createAnonymousClient();
-      currentClient.getProducts();
       localStorage.removeItem('tokenGG');
+      localStorage.removeItem('userGG');
     },
   },
 });
