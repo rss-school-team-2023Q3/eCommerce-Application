@@ -10,7 +10,7 @@ class MyTokenCache implements TokenCache {
   private cache: TokenStore = { ...MyTokenCache.EMPTY_CACHE };
 
   constructor() {
-    const savedCache = localStorage.getItem('tokenCache');
+    const savedCache = localStorage.getItem('tokenCacheGG');
 
     if (savedCache) {
       this.cache = JSON.parse(savedCache);
@@ -19,7 +19,7 @@ class MyTokenCache implements TokenCache {
 
   set(newCache: TokenStore): void {
     this.cache = newCache;
-    localStorage.setItem('tokenCache', JSON.stringify(this.cache));
+    // localStorage.setItem('tokenCacheGG', JSON.stringify(this.cache));
   }
 
   get(): TokenStore {
@@ -28,7 +28,7 @@ class MyTokenCache implements TokenCache {
 
   clear(): void {
     this.cache = { ...MyTokenCache.EMPTY_CACHE };
-    localStorage.removeItem('tokenCache');
+    localStorage.removeItem('tokenCacheGG');
   }
 }
 
