@@ -8,11 +8,12 @@ export default function NotFound() {
     <Container
       style={{ background: `url(${Image}) center no-repeat`, height: '92vh' }}
     >
+      <h2>Not Found</h2>
       <NavLink to="/main">
         <Button
           variant="contained"
           color="primary"
-          sx={{ mt: 3, py: 2, px: 4 }}
+          sx={{ mt: 1, py: 2, px: 4 }}
         >
           Return Home
         </Button>
