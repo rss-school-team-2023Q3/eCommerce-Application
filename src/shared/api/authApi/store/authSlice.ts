@@ -4,7 +4,7 @@ import IUser from 'pages/App/types/interfaces/IUser';
 import { tokenCache } from 'shared/libs/commercetools/tokenCache';
 
 const initialState: IAuthState = {
-  token: tokenCache.get().token,
+  token: tokenCache.get().token, // or localstorage may be
   isLoggedIn: false,
   user: null,
 };
@@ -23,6 +23,7 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
       state.isLoggedIn = true;
+      localStorage.setItem('tokenGG', state.token);
     },
     logout: (preState) => {
       const state = preState;
@@ -30,6 +31,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isLoggedIn = false;
       state.user = null;
+      localStorage.removeItem('tokenGG');
     },
   },
 });

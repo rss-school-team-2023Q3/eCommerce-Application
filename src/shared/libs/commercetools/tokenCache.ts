@@ -28,7 +28,7 @@ class MyTokenCache implements TokenCache {
 
   clear(): void {
     this.cache = { ...MyTokenCache.EMPTY_CACHE };
-    // localStorage.removeItem('tokenCache');
+    localStorage.removeItem('tokenCache');
   }
 }
 
