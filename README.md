@@ -19,6 +19,9 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.\
 See the section about [tests](https://vitest.dev/) for more information.
 
+### `npm run coverage`
+Launches the test runner to check file coverage with tests.
+
 ### `npm run build`
 
 Builds the app for production to the `build` folder.\

@@ -1,27 +1,91 @@
-import { useState } from 'react';
 import './App.css';
+import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
+import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
+import IUser from 'pages/App/types/interfaces/IUser';
+import { lazy, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { setCredentials } from 'shared/api/authApi/store/authSlice';
+import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
+import Loader from 'widgets/Loader/Loader';
+import 'react-toastify/dist/ReactToastify.css';
+
+const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
+const SignInPage = lazy(() => import('pages/SignInPage/SignIn'));
+const SignUpPage = lazy(() => import('pages/SignUpPage/SignUp'));
+const MainPage = lazy(() => import('pages/MainPage/Main'));
 
 function App() {
-  const [count, setCount] = useState(0);
+  const dispatch = useDispatch();
+  const isRefreshing = false;
+  const currentClient = new ApiBuilder();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (localStorage.getItem('tokenCacheGG')) {
+        const body = await currentClient.createRefreshTokenClient();
+
+        if (body) {
+          const { email, firstName, lastName } = body;
+
+          if (
+            typeof email === 'string'
+            && typeof firstName === 'string'
+            && typeof lastName === 'string'
+          ) {
+            const user: IUser = { email, firstName, lastName };
+
+            dispatch(setCredentials({ user }));
+          }
+        }
+      } else {
+        await currentClient.createAnonymousClient();
+      }
+
+      await currentClient.getProducts();
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button type="button" onClick={() => setCount((cnt) => cnt + 1)}>
-          count is
-          {count}
-        </button>
-        <p>
-          Edit
-          {' '}
-          <code>src/App.tsx</code>
-          {' '}
-          and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos</p>
-    </>
+    <div>
+      {isRefreshing ? (
+        <Loader />
+      ) : (
+        <Routes>
+          <Route path="/" element={<SharedLayout />}>
+            <Route index element={<MainPage />} />
+
+            <Route path="/main" element={<MainPage />} />
+
+            <Route
+              path="/signup"
+              element={(
+                <RestrictedRoute
+                  redirectTo="/main"
+                  component={<SignUpPage client={currentClient} />}
+                />
+              )}
+            />
+
+            <Route
+              path="/signin"
+              element={(
+                <RestrictedRoute
+                  redirectTo="/main"
+                  component={<SignInPage />}
+                />
+              )}
+            />
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      )}
+      <ToastContainer />
+    </div>
   );
 }
 
