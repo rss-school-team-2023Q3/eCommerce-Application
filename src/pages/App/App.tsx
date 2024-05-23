@@ -1,7 +1,9 @@
 import './App.css';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
+import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
 import IUser from 'pages/App/types/interfaces/IUser';
+import Profile from 'pages/ProfilePage/Profile';
 import { lazy, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -9,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import Loader from 'widgets/Loader/Loader';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
@@ -78,6 +81,13 @@ function App() {
                   component={<SignInPage />}
                 />
               )}
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute redirectTo="/signin" component={<Profile />} />
+              }
             />
 
             <Route path="*" element={<NotFoundPage />} />
