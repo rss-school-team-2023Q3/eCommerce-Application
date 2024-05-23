@@ -2,6 +2,7 @@ import './App.css';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
 import IUser from 'pages/App/types/interfaces/IUser';
+import CatalogPage from 'pages/CatalogPage/CatalogPage';
 import { lazy, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -9,7 +10,9 @@ import { ToastContainer } from 'react-toastify';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import Loader from 'widgets/Loader/Loader';
+
 import 'react-toastify/dist/ReactToastify.css';
+import PrivateRoute from './routes/PrivateRoute/PrivateRoute.tsx';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
 const SignInPage = lazy(() => import('pages/SignInPage/SignIn'));
@@ -43,7 +46,7 @@ function App() {
         await currentClient.createAnonymousClient();
       }
 
-      await currentClient.getProducts();
+      // await currentClient.getProducts();
     };
 
     fetchData();
@@ -66,6 +69,15 @@ function App() {
                 <RestrictedRoute
                   redirectTo="/main"
                   component={<SignUpPage client={currentClient} />}
+                />
+              )}
+            />
+            <Route
+              path="/catalog"
+              element={(
+                <PrivateRoute
+                  redirectTo="/catalog"
+                  component={<CatalogPage client={currentClient} />}
                 />
               )}
             />

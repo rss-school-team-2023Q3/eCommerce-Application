@@ -115,10 +115,13 @@ export class ApiBuilder {
   }
 
   public async getProducts() {
+    let resp;
     try {
-      await this.apiRoot?.products().get().execute();
+      resp = await this.apiRoot?.products().get().execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
+
+    return resp;
   }
 }
