@@ -1,5 +1,4 @@
 import HomeIcon from '@mui/icons-material/Home';
-
 import { Toolbar, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
@@ -15,6 +14,7 @@ export default function Navigation() {
           Home
         </Button>
       </NavLink>
+
       {/* {isLoggedIn && (
         <NavLink to="/products">
           <MUI.Button
