@@ -1,7 +1,28 @@
 import dayjs from 'dayjs';
-import { createContext } from 'react';
+import { Context, createContext } from 'react';
 
-const formContext = createContext({
+interface IValidValue {
+  value: string;
+  isValid: boolean;
+}
+
+interface IFormContextType {
+  email: IValidValue;
+  password: IValidValue;
+  name: IValidValue;
+  lastName: IValidValue;
+  date: { value: dayjs.Dayjs; isValid: boolean };
+  billingStreet: IValidValue;
+  shippingStreet: IValidValue;
+  shippingCity: IValidValue;
+  billingCity: IValidValue;
+  billingCode: IValidValue;
+  shippingCode: IValidValue;
+  billingCountry: IValidValue;
+  shippingCountry: IValidValue;
+}
+
+const context: IFormContextType = {
   email: { value: '', isValid: false },
   password: { value: '', isValid: false },
   name: { value: '', isValid: false },
@@ -15,6 +36,7 @@ const formContext = createContext({
   shippingCode: { value: '', isValid: false },
   billingCountry: { value: '', isValid: false },
   shippingCountry: { value: '', isValid: false },
-});
+};
+const formContext: Context<IFormContextType> = createContext(context);
 
 export default formContext;

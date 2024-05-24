@@ -17,6 +17,8 @@ import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
 import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
+import toogleSameAdress from 'shared/utils/toogleSameAdress.ts';
+
 import formContext from './formContext.ts';
 
 interface ISignupInterface {
@@ -36,38 +38,6 @@ function SignUp({ client }: ISignupInterface) {
 
   function validateForm() {
     setValid(Object.values(formData).every((value) => value.isValid));
-  }
-
-  function toogleSameAdress() {
-    switch (isSameAdress) {
-      case true: {
-        formData.shippingCode.value = ' ';
-        formData.shippingCode.isValid = false;
-        formData.shippingStreet.value = ' ';
-        formData.shippingStreet.isValid = false;
-        formData.shippingCity.value = ' ';
-        formData.shippingCity.isValid = false;
-        formData.shippingCountry.value = ' ';
-        formData.shippingCountry.isValid = false;
-        break;
-      }
-      case false: {
-        formData.shippingCode.value = formData.billingCode.value;
-        formData.shippingCode.isValid = true;
-        formData.shippingStreet.value = formData.billingStreet.value;
-        formData.shippingStreet.isValid = true;
-        formData.shippingCity.value = formData.billingCity.value;
-        formData.shippingCity.isValid = true;
-        formData.shippingCountry.value = formData.billingCountry.value;
-        formData.shippingCountry.isValid = true;
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
-    setSameAdress(!isSameAdress);
   }
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
@@ -266,7 +236,10 @@ function SignUp({ client }: ISignupInterface) {
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
-                      onChange={() => toogleSameAdress()}
+                      onChange={() => {
+                        toogleSameAdress(formData, isSameAdress);
+                        setSameAdress(!isSameAdress);
+                      }}
                     />
                   )}
                   label="Use same billing & shipping adress"
