@@ -1,6 +1,5 @@
 import { Customer } from '@commercetools/platform-sdk';
 import { Dispatch } from '@reduxjs/toolkit';
-import IUser from 'pages/App/types/interfaces/IUser';
 
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
@@ -18,18 +17,18 @@ export default async function signInStoreLogic(
 
     if (resp?.statusCode === 200) {
       const customer: Customer = resp?.body.customer;
-      const isStringProps = typeof customer.firstName === 'string'
-        && typeof customer.lastName === 'string';
+      // const isStringProps = typeof customer.firstName === 'string'
+      //   && typeof customer.lastName === 'string';
 
-      if (isStringProps) {
-        const user: IUser = {
-          email: customer.email,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-        };
+      // if (isStringProps) {
+      //   const user: IUser = {
+      //     email: customer.email,
+      //     firstName: customer.firstName,
+      //     lastName: customer.lastName,
+      //   };
 
-        dispatch(setCredentials({ user }));
-      }
+      dispatch(setCredentials({ user: customer }));
+      // }
     }
   } catch (error) {
     if (error instanceof Error) {

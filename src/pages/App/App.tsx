@@ -1,8 +1,8 @@
 import './App.css';
+import { Customer } from '@commercetools/platform-sdk';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
-import IUser from 'pages/App/types/interfaces/IUser';
 import Profile from 'pages/ProfilePage/Profile';
 import { lazy, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -27,20 +27,10 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       if (localStorage.getItem('tokenCacheGG')) {
-        const body = await currentClient.createRefreshTokenClient();
+        const body: Customer | null = await currentClient.createRefreshTokenClient();
 
         if (body) {
-          const { email, firstName, lastName } = body;
-
-          if (
-            typeof email === 'string'
-            && typeof firstName === 'string'
-            && typeof lastName === 'string'
-          ) {
-            const user: IUser = { email, firstName, lastName };
-
-            dispatch(setCredentials({ user }));
-          }
+          dispatch(setCredentials({ user: body }));
         }
       } else {
         await currentClient.createAnonymousClient();
