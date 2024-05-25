@@ -3,6 +3,7 @@ import IProductData from 'pages/App/types/interfaces/IProductData';
 import ProductListType from 'pages/App/types/types/ProductListType';
 import { useEffect, useState } from 'react';
 import ProductCard from 'widgets/ProductCard/ProductCard';
+import './CatalogPage.modules.css';
 
 function CatalogPage({ client }: IClient) {
   const productsList: IProductData[] = [];
@@ -42,9 +43,11 @@ function CatalogPage({ client }: IClient) {
   return (
     <>
       <h1>Catalog</h1>
-      {products.map((item) => (
-        <ProductCard key={item.variant.key} product={item} />
-      ))}
+      <div className="catalog">
+        {products.map((item) => (
+          <ProductCard key={item.variant.key} product={item} />
+        ))}
+      </div>
     </>
   );
 }
