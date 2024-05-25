@@ -1,5 +1,6 @@
 import './SignUp.modules.css';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import IClient from 'pages/App/types/interfaces/IClientInterface.ts';
 import signInStoreLogic from 'pages/SignInPage/utils/signInStoreLogic.ts';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,17 +14,12 @@ import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
 import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
 import formContext from './formContext.ts';
 
-interface ISignupInterface {
-  client: ApiBuilder;
-}
-
-function SignUp({ client }: ISignupInterface) {
+function SignUp({ client }: IClient) {
   const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
   const formData = useContext(formContext);
