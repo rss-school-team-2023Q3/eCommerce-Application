@@ -1,6 +1,8 @@
 import LogoutIcon from '@mui/icons-material/Logout';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { Button, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { RootState } from 'shared/api/authApi/store/store';
 
 import logoutUser from './utils/logoutUser.ts';
@@ -10,7 +12,16 @@ export default function UserMenu() {
   const dispatch = useDispatch();
 
   return (
-    <div>
+    <>
+      <NavLink to="/profile">
+        <Button
+          startIcon={<ManageAccountsIcon />}
+          sx={{ color: 'white' }}
+          variant="outlined"
+        >
+          Profile
+        </Button>
+      </NavLink>
       <Box
         sx={{
           display: 'flex',
@@ -36,6 +47,6 @@ export default function UserMenu() {
           Log Out
         </Button>
       </Box>
-    </div>
+    </>
   );
 }
