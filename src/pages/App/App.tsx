@@ -1,5 +1,5 @@
 import './App.css';
-import { ProductVariant } from '@commercetools/platform-sdk';
+import { ProductDiscount } from '@commercetools/platform-sdk';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
@@ -12,12 +12,12 @@ import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
+import setProductsArray from 'shared/utils/setProductsArray.ts';
 import Loader from 'widgets/Loader/Loader';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import IProductData from './types/interfaces/IProductData.ts';
-import ProductListType from './types/types/ProductListType.ts';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
 const SignInPage = lazy(() => import('pages/SignInPage/SignIn'));
@@ -29,27 +29,9 @@ function App() {
   const isRefreshing = false;
   const currentClient = new ApiBuilder();
   const productsList: IProductData[] = [];
+  const discountsList: ProductDiscount[] = [];
   const [products, setProducts] = useState(productsList);
-
-  function setProductsArray(list: ProductListType) {
-    const newProducts: IProductData[] = [];
-
-    list?.forEach((item) => {
-      newProducts.push({
-        variant: item.masterData.current.masterVariant,
-        name: item.masterData.current.name,
-        description: item.masterData.current.description,
-      });
-      item.masterData.current.variants.forEach((variant: ProductVariant) => {
-        newProducts.push({
-          variant,
-          name: item.masterData.current.name,
-          description: item.masterData.current.description,
-        });
-      });
-    });
-    setProducts(newProducts);
-  }
+  const [discounts, setDiscounts] = useState(discountsList);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,7 +65,12 @@ function App() {
       await currentClient
         .getProducts()
         .then((resp) => resp?.body.results)
-        .then((resp) => setProductsArray(resp));
+        .then((resp) => setProducts(setProductsArray(resp)));
+
+      await currentClient
+        .getProductsDiscount()
+        .then((resp) => resp?.body.results)
+        .then((resp) => setDiscounts(resp as ProductDiscount[]));
     };
 
     fetchData();
@@ -111,7 +98,9 @@ function App() {
             />
             <Route
               path="/catalog"
-              element=<CatalogPage products={products} />
+              element={
+                <CatalogPage products={products} discounts={discounts} />
+              }
             />
 
             <Route
