@@ -1,12 +1,29 @@
 import { TextField } from '@mui/material';
 import formContext from 'pages/SignUpPage/formContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'shared/api/authApi/store/store';
 import validate from 'shared/utils/validate';
 
 function LastNameInput() {
   const [isValid, setIsValid] = useState(true);
   const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
   const formData = useContext(formContext);
+
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const [lastName, setLastName] = useState(formData.lastName.value);
+
+  useEffect(() => {
+    if (user && typeof user.lastName === 'string') {
+      formData.lastName.value = user.lastName;
+      setLastName(user.lastName);
+    }
+
+    return () => {
+      formData.lastName.value = '';
+    };
+  }, []);
 
   function checkLastName(name: string) {
     setIsValid(!validate('lastName', name));
@@ -22,6 +39,7 @@ function LastNameInput() {
 
   return (
     <TextField
+      value={lastName}
       id="last_name"
       label="Last Name"
       autoComplete="off"

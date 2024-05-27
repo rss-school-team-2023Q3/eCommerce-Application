@@ -1,14 +1,31 @@
 import { TextField } from '@mui/material';
 import formContext from 'pages/SignUpPage/formContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'shared/api/authApi/store/store';
 import validate from 'shared/utils/validate';
 
 function FirstNameInput() {
   const [isValid, setIsValid] = useState(true);
   const [nameErrorMessage, setNameErrorMessage] = useState('');
   const formData = useContext(formContext);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const [firstName, setFirstName] = useState(formData.name.value);
+
+  useEffect(() => {
+    if (user && typeof user.firstName === 'string') {
+      formData.name.value = user.firstName;
+      setFirstName(user.firstName);
+    }
+
+    return () => {
+      formData.name.value = '';
+    };
+  }, []);
 
   function checkName(name: string) {
+    setFirstName(name);
     setIsValid(!validate('name', name));
     setNameErrorMessage(validate('name', name));
 
@@ -22,6 +39,7 @@ function FirstNameInput() {
 
   return (
     <TextField
+      value={firstName}
       id="first_name"
       label="First Name"
       autoComplete="off"

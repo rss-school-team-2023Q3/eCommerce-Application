@@ -6,7 +6,7 @@ interface IValidValue {
   isValid: boolean;
 }
 
-interface IFormContextType {
+export interface IFormContextType {
   email: IValidValue;
   password: IValidValue;
   name: IValidValue;
@@ -22,12 +22,12 @@ interface IFormContextType {
   shippingCountry: IValidValue;
 }
 
-const context: IFormContextType = {
+export const initialContext: IFormContextType = {
   email: { value: '', isValid: false },
   password: { value: '', isValid: false },
   name: { value: '', isValid: false },
   lastName: { value: '', isValid: false },
-  date: { value: dayjs(), isValid: false },
+  date: { value: dayjs(''), isValid: false },
   billingStreet: { value: '', isValid: false },
   shippingStreet: { value: '', isValid: false },
   billingCity: { value: '', isValid: false },
@@ -37,6 +37,7 @@ const context: IFormContextType = {
   billingCountry: { value: '', isValid: false },
   shippingCountry: { value: '', isValid: false },
 };
-const formContext: Context<IFormContextType> = createContext(context);
+
+const formContext: Context<IFormContextType> = createContext(initialContext);
 
 export default formContext;

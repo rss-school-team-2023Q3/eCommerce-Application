@@ -1,22 +1,25 @@
+import { Customer } from '@commercetools/platform-sdk';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import signInStoreLogic from 'pages/SignInPage/utils/signInStoreLogic';
-import 'pages/SignUpPage/SignUp.modules.css';
 import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'shared/api/authApi/store/store';
 import CityInput from 'shared/components/InputComponents/CityInput';
 import CountryInput from 'shared/components/InputComponents/CountryInput';
-import DateInput from 'shared/components/InputComponents/DateInput';
 import EmailInput from 'shared/components/InputComponents/EmailInput';
 import FirstNameInput from 'shared/components/InputComponents/FirstNameInput';
 import LastNameInput from 'shared/components/InputComponents/LastNameInput';
-import PasswordInput from 'shared/components/InputComponents/PasswordInput';
+// import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
+import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
 import { createAddress } from 'shared/utils/createAddress';
 import { toastError, toastSuccess } from 'shared/utils/notifications';
 import toogleSameAdress from 'shared/utils/toogleSameAdress';
+
+import './Profile.modules.css';
 
 interface ISignupInterface {
   client: ApiBuilder;
@@ -25,19 +28,41 @@ interface ISignupInterface {
 export default function Profile({ client }: ISignupInterface) {
   const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
+  const customer: Customer | null = useSelector(
+    (state: RootState) => state.auth.user,
+  );
+
+  if (!customer) {
+    throw new Error('Error Profile Page');
+  }
+
   const formData = useContext(formContext);
-  const [isBillingCountryChange, setBillingCountryChange] = useState(false);
-  const [isShippingCountryChange, setShippingCountryChange] = useState(false);
-  const [isSameAdress, setSameAdress] = useState(false);
-  const [isShippingDefaut, setShippingDefault] = useState(false);
-  const [isBillingDefaut, setBillingDefault] = useState(false);
+
+  const { billingAddressIds, shippingAddressIds } = customer;
+  const [isBillingCountryChange, setBillingCountryChange] = useState(
+    !!customer.defaultBillingAddressId,
+  );
+  const [isShippingCountryChange, setShippingCountryChange] = useState(
+    !!customer.defaultShippingAddressId,
+  );
+  const isAddresses = !!(billingAddressIds && shippingAddressIds);
+  const [isSameAddress, setSameAddress] = useState(
+    isAddresses && billingAddressIds[0] === shippingAddressIds[0],
+  );
+
+  const [isShippingDefaut, setShippingDefault] = useState(
+    isShippingCountryChange,
+  );
+  const [isBillingDefaut, setBillingDefault] = useState(
+    !!customer?.defaultBillingAddressId,
+  );
   const [isDateChange, setDateChange] = useState(false);
 
   function validateForm() {
     setValid(Object.values(formData).every((value) => value.isValid));
   }
 
-  const submitSignUpData = async (event: { preventDefault: () => void }) => {
+  const submitChangedData = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     let resp;
     const addressData = {
@@ -51,9 +76,9 @@ export default function Profile({ client }: ISignupInterface) {
       shippingStreet: { value: formData.shippingStreet.value },
     };
 
-    const addresses = [
+    const addressesSend = [
       createAddress(addressData, 'billing'),
-      ...(isSameAdress ? [] : [createAddress(addressData, 'shipping')]),
+      ...(isSameAddress ? [] : [createAddress(addressData, 'shipping')]),
     ];
 
     if (isValid) {
@@ -63,11 +88,11 @@ export default function Profile({ client }: ISignupInterface) {
         firstName: formData.name.value,
         lastName: formData.lastName.value,
         dateOfBirth: formData.date.value.format('YYYY-MM-DD'),
-        addresses,
+        addresses: addressesSend,
         billingAddresses: [0],
-        shippingAddresses: isSameAdress ? [0] : [1],
+        shippingAddresses: isSameAddress ? [0] : [1],
         ...(isBillingDefaut && { defaultBillingAddress: 0 }),
-        ...(isSameAdress
+        ...(isSameAddress
           ? isBillingDefaut && { defaultShippingAddress: 0 }
           : isShippingDefaut && { defaultShippingAddress: 1 }),
       };
@@ -110,50 +135,36 @@ export default function Profile({ client }: ISignupInterface) {
   }, [isBillingCountryChange, isShippingCountryChange, isDateChange]);
 
   return (
-    <div className="registration-wrapper">
+    <div className="profile-wrapper">
       <formContext.Provider value={formData}>
         <form
-          className="registration-form"
+          className="profile-form"
           action="registration"
           onChange={validateForm}
         >
-          <div className="registration-form-field">
-            <div
-              className={
-                isSameAdress ? 'user-field fifty-percent' : 'user-field'
-              }
-            >
+          <div className="profile-form-field">
+            <div className="user-field-profile">
               User Data
               <EmailInput />
               <FirstNameInput />
               <LastNameInput />
-              <DateInput
+              <DateInputProfile
                 dateProps={{
                   isChange: dateChange,
                 }}
               />
-              <PasswordInput />
+              {/* <PasswordInput /> */}
             </div>
-            <div
-              className={
-                isSameAdress ? 'adress-field fifty-percent' : 'adress-field'
-              }
-            >
-              <div
-                className={
-                  isSameAdress
-                    ? 'adress-input-field hundred-percent'
-                    : 'adress-input-field'
-                }
-              >
+            <div className="address-field">
+              <div className="address-input-field">
                 <div
                   className={
-                    isSameAdress ? 'data-field hundred-percent' : 'data-field'
+                    isSameAddress
+                      ? 'data-field-profile hundred-percent'
+                      : 'data-field-profile'
                   }
                 >
-                  {isSameAdress
-                    ? 'Billing & Shipping Adress'
-                    : 'Billing Adress'}
+                  Billing Address
                   <StreetInput
                     streetProps={{
                       type: 'billing',
@@ -182,12 +193,12 @@ export default function Profile({ client }: ISignupInterface) {
                         onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
                     )}
-                    label="Use as default adress"
+                    label="Use as default address"
                   />
                 </div>
-                {isSameAdress !== true ? (
-                  <div className="data-field">
-                    Shipping Adress
+                {isSameAddress !== true ? (
+                  <div className="data-field-profile">
+                    Shipping Address
                     <StreetInput
                       streetProps={{
                         type: 'shipping',
@@ -219,27 +230,27 @@ export default function Profile({ client }: ISignupInterface) {
                           onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
                       )}
-                      label="Use as default adress"
+                      label="Use as default address"
                     />
                   </div>
                 ) : (
                   ''
                 )}
               </div>
-              <div className="adress-switch-field">
+              <div className="address-switch-field">
                 <FormControlLabel
                   className="switch-field"
                   control={(
                     <Checkbox
                       size="small"
-                      checked={isSameAdress}
+                      checked={isSameAddress}
                       onChange={() => {
-                        toogleSameAdress(formData, isSameAdress);
-                        setSameAdress(!isSameAdress);
+                        toogleSameAdress(formData, isSameAddress);
+                        setSameAddress(!isSameAddress);
                       }}
                     />
                   )}
-                  label="Use same billing & shipping adress"
+                  label="Use same billing & shipping address"
                 />
               </div>
             </div>
@@ -247,9 +258,9 @@ export default function Profile({ client }: ISignupInterface) {
           <Button
             variant="contained"
             color={isValid ? 'primary' : 'error'}
-            onClick={submitSignUpData}
+            onClick={submitChangedData}
           >
-            Sign Up
+            Change data
           </Button>
         </form>
       </formContext.Provider>

@@ -1,0 +1,114 @@
+.sign-link {
+  text-decoration: none;
+  color: blue;
+}
+
+.profile-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.25rem;
+  width: 100%;
+  max-width: 75rem;
+  max-height: 34.375rem;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2.5rem;
+  border: 0.0063rem solid #1342fe;
+  border-radius: 0.3125rem;
+  box-shadow:
+    0 0 0.2rem #1342fe,
+    0 0 0.2rem #1342fe,
+    0 0 2rem #1342fe,
+    0 0 0.8rem #1342fe;
+  margin-bottom: 1.25rem;
+}
+
+.profile-form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3125rem;
+}
+
+.address-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: #1342fe;
+}
+
+.address-input-field {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  gap: 0.3125rem;
+}
+
+.user-field-profile {
+  display: flex;
+  flex-direction: column;
+  color: #1342fe;
+  width: 100%;
+  max-width: 35rem;
+}
+
+.data-field-profile {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  max-width: 35rem;
+}
+
+.address-switch-field {
+  display: flex;
+  flex-direction: column;
+  max-width: 35rem;
+}
+
+.switch-field {
+  margin-left: 0;
+}
+
+.address-switch-field:has(span) {
+  text-align: left;
+}
+
+.fifty-percent {
+  width: 50%;
+}
+
+.hundred-percent {
+  width: 100%;
+}
+
+@media (width <= 768px) {
+  .data-field-profile {
+    width: 100%;
+  }
+
+  .user-field-profile {
+    width: 100%;
+  }
+
+  .address-input-field {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .address-field {
+    width: 100%;
+  }
+
+  .registration-form-field {
+    flex-direction: column;
+  }
+
+  .registration-form {
+    padding: 1rem;
+  }
+}

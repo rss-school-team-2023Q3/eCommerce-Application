@@ -1,6 +1,7 @@
 import './SignUp.modules.css';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import signInStoreLogic from 'pages/SignInPage/utils/signInStoreLogic.ts';
+import formContext, { initialContext } from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -19,8 +20,6 @@ import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
 import toogleSameAdress from 'shared/utils/toogleSameAdress.ts';
 
-import formContext from './formContext.ts';
-
 interface ISignupInterface {
   client: ApiBuilder;
 }
@@ -28,7 +27,7 @@ interface ISignupInterface {
 function SignUp({ client }: ISignupInterface) {
   const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
-  const formData = useContext(formContext);
+  let formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
   const [isSameAdress, setSameAdress] = useState(false);
@@ -109,7 +108,13 @@ function SignUp({ client }: ISignupInterface) {
   }
 
   useEffect(() => {
+    formData = initialContext;
+    setDateChange(false);
+  }, []);
+  useEffect(() => {
     validateForm();
+
+    // return () => setDateChange(false);
   }, [isBillingCountryChange, isShippingCountryChange, isDateChange]);
 
   return (
