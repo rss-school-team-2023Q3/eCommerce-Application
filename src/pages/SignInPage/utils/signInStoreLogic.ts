@@ -26,6 +26,9 @@ export default async function signInStoreLogic(
           email: customer.email,
           firstName: customer.firstName,
           lastName: customer.lastName,
+          country: customer.addresses[1]
+            ? customer.addresses[1].country
+            : customer.addresses[0].country,
         };
 
         dispatch(setCredentials({ user }));

@@ -1,5 +1,11 @@
 .card {
-  width: 21.5625rem;
+  width: 18.75rem;
+  display: flex;
+  flex-direction: column;
+
+  /* align-items: center; */
+
+  /* justify-content: space-between; */
 }
 
 .card-img {
