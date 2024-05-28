@@ -75,12 +75,9 @@ function App() {
 
             <Route
               path="/profile"
-              element={(
-                <PrivateRoute
-                  redirectTo="/signin"
-                  component={<Profile client={currentClient} />}
-                />
-              )}
+              element={
+                <PrivateRoute redirectTo="/signin" component={<Profile />} />
+              }
             />
 
             <Route path="*" element={<NotFoundPage />} />

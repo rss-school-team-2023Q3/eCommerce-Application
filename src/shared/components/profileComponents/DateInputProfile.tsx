@@ -2,7 +2,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
-import formContext from 'pages/SignUpPage/formContext';
+import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import 'dayjs/locale/ru';
 import { useSelector } from 'react-redux';
@@ -18,7 +18,7 @@ function DateInput({ dateProps }: IDateInterface) {
   const minAge = dayjs().subtract(15, 'y');
   const [isValid, setIsValid] = useState(true);
   const [dateErrorMessage, setDateErrorMessage] = useState('');
-  const formData = useContext(formContext);
+  const formData = useContext(profileContext);
 
   const user = useSelector((state: RootState) => state.auth.user);
 

@@ -4,17 +4,25 @@ import { postcodeValidator } from 'postcode-validator';
 import { useContext, useEffect, useState } from 'react';
 import selectCountryCode from 'shared/utils/selectCountryCode';
 
+type TypePostal = 'billingCode' | 'shippingCode';
+
 interface IPostalPropsInterface {
-  postalProps: { type: string; isChange: boolean };
+  postalProps: { type: string; isChange: boolean; profilePostalCode?: string };
 }
 
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   const formData = useContext(profileContext);
   const [isValid, setIsValid] = useState(true);
+  const typePostal: TypePostal = `${postalProps.type}Code` as TypePostal;
+
+  formData[typePostal].value = postalProps.profilePostalCode as TypePostal;
+
+  const [postalProfile, setPostalProfile] = useState(
+    formData[typePostal].value,
+  );
   const country = postalProps.type === 'shipping'
     ? formData.shippingCountry.value
     : formData.billingCountry.value;
-  const [code, setCode] = useState('1');
 
   function setPostalPropsContext(
     value: string,
@@ -35,7 +43,8 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   }
 
   function checkCode(value: string) {
-    setCode(value);
+    setPostalProfile(value);
+    formData[typePostal].value = value;
 
     if (typeof country === 'string' && country.length > 1) {
       const countryCode = selectCountryCode(country);
@@ -46,18 +55,19 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   }
 
   useEffect(() => {
-    checkCode(code);
+    checkCode(postalProfile);
   }, [postalProps.isChange]);
 
   return (
     <TextField
+      value={postalProfile}
       autoComplete="off"
       type="Text"
       style={{ marginBottom: '10px' }}
       required
       size="small"
       onChange={(e) => checkCode(e.target.value)}
-      label="Postal Code"
+      label={postalProps.profilePostalCode ? '' : 'Postal Code'}
       helperText={isValid ? '' : 'Enter valid postal code'}
       FormHelperTextProps={{
         sx: {

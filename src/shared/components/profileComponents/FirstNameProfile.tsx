@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
 import validate from 'shared/utils/validate';
 
-function FirstNameInput() {
+function FirstNameProfile() {
   const [isValid, setIsValid] = useState(true);
   const [nameErrorMessage, setNameErrorMessage] = useState('');
 
@@ -62,4 +62,4 @@ function FirstNameInput() {
   );
 }
 
-export default FirstNameInput;
+export default FirstNameProfile;

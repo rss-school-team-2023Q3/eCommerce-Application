@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import formContext from 'pages/SignUpPage/formContext';
+import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
@@ -8,7 +8,8 @@ import validate from 'shared/utils/validate';
 function LastNameInput() {
   const [isValid, setIsValid] = useState(true);
   const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
-  const formData = useContext(formContext);
+
+  const formData = useContext(profileContext);
 
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -26,6 +27,7 @@ function LastNameInput() {
   }, []);
 
   function checkLastName(name: string) {
+    setLastName(name);
     setIsValid(!validate('lastName', name));
     setLastNameErrorMessage(validate('lastName', name));
 

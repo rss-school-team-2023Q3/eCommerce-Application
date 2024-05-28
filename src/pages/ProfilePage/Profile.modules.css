@@ -46,7 +46,7 @@
   display: flex;
   justify-content: center;
   flex-direction: row;
-  gap: 0.3125rem;
+  gap: 1rem;
 }
 
 .user-field-profile {
@@ -60,11 +60,13 @@
 .data-field-profile {
   display: flex;
   flex-direction: column;
+  padding: 0;
   width: 50%;
   max-width: 35rem;
+  list-style: none;
 }
 
-.address-switch-field {
+.data-field-input {
   display: flex;
   flex-direction: column;
   max-width: 35rem;
