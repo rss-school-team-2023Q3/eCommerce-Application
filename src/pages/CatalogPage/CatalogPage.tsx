@@ -1,5 +1,6 @@
 import { ProductDiscount } from '@commercetools/platform-sdk';
 import IProductData from 'pages/App/types/interfaces/IProductData';
+import FilterAside from 'widgets/FilterAside/FilterAside';
 import ProductCard from 'widgets/ProductCard/ProductCard';
 import './CatalogPage.modules.css';
 
@@ -23,8 +24,15 @@ function CatalogPage({
   }
 
   return (
-    <>
-      <h1>Catalog</h1>
+    <div className="catalog-page">
+      {/* <TextField
+          autoComplete="off"
+          type="Text"
+          // onChange={(e) => checkCity(e.target.value)}
+          label="Search"
+          color="primary"
+        /> */}
+      <FilterAside />
       <div className="catalog">
         {products.map((item) => {
           const isDiscont = getDiscont(item.variant.sku);
@@ -38,7 +46,7 @@ function CatalogPage({
           );
         })}
       </div>
-    </>
+    </div>
   );
 }
 
