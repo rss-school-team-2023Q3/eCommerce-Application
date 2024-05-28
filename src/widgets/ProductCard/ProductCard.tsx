@@ -2,9 +2,7 @@ import {
   ProductDiscount,
   ProductDiscountValueRelative,
 } from '@commercetools/platform-sdk';
-import {
-  Card, CardMedia, CardContent, Typography,
-} from '@mui/material';
+import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
 import { useSelector } from 'react-redux';
@@ -33,17 +31,18 @@ function ProductCard({
     let price: string | undefined;
 
     if (isLoggedIn && country) {
-      price = item.variant.prices
-        && `${selectPriceIndex(country)}${String(
+      price =
+        item.variant.prices &&
+        `${selectPriceIndex(country)}${String(
           (
             item.variant.prices.filter((value) => value.country === country)[0]
               .value.centAmount / 100
-          ).toFixed(2),
+          ).toFixed(2)
         )}`;
     } else {
       price = `$${
-        item.variant.prices
-        && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+        item.variant.prices &&
+        String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
       }`;
     }
 
@@ -56,7 +55,8 @@ function ProductCard({
     }
 
     if (typeof discount !== 'boolean' && price) {
-      const discountAmount = +(discount.value as ProductDiscountValueRelative).permyriad / 100;
+      const discountAmount =
+        +(discount.value as ProductDiscountValueRelative).permyriad / 100;
       const moneyIndex = price.slice(0, 1);
 
       return `${moneyIndex}${String((+price.slice(1) - +price.slice(1) * (discountAmount / 100)).toFixed(2))}`;
@@ -70,25 +70,32 @@ function ProductCard({
 
   return (
     <Card className="card" onClick={() => false}>
-      <CardMedia className="card-img" sx={{ height: 345 }} image={img} />
+      <CardMedia className="card-img" image={img} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {product.variant.key}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {product.description
-            && `${product.description.en}: ${product.name.en}`}
+          {product.description &&
+            `${product.description.en}: ${product.name.en}`}
         </Typography>
-        <Typography sx={{ alignSelf: 'flex-end', marginTop: 5 }} variant="h5">
-          {price}
-        </Typography>
-        {discountPrice ? (
-          <Typography sx={{ alignSelf: 'flex-end', marginTop: 5 }} variant="h5">
-            {discountPrice}
+        <div className="card-price">
+          <Typography
+            sx={{
+              textDecorationLine: discountPrice ? 'line-through' : 'none',
+            }}
+            variant="h5"
+          >
+            {price}
           </Typography>
-        ) : (
-          ''
-        )}
+          {discountPrice ? (
+            <Typography variant="h5" color="red">
+              {discountPrice}
+            </Typography>
+          ) : (
+            ''
+          )}
+        </div>
       </CardContent>
     </Card>
   );
