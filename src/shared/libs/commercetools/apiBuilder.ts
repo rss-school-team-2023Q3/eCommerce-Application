@@ -124,4 +124,16 @@ export class ApiBuilder {
 
     return resp;
   }
+  // .get({queryArgs: {limit:10}})
+
+  public async getProductsDiscount() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.productDiscounts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
 }

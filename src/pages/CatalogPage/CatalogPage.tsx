@@ -1,52 +1,42 @@
-import IClient from 'pages/App/types/interfaces/IClientInterface';
+import { ProductDiscount } from '@commercetools/platform-sdk';
 import IProductData from 'pages/App/types/interfaces/IProductData';
-import ProductListType from 'pages/App/types/types/ProductListType';
-import { useEffect, useState } from 'react';
 import ProductCard from 'widgets/ProductCard/ProductCard';
 import './CatalogPage.modules.css';
 
-function CatalogPage({ client }: IClient) {
-  const productsList: IProductData[] = [];
-  const [products, setProducts] = useState(productsList);
+function CatalogPage({
+  products,
+  discounts,
+}: {
+  products: IProductData[];
+  discounts: ProductDiscount[];
+}) {
+  function getDiscont(name: string | undefined) {
+    let discont: ProductDiscount | boolean = false;
 
-  function setProductsArray(list: ProductListType) {
-    const newProducts: IProductData[] = [];
-
-    list?.forEach((item) => {
-      newProducts.push({
-        variant: item.masterData.current.masterVariant,
-        name: item.masterData.current.name,
-        description: item.masterData.current.description,
-      });
-      item.masterData.current.variants.forEach((variant) => {
-        newProducts.push({
-          variant,
-          name: item.masterData.current.name,
-          description: item.masterData.current.description,
-        });
-      });
+    discounts.forEach((disc: ProductDiscount) => {
+      if (name?.includes(disc.key as string)) {
+        discont = disc;
+      }
     });
-    setProducts(newProducts);
-  }
 
-  async function fetchData() {
-    await client
-      .getProducts()
-      .then((resp) => resp?.body.results)
-      .then((resp) => setProductsArray(resp));
+    return discont;
   }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <>
       <h1>Catalog</h1>
       <div className="catalog">
-        {products.map((item) => (
-          <ProductCard key={item.variant.key} product={item} />
-        ))}
+        {products.map((item) => {
+          const isDiscont = getDiscont(item.variant.sku);
+
+          return (
+            <ProductCard
+              key={item.variant.key}
+              product={item}
+              discount={isDiscont}
+            />
+          );
+        })}
       </div>
     </>
   );
