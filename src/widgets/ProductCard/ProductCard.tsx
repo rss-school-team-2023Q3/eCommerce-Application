@@ -2,7 +2,9 @@ import {
   ProductDiscount,
   ProductDiscountValueRelative,
 } from '@commercetools/platform-sdk';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import {
+  Card, CardMedia, CardContent, Typography,
+} from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
 import { useSelector } from 'react-redux';
@@ -31,18 +33,17 @@ function ProductCard({
     let price: string | undefined;
 
     if (isLoggedIn && country) {
-      price =
-        item.variant.prices &&
-        `${selectPriceIndex(country)}${String(
+      price = item.variant.prices
+        && `${selectPriceIndex(country)}${String(
           (
             item.variant.prices.filter((value) => value.country === country)[0]
               .value.centAmount / 100
-          ).toFixed(2)
+          ).toFixed(2),
         )}`;
     } else {
       price = `$${
-        item.variant.prices &&
-        String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+        item.variant.prices
+        && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
       }`;
     }
 
@@ -55,8 +56,7 @@ function ProductCard({
     }
 
     if (typeof discount !== 'boolean' && price) {
-      const discountAmount =
-        +(discount.value as ProductDiscountValueRelative).permyriad / 100;
+      const discountAmount = +(discount.value as ProductDiscountValueRelative).permyriad / 100;
       const moneyIndex = price.slice(0, 1);
 
       return `${moneyIndex}${String((+price.slice(1) - +price.slice(1) * (discountAmount / 100)).toFixed(2))}`;
@@ -76,8 +76,8 @@ function ProductCard({
           {product.variant.key}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {product.description &&
-            `${product.description.en}: ${product.name.en}`}
+          {product.description
+            && `${product.description.en}: ${product.name.en}`}
         </Typography>
         <div className="card-price">
           <Typography

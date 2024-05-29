@@ -17,12 +17,12 @@ import StreetInput from 'shared/components/InputComponents/StreetInput';
 import { createAddress } from 'shared/utils/createAddress.ts';
 import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
-import formContext from './formContext.ts';
+import formContext, { initialContext } from './formContext.ts';
 
 function SignUp({ client }: IClient) {
   const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
-  const formData = useContext(formContext);
+  let formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
   const [isSameAdress, setSameAdress] = useState(false);
@@ -102,6 +102,7 @@ function SignUp({ client }: IClient) {
       };
       try {
         await client.registerUser(userData);
+
         await signInStoreLogic(userData.email, userData.password, dispatch);
         toastSuccess('User created');
       } catch (error) {
@@ -133,6 +134,14 @@ function SignUp({ client }: IClient) {
   function dateChange() {
     setDateChange(!isDateChange);
   }
+
+  useEffect(() => {
+    formData = structuredClone(initialContext);
+
+    return () => {
+      formData = structuredClone(initialContext);
+    };
+  }, []);
 
   useEffect(() => {
     validateForm();

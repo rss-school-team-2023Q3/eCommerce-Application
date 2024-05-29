@@ -1,28 +1,8 @@
 import dayjs from 'dayjs';
+import { IFormContextType } from 'pages/SignUpPage/formContext';
 import { Context, createContext } from 'react';
 
-interface IValidValue {
-  value: string;
-  isValid: boolean;
-}
-
-export interface IFormContextType {
-  email: IValidValue;
-  password: IValidValue;
-  name: IValidValue;
-  lastName: IValidValue;
-  date: { value: dayjs.Dayjs; isValid: boolean };
-  billingStreet: IValidValue;
-  shippingStreet: IValidValue;
-  shippingCity: IValidValue;
-  billingCity: IValidValue;
-  billingCode: IValidValue;
-  shippingCode: IValidValue;
-  billingCountry: IValidValue;
-  shippingCountry: IValidValue;
-}
-
-export const initialContext: IFormContextType = {
+export const initialContextProfile: IFormContextType = {
   email: { value: '', isValid: false },
   password: { value: '', isValid: false },
   name: { value: '', isValid: false },
@@ -38,8 +18,8 @@ export const initialContext: IFormContextType = {
   shippingCountry: { value: '', isValid: false },
 };
 
-const formContext: Context<IFormContextType> = createContext(
-  structuredClone(initialContext),
+const profileContext: Context<IFormContextType> = createContext(
+  initialContextProfile,
 );
 
-export default formContext;
+export default profileContext;

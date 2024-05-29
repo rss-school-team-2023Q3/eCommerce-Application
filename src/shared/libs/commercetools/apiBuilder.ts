@@ -2,9 +2,9 @@ import {
   ByProjectKeyRequestBuilder,
   CustomerDraft,
   createApiBuilderFromCtpClient,
+  Customer,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
-
 import { toastError } from 'shared/utils/notifications.ts';
 
 import {
@@ -21,6 +21,8 @@ export class ApiBuilder {
   private client: Client | undefined;
 
   private apiRoot: ByProjectKeyRequestBuilder | undefined;
+
+  static client = new ApiBuilder();
 
   private buildClient() {
     return new ClientBuilder()
@@ -47,7 +49,7 @@ export class ApiBuilder {
     this.apiRoot = this.createApiRoot(this.client);
   }
 
-  public async createRefreshTokenClient() {
+  public async createRefreshTokenClient(): Promise<Customer | null> {
     const options = refreshAuthMiddlewareOptions;
 
     options.refreshToken = JSON.parse(

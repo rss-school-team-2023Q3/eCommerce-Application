@@ -1,11 +1,10 @@
 import './App.css';
-import { ProductDiscount } from '@commercetools/platform-sdk';
+import { Customer, ProductDiscount } from '@commercetools/platform-sdk';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
-import IUser from 'pages/App/types/interfaces/IUser';
+// import IUser from 'pages/App/types/interfaces/IUser';
 import CatalogPage from 'pages/CatalogPage/CatalogPage';
-import Profile from 'pages/ProfilePage/Profile';
 import { lazy, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -21,13 +20,14 @@ import IProductData from './types/interfaces/IProductData.ts';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
 const SignInPage = lazy(() => import('pages/SignInPage/SignIn'));
-const SignUpPage = lazy(() => import('pages/SignUpPage/SignUp'));
+const Profile = lazy(() => import('pages/ProfilePage/Profile'));
+const SignUp = lazy(() => import('pages/SignUpPage/SignUp'));
 const MainPage = lazy(() => import('pages/MainPage/Main'));
 
 function App() {
   const dispatch = useDispatch();
   const isRefreshing = false;
-  const currentClient = new ApiBuilder();
+  const currentClient = ApiBuilder.client;
   const productsList: IProductData[] = [];
   const discountsList: ProductDiscount[] = [];
   const [products, setProducts] = useState(productsList);
@@ -36,27 +36,29 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       if (localStorage.getItem('tokenCacheGG')) {
-        const body = await currentClient.createRefreshTokenClient();
+        const body: Customer | null = await currentClient.createRefreshTokenClient();
 
         if (body) {
-          const { email, firstName, lastName } = body;
+          // const { email, firstName, lastName } = body;
 
-          if (
-            typeof email === 'string'
-            && typeof firstName === 'string'
-            && typeof lastName === 'string'
-          ) {
-            const user: IUser = {
-              email,
-              firstName,
-              lastName,
-              country: body.addresses[1]
-                ? body.addresses[1].country
-                : body.addresses[0].country,
-            };
+          // if (
+          //   typeof email === 'string'
+          //   && typeof firstName === 'string'
+          //   && typeof lastName === 'string'
+          // ) {
+          //   const user: IUser = {
+          //     email,
+          //     firstName,
+          //     lastName,
+          //     country: body.addresses[1]
+          //       ? body.addresses[1].country
+          //       : body.addresses[0].country,
+          //   };
 
-            dispatch(setCredentials({ user }));
-          }
+          //   dispatch(setCredentials({ user }));
+          // }
+
+          dispatch(setCredentials({ user: body }));
         }
       } else {
         await currentClient.createAnonymousClient();
@@ -92,7 +94,7 @@ function App() {
               element={(
                 <RestrictedRoute
                   redirectTo="/main"
-                  component={<SignUpPage client={currentClient} />}
+                  component={<SignUp client={currentClient} />}
                 />
               )}
             />
