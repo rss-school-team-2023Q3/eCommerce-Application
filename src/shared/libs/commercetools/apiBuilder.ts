@@ -22,6 +22,8 @@ export class ApiBuilder {
 
   private apiRoot: ByProjectKeyRequestBuilder | undefined;
 
+  static client = new ApiBuilder();
+
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
@@ -115,10 +117,25 @@ export class ApiBuilder {
   }
 
   public async getProducts() {
+    let resp;
     try {
-      await this.apiRoot?.products().get().execute();
+      resp = await this.apiRoot?.products().get().execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
+
+    return resp;
+  }
+  // .get({queryArgs: {limit:10}})
+
+  public async getProductsDiscount() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.productDiscounts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
   }
 }

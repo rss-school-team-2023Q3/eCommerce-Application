@@ -17,6 +17,20 @@ export default async function signInStoreLogic(
 
     if (resp?.statusCode === 200) {
       const customer: Customer = resp?.body.customer;
+      const isStringProps = typeof customer.firstName === 'string'
+        && typeof customer.lastName === 'string';
+
+      if (isStringProps) {
+        // const user: IUser = {
+        //   email: customer.email,
+        //   firstName: customer.firstName,
+        //   lastName: customer.lastName,
+        //   country: customer.addresses[1]
+        //     ? customer.addresses[1].country
+        //     : customer.addresses[0].country,
+        // };
+        // dispatch(setCredentials({ user }));
+      }
 
       dispatch(setCredentials({ user: customer }));
     }

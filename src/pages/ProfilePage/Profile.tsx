@@ -1,7 +1,7 @@
 import { Customer } from '@commercetools/platform-sdk';
 import { FormControlLabel, Switch } from '@mui/material';
-// import { Button } from '@mui/material';
-import { initialContext } from 'pages/SignUpPage/formContext';
+import dayjs from 'dayjs';
+import { IFormContextType } from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
@@ -15,6 +15,22 @@ import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
 import profileContext from './utils/profileContext.ts';
 
 import './Profile.modules.css';
+
+const initialContext: IFormContextType = {
+  email: { value: '', isValid: false },
+  password: { value: '', isValid: false },
+  name: { value: '', isValid: false },
+  lastName: { value: '', isValid: false },
+  date: { value: dayjs(''), isValid: false },
+  billingStreet: { value: '', isValid: false },
+  shippingStreet: { value: '', isValid: false },
+  billingCity: { value: '', isValid: false },
+  shippingCity: { value: '', isValid: false },
+  billingCode: { value: '', isValid: false },
+  shippingCode: { value: '', isValid: false },
+  billingCountry: { value: '', isValid: false },
+  shippingCountry: { value: '', isValid: false },
+};
 
 export default function Profile() {
   const customer: Customer | null = useSelector(
@@ -35,7 +51,9 @@ export default function Profile() {
     setDateChange(!isDateChange);
   }
 
-  useEffect(() => {}, [isDateChange]);
+  useEffect(() => {
+    setDateChange(!isDateChange);
+  }, [isDateChange]);
 
   useEffect(() => {
     formData = structuredClone(initialContext);

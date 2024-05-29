@@ -102,6 +102,7 @@ function SignUp({ client }: IClient) {
       };
       try {
         await client.registerUser(userData);
+
         await signInStoreLogic(userData.email, userData.password, dispatch);
         toastSuccess('User created');
       } catch (error) {
