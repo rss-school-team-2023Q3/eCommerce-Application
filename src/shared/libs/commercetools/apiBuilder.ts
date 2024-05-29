@@ -114,10 +114,19 @@ class ApiBuilder {
     return resp;
   }
 
-  public async getProducts() {
+  public async getProducts(query: string) {
     let resp;
     try {
-      resp = await this.apiRoot?.products().get().execute();
+      resp = query
+        ? await this.apiRoot
+          ?.products()
+          .get({
+            queryArgs: {
+              where: query,
+            },
+          })
+          .execute()
+        : await this.apiRoot?.products().get().execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
@@ -130,6 +139,28 @@ class ApiBuilder {
     let resp;
     try {
       resp = await this.apiRoot?.productDiscounts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getFilterProducts() {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.products()
+        .get({
+          queryArgs: {
+            where:
+              // ' masterData(current(masterVariant(prices(value(centAmount < 10000))))) and masterData(current(variants(prices(value(centAmount < 10000)))))',
+              // '   masterData(current(masterVariant(attributes(value="intel"))))',
+              'masterData(current(categories(id="d4228024-abd8-4162-8c68-7fb9f5537ff9")))',
+            // '    masterData(current(masterVariant(prices(discounted is defined))))',
+          },
+        })
+        .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }

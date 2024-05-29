@@ -14,12 +14,20 @@ import {
 } from '@mui/material';
 import './FilterAside.modules.css';
 import { ChangeEvent, useState } from 'react';
+// import catalogContext from 'pages/CatalogPage/catalogContext';
 
 function FilterAside() {
-  const [manufacture, setManufacture] = useState('');
+  const [manufacture, setManufacture] = useState('All');
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
   const [maxCost, setMaxCost] = useState(2000);
+  const onSaleQuery = 'masterData(current(masterVariant(prices(discounted is defined))))';
+  const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
+  const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost}))))) 
+  and masterData(current(variants(prices(value(centAmount > ${minCost})))))`;
+  const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost})))))
+   and masterData(current(variants(prices(value(centAmount < ${maxCost})))))`;
+  // const catalogFilterData = useContext(catalogContext);
 
   const handleChangeSale = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOnSale(event.target.checked);
@@ -35,6 +43,18 @@ function FilterAside() {
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
+  };
+
+  const setFilter = () => {
+    const query = [];
+
+    if (isOnSale) query.push(onSaleQuery);
+
+    if (manufacture !== 'All') query.push(manufactureQuery);
+
+    query.push(minPriceQuery);
+    query.push(maxPriceQuery);
+    // console.log(query.join(' and '));
   };
 
   return (
@@ -62,6 +82,7 @@ function FilterAside() {
           label="Manufacturer"
           onChange={handleChangeManufacture}
         >
+          <MenuItem value="All">All</MenuItem>
           <MenuItem value="Palit">Palit</MenuItem>
           <MenuItem value="ASUS">ASUS</MenuItem>
           <MenuItem value="Sapphire">Sapphire</MenuItem>
@@ -83,6 +104,11 @@ function FilterAside() {
           type="number"
           variant="outlined"
           InputLabelProps={{ shrink: true }}
+          InputProps={{
+            inputProps: {
+              min: 0,
+            },
+          }}
           sx={{ width: '90px' }}
           value={minCost}
           onChange={(e) => {
@@ -104,7 +130,9 @@ function FilterAside() {
       </Stack>
       <Divider variant="middle" />
       <div className="aside-buttons">
-        <Button variant="contained">Filter</Button>
+        <Button onClick={setFilter} variant="contained">
+          Filter
+        </Button>
         <Button onClick={resetFilters} variant="contained">
           Reset
         </Button>
