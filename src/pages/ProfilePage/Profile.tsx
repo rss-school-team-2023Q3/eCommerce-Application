@@ -9,6 +9,7 @@ import DateInputProfile from 'shared/components/profileComponents/DateInputProfi
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
 import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfile.tsx';
 import LastNameProfile from 'shared/components/profileComponents/LastNameProfile.tsx';
+import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
 
 import profileContext from './utils/profileContext.ts';
@@ -74,7 +75,7 @@ export default function Profile() {
                   isDisable,
                 }}
               />
-              {/* <PasswordProfile /> */}
+              <PasswordProfile isDisable={isDisable} />
             </div>
             <div className="address-field">
               <div className="address-input-field">
