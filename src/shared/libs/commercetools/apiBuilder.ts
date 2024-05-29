@@ -15,7 +15,7 @@ import {
 } from './middlewareOptions.ts';
 import { tokenCache } from './tokenCache.ts';
 
-export class ApiBuilder {
+class ApiBuilder {
   private projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
   private client: Client | undefined;
@@ -137,3 +137,5 @@ export class ApiBuilder {
     return resp;
   }
 }
+
+export const currentClient = new ApiBuilder();

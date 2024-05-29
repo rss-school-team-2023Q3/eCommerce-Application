@@ -3,7 +3,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import IUser from 'pages/App/types/interfaces/IUser';
 
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
+import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
 import { toastError } from 'shared/utils/notifications';
 
@@ -14,7 +14,7 @@ export default async function signInStoreLogic(
 ) {
   let resp;
   try {
-    resp = await new ApiBuilder().loginUser(email, password);
+    resp = await currentClient.loginUser(email, password);
 
     if (resp?.statusCode === 200) {
       const customer: Customer = resp?.body.customer;
