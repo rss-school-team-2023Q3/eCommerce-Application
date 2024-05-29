@@ -33,9 +33,6 @@ function DateInput({ dateProps }: IDateInterface) {
     }
 
     setIsValid(true);
-    // return () => {
-    //   formData.date.value = dayjs('');
-    // };
   }, []);
 
   function checkDate(date: Dayjs) {

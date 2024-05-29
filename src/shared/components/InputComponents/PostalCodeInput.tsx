@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import profileContext from 'pages/ProfilePage/utils/profileContext';
+import formContext from 'pages/SignUpPage/formContext';
 import { postcodeValidator } from 'postcode-validator';
 import { useContext, useEffect, useState } from 'react';
 import selectCountryCode from 'shared/utils/selectCountryCode';
@@ -9,7 +9,7 @@ interface IPostalPropsInterface {
 }
 
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
-  const formData = useContext(profileContext);
+  const formData = useContext(formContext);
   const [isValid, setIsValid] = useState(true);
   const country = postalProps.type === 'shipping'
     ? formData.shippingCountry.value

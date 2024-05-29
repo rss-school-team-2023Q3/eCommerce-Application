@@ -4,14 +4,15 @@ import { initialContext } from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
-import EmailInput from 'shared/components/InputComponents/EmailInput';
-import FirstNameInput from 'shared/components/InputComponents/FirstNameInput';
-import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
+import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
+import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfile.tsx';
+import LastNameProfile from 'shared/components/profileComponents/LastNameProfile.tsx';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
 
-import './Profile.modules.css';
 import profileContext from './utils/profileContext.ts';
+
+import './Profile.modules.css';
 
 export default function Profile() {
   const customer: Customer | null = useSelector(
@@ -33,10 +34,10 @@ export default function Profile() {
   useEffect(() => {}, [isDateChange]);
 
   useEffect(() => {
-    formData = initialContext;
+    formData = structuredClone(initialContext);
 
     return () => {
-      formData = initialContext;
+      formData = structuredClone(initialContext);
     };
   }, []);
 
@@ -51,9 +52,9 @@ export default function Profile() {
           <div className="profile-form-field">
             <div className="user-field-profile">
               User Data
-              <EmailInput />
-              <FirstNameInput />
-              <LastNameInput />
+              <EmailProfile />
+              <FirstNameProfile />
+              <LastNameProfile />
               <DateInputProfile
                 dateProps={{
                   isChange: dateChange,
@@ -66,27 +67,29 @@ export default function Profile() {
                 <ul className="data-field-profile">
                   <p> Billing Addresses</p>
                   {customer.billingAddressIds
-                    && customer.billingAddressIds.map((id, index) => {
-                      const currentAddress = customer.addresses.find(
-                        (el) => el.id === id,
-                      );
-
-                      return currentAddress ? (
-                        <li key={id}>
-                          <ProfileAddress
-                            type="billing"
-                            address={currentAddress}
-                            index={index}
-                          />
-                        </li>
-                      ) : (
-                        ''
-                      );
-                    })}
+                    && customer.billingAddressIds.map((id, index) => (
+                      <li key={id}>
+                        <ProfileAddress
+                          type="billing"
+                          addressId={id}
+                          index={index}
+                        />
+                      </li>
+                    ))}
                 </ul>
                 <ul className="data-field-profile">
                   <p> Shipping Addresses</p>
                   {customer.shippingAddressIds
+                    && customer.shippingAddressIds.map((id, index) => (
+                      <li key={id}>
+                        <ProfileAddress
+                          type="billing"
+                          addressId={id}
+                          index={index}
+                        />
+                      </li>
+                    ))}
+                  {/* {customer.shippingAddressIds
                     && customer.shippingAddressIds.map((id, index) => {
                       const currentAddress = customer.addresses.find(
                         (el) => el.id === id,
@@ -103,7 +106,7 @@ export default function Profile() {
                       ) : (
                         ''
                       );
-                    })}
+                    })} */}
                   {/* <FormControlLabel
                       className="switch-field"
                       control={(

@@ -1,15 +1,31 @@
 import { TextField } from '@mui/material';
-import formContext from 'pages/SignUpPage/formContext';
-import { useContext, useState } from 'react';
+import profileContext from 'pages/ProfilePage/utils/profileContext';
+import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'shared/api/authApi/store/store';
 import validate from 'shared/utils/validate';
 
-function EmailInput() {
+function EmailProfile() {
   const [isValid, setIsValid] = useState(true);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const formData = useContext(profileContext);
+  const user = useSelector((state: RootState) => state.auth.user);
 
-  const formData = useContext(formContext);
+  const [userEmail, setUserEmail] = useState(formData.email.value);
+
+  useEffect(() => {
+    if (user) {
+      formData.email.value = user.email;
+      setUserEmail(user.email);
+    }
+
+    return () => {
+      formData.email.value = '';
+    };
+  }, []);
 
   function checkEmail(email: string) {
+    setUserEmail(email);
     setIsValid(!validate('email', email));
     setEmailErrorMessage(validate('email', email));
 
@@ -23,6 +39,7 @@ function EmailInput() {
 
   return (
     <TextField
+      value={userEmail}
       type="email"
       id="email"
       label="Email"
@@ -42,4 +59,4 @@ function EmailInput() {
   );
 }
 
-export default EmailInput;
+export default EmailProfile;

@@ -7,15 +7,15 @@ import CityInputProfile from 'shared/components/profileComponents/CityIpnputProf
 
 import CountryProfile from './CountryProfile.tsx';
 import PostalCodeProfile from './PostalCodeProfile.tsx';
-import StreetInputProfile from './StreetInputProfile.tsx';
+import StreetInputProfile from './StreetProfile.tsx';
 
 export default function ProfileAddress({
   type,
-  address,
+  addressId,
   index,
 }: {
   type: string;
-  address: Address;
+  addressId: string;
   index: number;
 }) {
   const customer: Customer | null = useSelector(
@@ -25,6 +25,12 @@ export default function ProfileAddress({
   if (!customer) {
     throw new Error('Error Profile Page');
   }
+
+  const address: Address | undefined = customer.addresses.find(
+    (addr) => addr.id === addressId,
+  );
+
+  if (!address) throw new Error('Address dont find by id');
 
   // const { billingAddressIds, shippingAddressIds } = customer;
   const [isBillingCountryChange, setBillingCountryChange] = useState(

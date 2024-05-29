@@ -9,7 +9,7 @@ interface IStreetInterface {
   streetProps: { type: string; profileStreet?: string };
 }
 
-function StreetInputProfile({ streetProps }: IStreetInterface) {
+function StreetProfile({ streetProps }: IStreetInterface) {
   const [isValid, setIsValid] = useState(true);
   const [streetErrorMessage, setStreetErrorMessage] = useState('');
 
@@ -69,4 +69,4 @@ function StreetInputProfile({ streetProps }: IStreetInterface) {
   );
 }
 
-export default StreetInputProfile;
+export default StreetProfile;

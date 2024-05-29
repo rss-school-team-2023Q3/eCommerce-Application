@@ -3,7 +3,6 @@ import { Customer } from '@commercetools/platform-sdk';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
-import Profile from 'pages/ProfilePage/Profile';
 import { lazy, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
@@ -16,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
 const SignInPage = lazy(() => import('pages/SignInPage/SignIn'));
+const Profile = lazy(() => import('pages/ProfilePage/Profile'));
 const SignUpPage = lazy(() => import('pages/SignUpPage/SignUp'));
 const MainPage = lazy(() => import('pages/MainPage/Main'));
 

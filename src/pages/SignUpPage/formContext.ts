@@ -38,6 +38,8 @@ export const initialContext: IFormContextType = {
   shippingCountry: { value: '', isValid: false },
 };
 
-const formContext: Context<IFormContextType> = createContext(initialContext);
+const formContext: Context<IFormContextType> = createContext(
+  structuredClone(initialContext),
+);
 
 export default formContext;

@@ -1,7 +1,7 @@
 import './SignUp.modules.css';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import IClient from 'pages/App/types/interfaces/IClientInterface.ts';
 import signInStoreLogic from 'pages/SignInPage/utils/signInStoreLogic.ts';
-import formContext, { initialContext } from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -14,17 +14,12 @@ import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
 import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
-import toogleSameAdress from 'shared/utils/toogleSameAdress.ts';
+import formContext, { initialContext } from './formContext.ts';
 
-interface ISignupInterface {
-  client: ApiBuilder;
-}
-
-function SignUp({ client }: ISignupInterface) {
+function SignUp({ client }: IClient) {
   const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
   let formData = useContext(formContext);
@@ -37,6 +32,38 @@ function SignUp({ client }: ISignupInterface) {
 
   function validateForm() {
     setValid(Object.values(formData).every((value) => value.isValid));
+  }
+
+  function toogleSameAdress() {
+    switch (isSameAdress) {
+      case true: {
+        formData.shippingCode.value = ' ';
+        formData.shippingCode.isValid = false;
+        formData.shippingStreet.value = ' ';
+        formData.shippingStreet.isValid = false;
+        formData.shippingCity.value = ' ';
+        formData.shippingCity.isValid = false;
+        formData.shippingCountry.value = ' ';
+        formData.shippingCountry.isValid = false;
+        break;
+      }
+      case false: {
+        formData.shippingCode.value = formData.billingCode.value;
+        formData.shippingCode.isValid = true;
+        formData.shippingStreet.value = formData.billingStreet.value;
+        formData.shippingStreet.isValid = true;
+        formData.shippingCity.value = formData.billingCity.value;
+        formData.shippingCity.isValid = true;
+        formData.shippingCountry.value = formData.billingCountry.value;
+        formData.shippingCountry.isValid = true;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    setSameAdress(!isSameAdress);
   }
 
   const submitSignUpData = async (event: { preventDefault: () => void }) => {
@@ -108,13 +135,15 @@ function SignUp({ client }: ISignupInterface) {
   }
 
   useEffect(() => {
-    formData = initialContext;
-    setDateChange(false);
+    formData = structuredClone(initialContext);
+
+    return () => {
+      formData = structuredClone(initialContext);
+    };
   }, []);
+
   useEffect(() => {
     validateForm();
-
-    // return () => setDateChange(false);
   }, [isBillingCountryChange, isShippingCountryChange, isDateChange]);
 
   return (
@@ -241,10 +270,7 @@ function SignUp({ client }: ISignupInterface) {
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
-                      onChange={() => {
-                        toogleSameAdress(formData, isSameAdress);
-                        setSameAdress(!isSameAdress);
-                      }}
+                      onChange={() => toogleSameAdress()}
                     />
                   )}
                   label="Use same billing & shipping adress"
