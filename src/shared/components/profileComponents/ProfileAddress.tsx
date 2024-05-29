@@ -13,10 +13,12 @@ export default function ProfileAddress({
   type,
   addressId,
   index,
+  isDisable,
 }: {
   type: string;
   addressId: string;
   index: number;
+  isDisable: boolean;
 }) {
   const customer: Customer | null = useSelector(
     (state: RootState) => state.auth.user,
@@ -70,14 +72,21 @@ export default function ProfileAddress({
     <div className="data-field-input">
       <p>{`${index + 1} Address`}</p>
       <StreetInputProfile
-        streetProps={{ type, profileStreet: address.streetName }}
+        streetProps={{
+          type,
+          profileStreet: address.streetName ? address.streetName : '',
+          isDisable,
+        }}
       />
-      <CityInputProfile cityProps={{ type, profileCity: address.city }} />
+      <CityInputProfile
+        cityProps={{ type, profileCity: address.city, isDisable }}
+      />
       <PostalCodeProfile
         postalProps={{
           isChange: isShippingCountryChange,
           type,
           profilePostalCode: address.postalCode,
+          isDisable,
         }}
       />
       {/* <div style={{ display: 'flex' }}> */}
@@ -86,6 +95,7 @@ export default function ProfileAddress({
           isUpdate: () => updateCountry,
           type,
           profileCountry: address.country,
+          isDisable,
         }}
       />
       {/* </div> */}

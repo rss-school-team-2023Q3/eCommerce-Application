@@ -1,4 +1,5 @@
 import { Customer } from '@commercetools/platform-sdk';
+import { FormControlLabel, Switch } from '@mui/material';
 // import { Button } from '@mui/material';
 import { initialContext } from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
@@ -18,6 +19,8 @@ export default function Profile() {
   const customer: Customer | null = useSelector(
     (state: RootState) => state.auth.user,
   );
+
+  const [isDisable, setIsDisable] = useState(true);
 
   if (!customer) {
     throw new Error('Error Profile Page');
@@ -49,18 +52,29 @@ export default function Profile() {
           action="registration"
           // onChange={validateForm}
         >
+          <FormControlLabel
+            control={(
+              <Switch
+                className="disable-switch"
+                onChange={() => setIsDisable(!isDisable)}
+              />
+            )}
+            label={isDisable ? 'Edit data' : 'Cancel data editing'}
+          />
+
           <div className="profile-form-field">
             <div className="user-field-profile">
               User Data
-              <EmailProfile />
-              <FirstNameProfile />
-              <LastNameProfile />
+              <EmailProfile isDisable={isDisable} />
+              <FirstNameProfile isDisable={isDisable} />
+              <LastNameProfile isDisable={isDisable} />
               <DateInputProfile
                 dateProps={{
                   isChange: dateChange,
+                  isDisable,
                 }}
               />
-              {/* <PasswordInput /> */}
+              {/* <PasswordProfile /> */}
             </div>
             <div className="address-field">
               <div className="address-input-field">
@@ -73,6 +87,7 @@ export default function Profile() {
                           type="billing"
                           addressId={id}
                           index={index}
+                          isDisable={isDisable}
                         />
                       </li>
                     ))}
@@ -86,6 +101,7 @@ export default function Profile() {
                           type="billing"
                           addressId={id}
                           index={index}
+                          isDisable={isDisable}
                         />
                       </li>
                     ))}

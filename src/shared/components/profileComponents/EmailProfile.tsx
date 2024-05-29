@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
 import validate from 'shared/utils/validate';
 
-function EmailProfile() {
+function EmailProfile({ isDisable }: { isDisable: boolean }) {
   const [isValid, setIsValid] = useState(true);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const formData = useContext(profileContext);
@@ -39,6 +39,7 @@ function EmailProfile() {
 
   return (
     <TextField
+      disabled={isDisable}
       value={userEmail}
       type="email"
       id="email"

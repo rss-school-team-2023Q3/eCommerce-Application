@@ -10,7 +10,7 @@ import { RootState } from 'shared/api/authApi/store/store';
 import validateDate from 'shared/utils/validateDate';
 
 interface IDateInterface {
-  dateProps: { isChange: (type: boolean) => void };
+  dateProps: { isChange: (type: boolean) => void; isDisable: boolean };
 }
 
 function DateInput({ dateProps }: IDateInterface) {
@@ -53,6 +53,7 @@ function DateInput({ dateProps }: IDateInterface) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
       <DateField
+        disabled={dateProps.isDisable}
         value={dateBird}
         style={{ marginBottom: '10px' }}
         label="Date of birth"

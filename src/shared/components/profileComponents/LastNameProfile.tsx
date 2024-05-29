@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
 import validate from 'shared/utils/validate';
 
-function LastNameProfile() {
+function LastNameProfile({ isDisable }: { isDisable: boolean }) {
   const [isValid, setIsValid] = useState(true);
   const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
 
@@ -41,6 +41,7 @@ function LastNameProfile() {
 
   return (
     <TextField
+      disabled={isDisable}
       value={lastName}
       id="last_name"
       label="Last Name"

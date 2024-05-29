@@ -7,7 +7,12 @@ import selectCountryCode from 'shared/utils/selectCountryCode';
 type TypePostal = 'billingCode' | 'shippingCode';
 
 interface IPostalPropsInterface {
-  postalProps: { type: string; isChange: boolean; profilePostalCode?: string };
+  postalProps: {
+    type: string;
+    isChange: boolean;
+    profilePostalCode?: string;
+    isDisable: boolean;
+  };
 }
 
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
@@ -60,6 +65,7 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
 
   return (
     <TextField
+      disabled={postalProps.isDisable}
       value={postalProfile}
       autoComplete="off"
       type="Text"

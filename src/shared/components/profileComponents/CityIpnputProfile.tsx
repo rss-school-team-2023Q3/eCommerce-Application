@@ -6,7 +6,7 @@ import validate from 'shared/utils/validate';
 type TypeCity = 'billingCity' | 'shippingCity';
 
 interface ICityInterface {
-  cityProps: { type: string; profileCity?: string };
+  cityProps: { type: string; profileCity?: string; isDisable: boolean };
 }
 
 export default function CityInputProfile({ cityProps }: ICityInterface) {
@@ -14,17 +14,11 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
   const [cityErrorMessage, setCityErrorMessage] = useState('');
 
   const formData = useContext(profileContext);
+
   const typeCity: TypeCity = `${cityProps.type}City` as TypeCity;
 
   formData[typeCity].value = cityProps.profileCity as TypeCity;
   const [cityProfile, setCityProfile] = useState(formData[typeCity].value);
-
-  // useEffect(() => {
-  //     formData.lastName.value = cityProps.profileCity;
-  //   return () => {
-  //     formData.lastName.value = '';
-  //   };
-  // }, []);
 
   function checkCity(city: string) {
     setCityProfile(city);
@@ -33,22 +27,12 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
 
     switch (!validate('city', city)) {
       case true: {
-        if (cityProps.type === 'shipping') {
-          formData.shippingCity.value = city;
-          formData.shippingCity.isValid = true;
-        } else {
-          formData.billingCity.value = city;
-          formData.billingCity.isValid = true;
-        }
-
+        formData[typeCity].value = city;
+        formData[typeCity].isValid = true;
         break;
       }
       default: {
-        if (cityProps.type === 'shipping') {
-          formData.shippingCity.isValid = false;
-        } else {
-          formData.billingCity.isValid = false;
-        }
+        formData[typeCity].isValid = false;
 
         break;
       }
@@ -57,6 +41,7 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
 
   return (
     <TextField
+      disabled={cityProps.isDisable}
       value={cityProfile}
       autoComplete="off"
       type="Text"

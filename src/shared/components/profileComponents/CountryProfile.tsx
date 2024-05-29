@@ -10,6 +10,7 @@ interface ICountryInterface {
     isUpdate: (type: string) => void;
     type: string;
     profileCountry?: string;
+    isDisable: boolean;
   };
 }
 
@@ -30,12 +31,11 @@ function CountryInput({ countryProps }: ICountryInterface) {
     countryProps.isUpdate(countryProps.type);
   }
 
-  // if (countryProps.profileCountry) selectCountry(countryProps.profileCountry);
-
   return (
     <FormControl size="small">
       <InputLabel id="country_select">Country</InputLabel>
       <Select
+        disabled={countryProps.isDisable}
         style={{ marginBottom: '10px' }}
         labelId="country_select"
         label="Country"

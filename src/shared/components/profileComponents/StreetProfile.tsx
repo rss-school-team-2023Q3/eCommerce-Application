@@ -6,7 +6,7 @@ import validate from 'shared/utils/validate';
 type TypeStreet = 'billingStreet' | 'shippingStreet';
 
 interface IStreetInterface {
-  streetProps: { type: string; profileStreet?: string };
+  streetProps: { type: string; profileStreet: string; isDisable: boolean };
 }
 
 function StreetProfile({ streetProps }: IStreetInterface) {
@@ -50,6 +50,7 @@ function StreetProfile({ streetProps }: IStreetInterface) {
 
   return (
     <TextField
+      disabled={streetProps.isDisable}
       value={streetProfile}
       autoComplete="off"
       type="Text"
