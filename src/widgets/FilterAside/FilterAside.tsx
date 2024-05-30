@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import './FilterAside.modules.css';
 import { ChangeEvent, useState } from 'react';
-// import catalogContext from 'pages/CatalogPage/catalogContext';
+import getProducts from 'shared/utils/getProducts';
 
 function FilterAside() {
   const [manufacture, setManufacture] = useState('All');
@@ -23,11 +23,8 @@ function FilterAside() {
   const [maxCost, setMaxCost] = useState(2000);
   const onSaleQuery = 'masterData(current(masterVariant(prices(discounted is defined))))';
   const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
-  const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost}))))) 
-  and masterData(current(variants(prices(value(centAmount > ${minCost})))))`;
-  const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost})))))
-   and masterData(current(variants(prices(value(centAmount < ${maxCost})))))`;
-  // const catalogFilterData = useContext(catalogContext);
+  const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
+  const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
 
   const handleChangeSale = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOnSale(event.target.checked);
@@ -54,6 +51,9 @@ function FilterAside() {
 
     query.push(minPriceQuery);
     query.push(maxPriceQuery);
+    const request = query.join(' and ');
+
+    getProducts(request);
     // console.log(query.join(' and '));
   };
 

@@ -2,20 +2,16 @@ import { ProductDiscount } from '@commercetools/platform-sdk';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './CatalogPage.modules.css';
 import { useEffect, useState } from 'react';
-// import { currentClient } from 'shared/libs/commercetools/apiBuilder';
-// import setProductsArray from 'shared/utils/setProductsArray';
 import getDiscounts from 'shared/utils/getDiscounts';
 import getProducts from 'shared/utils/getProducts';
 import FilterAside from 'widgets/FilterAside/FilterAside';
 import ProductCard from 'widgets/ProductCard/ProductCard';
-// import catalogContext from './catalogContext';
 
 function CatalogPage() {
   const productsList: IProductData[] = [];
   const discountsList: ProductDiscount[] = [];
   const [products, setProducts] = useState(productsList);
   const [discounts, setDiscounts] = useState(discountsList);
-  // const catalogFilterData = useContext(catalogContext);
 
   function getDiscont(name: string | undefined) {
     let discont: ProductDiscount | boolean = false;
@@ -30,10 +26,8 @@ function CatalogPage() {
   }
   useEffect(() => {
     const fetchData = async () => {
-      setProducts(await getProducts());
-
+      setProducts(await getProducts(''));
       setDiscounts(await getDiscounts());
-      // .then((resp) => (resp ? setDiscounts(resp) : '')))
     };
 
     if (!products.length) {
@@ -43,7 +37,6 @@ function CatalogPage() {
 
   return (
     <div className="catalog-page">
-      {/* <catalogContext.Provider value={catalogFilterData}> */}
       <FilterAside />
       <div className="catalog">
         {products.map((item) => {
@@ -58,7 +51,6 @@ function CatalogPage() {
           );
         })}
       </div>
-      {/* </catalogContext.Provider> */}
     </div>
   );
 }
