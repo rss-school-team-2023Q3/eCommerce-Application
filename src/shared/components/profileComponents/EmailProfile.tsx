@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -23,6 +24,19 @@ function EmailProfile({ isDisable }: { isDisable: boolean }) {
       formData.email.value = '';
     };
   }, []);
+
+  useEffect(() => {
+    if (isDisable) setUserEmail(user?.email ? user?.email : userEmail);
+
+    if (!formData.fieldChangedSet) throw new Error("formData.fieldChangedSet doesn't exist");
+
+    if (
+      userEmail === user?.email
+      && formData.fieldChangedSet.has(FormField.email)
+    ) {
+      formData.fieldChangedSet.delete(FormField.email);
+    } else if (userEmail !== user?.email) formData.fieldChangedSet.add(FormField.email);
+  }, [isDisable, userEmail]);
 
   function checkEmail(email: string) {
     setUserEmail(email);

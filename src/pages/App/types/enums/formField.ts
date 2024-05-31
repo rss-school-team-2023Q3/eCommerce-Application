@@ -1,7 +1,8 @@
 enum FormField {
   firstName = 'firstName',
   lastName = 'lastName',
-  emai = 'email',
+  email = 'email',
+  dateOfBirth = 'dateOfBirth',
 }
 
 export default FormField;

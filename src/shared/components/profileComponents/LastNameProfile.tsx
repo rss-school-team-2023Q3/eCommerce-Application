@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -25,6 +26,19 @@ function LastNameProfile({ isDisable }: { isDisable: boolean }) {
       formData.lastName.value = '';
     };
   }, []);
+
+  useEffect(() => {
+    if (isDisable) setLastName(user?.lastName ? user?.lastName : lastName);
+
+    if (!formData.fieldChangedSet) throw new Error("formData.fieldChanged doesn't exist");
+
+    if (
+      lastName === user?.lastName
+      && formData.fieldChangedSet.has(FormField.lastName)
+    ) {
+      formData.fieldChangedSet.delete(FormField.lastName);
+    } else if (lastName !== user?.lastName) formData.fieldChangedSet.add(FormField.lastName);
+  }, [isDisable, lastName]);
 
   function checkLastName(name: string) {
     setLastName(name);

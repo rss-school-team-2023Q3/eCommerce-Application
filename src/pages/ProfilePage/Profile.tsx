@@ -32,7 +32,7 @@ export default function Profile() {
 
   const [isDateChange, setDateChange] = useState(false);
 
-  const [isChanged, setIsChanged] = useState(!!formData.fieldChangedSet?.size);
+  const [isChanged, setIsChanged] = useState(false);
 
   function dateChange() {
     setDateChange(!isDateChange);
@@ -42,9 +42,9 @@ export default function Profile() {
     setDateChange(!isDateChange);
   }, [isDateChange]);
 
-  // useEffect(() => {
-  //   setIsChanged()
-  // }, [formData.isChangeField]);
+  useEffect(() => {
+    setIsChanged(!!formData.fieldChangedSet?.size);
+  }, [formData.fieldChangedSet?.size]);
 
   useEffect(() => {
     formData = structuredClone(initialContextProfile);
@@ -54,12 +54,7 @@ export default function Profile() {
     };
   }, []);
 
-  function onChangeForm() {
-    // console.log(formData);
-
-    setIsChanged(!!formData.fieldChangedSet?.size);
-    // console.log(isChanged);
-  }
+  function onChangeForm() {}
 
   return (
     <div className="profile-wrapper">

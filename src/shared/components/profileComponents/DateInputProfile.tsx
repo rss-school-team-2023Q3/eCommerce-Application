@@ -2,6 +2,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
+import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import 'dayjs/locale/ru';
@@ -22,18 +23,33 @@ function DateInput({ dateProps }: IDateInterface) {
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [dateBird, setDateBird] = useState(formData.date.value);
+  const [dateBirth, setDateBirth] = useState(formData.date.value);
 
   useEffect(() => {
     if (user && typeof user.dateOfBirth === 'string') {
       formData.date.value = dayjs(user.dateOfBirth);
-      setDateBird(formData.date.value);
+      setDateBirth(formData.date.value);
     } else {
       formData.date.value = dayjs('');
     }
 
     setIsValid(true);
   }, []);
+
+  useEffect(() => {
+    if (dateProps.isDisable) setDateBirth(user?.dateOfBirth ? dayjs(user?.dateOfBirth) : dateBirth);
+
+    if (!formData.fieldChangedSet) throw new Error("formData.fieldChangedSet doesn't exist");
+
+    if (
+      formData.date.value.format('YYYY-MM-DD') === user?.dateOfBirth
+      && formData.fieldChangedSet.has(FormField.dateOfBirth)
+    ) {
+      formData.fieldChangedSet.delete(FormField.dateOfBirth);
+    } else if (formData.date.value.format('YYYY-MM-DD') !== user?.dateOfBirth) {
+      formData.fieldChangedSet.add(FormField.dateOfBirth);
+    }
+  }, [dateProps.isDisable, formData.date.value]);
 
   function checkDate(date: Dayjs) {
     dateProps.isChange(true);
@@ -54,7 +70,7 @@ function DateInput({ dateProps }: IDateInterface) {
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
       <DateField
         disabled={dateProps.isDisable}
-        value={dateBird}
+        value={dateBirth}
         style={{ marginBottom: '10px' }}
         label="Date of birth"
         required
