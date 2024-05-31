@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { IFormContextType } from 'pages/SignUpPage/formContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store.ts';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
 import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfile.tsx';

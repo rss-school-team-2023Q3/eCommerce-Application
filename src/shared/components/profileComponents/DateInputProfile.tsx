@@ -6,7 +6,7 @@ import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import 'dayjs/locale/ru';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 import validateDate from 'shared/utils/validateDate';
 
 interface IDateInterface {

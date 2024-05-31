@@ -2,7 +2,7 @@ import { TextField } from '@mui/material';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 import validate from 'shared/utils/validate';
 
 function LastNameProfile({ isDisable }: { isDisable: boolean }) {

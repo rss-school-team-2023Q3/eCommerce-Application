@@ -1,7 +1,7 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store.ts';
 import 'pages/ProfilePage/Profile.modules.css';
 import CityInputProfile from 'shared/components/profileComponents/CityIpnputProfile';
 

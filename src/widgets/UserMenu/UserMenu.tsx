@@ -3,7 +3,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { Button, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store.ts';
 
 import logoutUser from './utils/logoutUser.ts';
 
