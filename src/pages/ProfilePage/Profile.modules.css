@@ -33,6 +33,7 @@
   overflow: hidden;
   display: flex;
   justify-content: space-between;
+  padding: 1.5rem;
 }
 
 .profile-form-field {
@@ -97,9 +98,14 @@
 
 .save-icon {
   position: absolute;
-  top: -1.25rem;
-  right: -0.5rem;
+  top: 0;
+  right: 0;
   transition: all 0.3s;
+  outline: none;
+}
+
+.save-icon:hover {
+  color: blue;
 }
 
 .input-field-profile {
@@ -112,7 +118,7 @@
 }
 
 .save-visible {
-  transform: translateX(0);
+  transform: translateY(-0.5rem);
 }
 
 .data-field-list {

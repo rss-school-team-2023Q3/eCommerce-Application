@@ -8,8 +8,10 @@ import {
   RadioGroup,
   Radio,
 } from '@mui/material';
+import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCredentials } from 'shared/api/authApi/store/authSlice.ts';
 import { RootState } from 'shared/api/authApi/store/store';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
@@ -17,6 +19,7 @@ import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfi
 import LastNameProfile from 'shared/components/profileComponents/LastNameProfile.tsx';
 import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
+import { toastSuccess } from 'shared/utils/notifications.ts';
 
 import profileContext, {
   initialContextProfile,
@@ -28,6 +31,7 @@ export default function Profile() {
   const customer: Customer | null = useSelector(
     (state: RootState) => state.auth.user,
   );
+  const dispatch = useDispatch();
 
   const [isDisable, setIsDisable] = useState(true);
 
@@ -69,6 +73,19 @@ export default function Profile() {
 
   function onChangeForm() {}
 
+  async function onUpdate() {
+    const resp = await actionsSDK(
+      formData,
+      customer?.id as string,
+      customer?.version as number,
+    );
+
+    if (resp?.statusCode === 200) {
+      toastSuccess('User updated');
+      dispatch(setCredentials({ user: resp.body }));
+    }
+  }
+
   return (
     <div className="profile-wrapper">
       <profileContext.Provider value={formData}>
@@ -91,6 +108,7 @@ export default function Profile() {
               size="large"
               // color="secondary"
               className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
+              onClick={() => onUpdate()}
             >
               <SaveAsIcon />
               save

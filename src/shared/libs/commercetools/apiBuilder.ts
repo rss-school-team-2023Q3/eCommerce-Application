@@ -3,8 +3,10 @@ import {
   CustomerDraft,
   createApiBuilderFromCtpClient,
   Customer,
+  CustomerUpdateAction,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
+import IDataAction from 'pages/App/types/interfaces/IDataAction.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
 import {
@@ -134,6 +136,32 @@ export class ApiBuilder {
       resp = await this.apiRoot?.productDiscounts().get().execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
+
+  public async updateUserData(
+    actions: IDataAction[],
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const body = {
+      version,
+      actions: actions as CustomerUpdateAction[],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
     }
 
     return resp;

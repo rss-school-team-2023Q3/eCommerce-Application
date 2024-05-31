@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Context, createContext } from 'react';
 
-interface IValidValue {
+export interface IValidValue {
   value: string;
   isValid: boolean;
 }
