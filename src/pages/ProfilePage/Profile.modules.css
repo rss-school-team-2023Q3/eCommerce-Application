@@ -28,9 +28,14 @@
   margin-bottom: 1.25rem;
 }
 
-.profile-form-field {
+.switcher-wrap {
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-form-field {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,8 +97,8 @@
 
 .save-icon {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -1.25rem;
+  right: -0.5rem;
   transition: all 0.3s;
 }
 
@@ -103,11 +108,15 @@
 }
 
 .save-unvisible {
-  transform: translateX(-6rem);
+  transform: translateY(-2.5rem);
 }
 
 .save-visible {
   transform: translateX(0);
+}
+
+.data-field-list {
+  list-style: none;
 }
 
 @media (width <= 768px) {

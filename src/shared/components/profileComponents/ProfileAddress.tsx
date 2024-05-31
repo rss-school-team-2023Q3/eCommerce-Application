@@ -1,4 +1,5 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
+import { FormControlLabel, Radio } from '@mui/material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
@@ -8,6 +9,8 @@ import CityInputProfile from 'shared/components/profileComponents/CityIpnputProf
 import CountryProfile from './CountryProfile.tsx';
 import PostalCodeProfile from './PostalCodeProfile.tsx';
 import StreetInputProfile from './StreetProfile.tsx';
+
+// type DefaultType = 'defaultBillingAddressId' | 'defaultShippingAddressId'
 
 export default function ProfileAddress({
   type,
@@ -24,17 +27,20 @@ export default function ProfileAddress({
     (state: RootState) => state.auth.user,
   );
 
+  // const defaultType = `default${capitalizeFirstLetter(type)}AddressId` as DefaultType;
+
   if (!customer) {
     throw new Error('Error Profile Page');
   }
 
+  // const [isDefault, setIsDefault] = useState(customer[defaultType] === addressId);
+  // formData[defaultType] = customer[defaultType];
   const address: Address | undefined = customer.addresses.find(
     (addr) => addr.id === addressId,
   );
 
   if (!address) throw new Error('Address dont find by id');
 
-  // const { billingAddressIds, shippingAddressIds } = customer;
   const [isBillingCountryChange, setBillingCountryChange] = useState(
     !!customer.defaultBillingAddressId,
   );
@@ -46,12 +52,14 @@ export default function ProfileAddress({
   //   isAddresses && billingAddressIds[0] === shippingAddressIds[0],
   // );
 
-  // const [isShippingDefaut, setShippingDefault] = useState(
-  //   isShippingCountryChange,
+  // const [isDefaut, setDefault] = useState(
+  //   customer?.defaultShippingAddressId === addressId || customer?.defaultBillingAddressId === addressId,
   // );
-  // const [isBillingDefaut, setBillingDefault] = useState(
-  //   !!customer?.defaultBillingAddressId,
-  // );
+  // useEffect(() => {
+  //   setIsDefault(formData[defaultType] === addressId);
+  //   console.log(isDefault);
+  // }, [formData[defaultType]]);
+
   const updateCountry = () => {
     switch (type) {
       case 'shipping': {
@@ -71,6 +79,17 @@ export default function ProfileAddress({
   return (
     <div className="data-field-input">
       <p>{`${index + 1} Address`}</p>
+      <FormControlLabel
+        control={(
+          <Radio
+            value={addressId}
+            // onChange={() => {
+            //   setIsDefault(!isDefault);
+            // }}
+          />
+        )}
+        label=" default address"
+      />
       <StreetInputProfile
         streetProps={{
           type,
@@ -89,7 +108,6 @@ export default function ProfileAddress({
           isDisable,
         }}
       />
-      {/* <div style={{ display: 'flex' }}> */}
       <CountryProfile
         countryProps={{
           isUpdate: () => updateCountry,
@@ -98,7 +116,6 @@ export default function ProfileAddress({
           isDisable,
         }}
       />
-      {/* </div> */}
     </div>
   );
 }

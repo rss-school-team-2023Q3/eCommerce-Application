@@ -1,6 +1,13 @@
 import { Customer } from '@commercetools/platform-sdk';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
-import { FormControlLabel, Switch, IconButton } from '@mui/material';
+import {
+  FormControlLabel,
+  Switch,
+  IconButton,
+  FormControl,
+  RadioGroup,
+  Radio,
+} from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
@@ -30,6 +37,13 @@ export default function Profile() {
 
   let formData = useContext(profileContext);
 
+  formData.defaultBillingAddressId = customer.defaultBillingAddressId
+    ? customer.defaultBillingAddressId
+    : '';
+  formData.defaultShippingAddressId = customer.defaultShippingAddressId
+    ? customer.defaultShippingAddressId
+    : '';
+
   const [isDateChange, setDateChange] = useState(false);
 
   const [isChanged, setIsChanged] = useState(false);
@@ -46,13 +60,12 @@ export default function Profile() {
     setIsChanged(!!formData.fieldChangedSet?.size);
   }, [formData.fieldChangedSet?.size]);
 
-  useEffect(() => {
-    formData = structuredClone(initialContextProfile);
-
-    return () => {
+  useEffect(
+    () => () => {
       formData = structuredClone(initialContextProfile);
-    };
-  }, []);
+    },
+    [],
+  );
 
   function onChangeForm() {}
 
@@ -64,17 +77,16 @@ export default function Profile() {
           action="registration"
           onChange={onChangeForm}
         >
-          <FormControlLabel
-            control={(
-              <Switch
-                className="disable-switch"
-                onChange={() => setIsDisable(!isDisable)}
-              />
-            )}
-            label={isDisable ? 'Edit data' : 'Cancel data editing'}
-          />
-
-          <div className="profile-form-field">
+          <div className="switcher-wrap">
+            <FormControlLabel
+              control={(
+                <Switch
+                  className="disable-switch"
+                  onChange={() => setIsDisable(!isDisable)}
+                />
+              )}
+              label={isDisable ? 'Edit data' : 'Cancel data editing'}
+            />
             <IconButton
               size="large"
               // color="secondary"
@@ -83,6 +95,8 @@ export default function Profile() {
               <SaveAsIcon />
               save
             </IconButton>
+          </div>
+          <div className="profile-form-field">
             <div className="user-field-profile">
               User Data
               <EmailProfile isDisable={isDisable} />
@@ -98,63 +112,79 @@ export default function Profile() {
             </div>
             <div className="address-field">
               <div className="address-input-field">
-                <ul className="data-field-profile">
-                  <p> Billing Addresses</p>
-                  {customer.billingAddressIds
-                    && customer.billingAddressIds.map((id, index) => (
-                      <li key={id}>
-                        <ProfileAddress
-                          type="billing"
-                          addressId={id}
-                          index={index}
-                          isDisable={isDisable}
-                        />
-                      </li>
-                    ))}
-                </ul>
-                <ul className="data-field-profile">
-                  <p> Shipping Addresses</p>
-                  {customer.shippingAddressIds
-                    && customer.shippingAddressIds.map((id, index) => (
-                      <li key={id}>
-                        <ProfileAddress
-                          type="billing"
-                          addressId={id}
-                          index={index}
-                          isDisable={isDisable}
-                        />
-                      </li>
-                    ))}
-                  {/* {customer.shippingAddressIds
-                    && customer.shippingAddressIds.map((id, index) => {
-                      const currentAddress = customer.addresses.find(
-                        (el) => el.id === id,
-                      );
+                <FormControl
+                  className="data-field-profile"
+                  disabled={isDisable}
+                >
+                  <RadioGroup
+                    defaultValue={
+                      customer.defaultBillingAddressId
+                        ? customer.defaultBillingAddressId
+                        : ''
+                    }
+                    onChange={(e) => {
+                      formData.defaultBillingAddressId = e.target.value;
+                    }}
+                    aria-labelledby="radio-buttons-group-label"
+                    name="radio-buttons-billing"
+                  >
+                    <ul className="data-field-list">
+                      <p> Billing Addresses</p>
+                      {customer.billingAddressIds
+                        && customer.billingAddressIds.map((id, index) => (
+                          <li key={id}>
+                            <ProfileAddress
+                              type="billing"
+                              addressId={id}
+                              index={index}
+                              isDisable={isDisable}
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                    {!isDisable && (
+                      <FormControlLabel
+                        control={<Radio value="" />}
+                        label="reset default address"
+                      />
+                    )}
+                  </RadioGroup>
+                </FormControl>
 
-                      return currentAddress ? (
-                        <li key={id}>
-                          <ProfileAddress
-                            type="shipping"
-                            address={currentAddress}
-                            index={index}
-                          />
-                        </li>
-                      ) : (
-                        ''
-                      );
-                    })} */}
-                  {/* <FormControlLabel
-                      className="switch-field"
-                      control={(
-                        <Checkbox
-                          size="small"
-                          checked={isShippingDefaut}
-                          onChange={() => setShippingDefault(!isShippingDefaut)}
-                        />
-                      )}
-                      label="Use as default address"
-                    /> */}
-                </ul>
+                <FormControl
+                  className="data-field-profile"
+                  disabled={isDisable}
+                >
+                  <RadioGroup
+                    defaultValue={customer.defaultShippingAddressId}
+                    onChange={(e) => {
+                      formData.defaultShippingAddressId = e.target.value;
+                    }}
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    name="radio-buttons-shipping"
+                  >
+                    <ul className="data-field-list">
+                      <p> Shipping Addresses</p>
+                      {customer.shippingAddressIds
+                        && customer.shippingAddressIds.map((id, index) => (
+                          <li key={id}>
+                            <ProfileAddress
+                              type="shipping"
+                              addressId={id}
+                              index={index}
+                              isDisable={isDisable}
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                    {!isDisable && (
+                      <FormControlLabel
+                        control={<Radio value="" />}
+                        label="reset default address"
+                      />
+                    )}
+                  </RadioGroup>
+                </FormControl>
               </div>
             </div>
           </div>

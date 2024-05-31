@@ -21,6 +21,8 @@ export interface IFormContextType {
   billingCountry: IValidValue;
   shippingCountry: IValidValue;
   fieldChangedSet?: Set<string>;
+  defaultBillingAddressId?: string;
+  defaultShippingAddressId?: string;
 }
 
 export const initialContext: IFormContextType = {
