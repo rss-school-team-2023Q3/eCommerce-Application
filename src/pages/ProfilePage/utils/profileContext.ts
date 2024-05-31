@@ -16,6 +16,7 @@ export const initialContextProfile: IFormContextType = {
   shippingCode: { value: '', isValid: false },
   billingCountry: { value: '', isValid: false },
   shippingCountry: { value: '', isValid: false },
+  fieldChangedSet: new Set<string>(),
 };
 
 const profileContext: Context<IFormContextType> = createContext(

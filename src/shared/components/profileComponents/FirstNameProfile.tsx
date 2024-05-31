@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -26,6 +27,19 @@ function FirstNameProfile({ isDisable }: { isDisable: boolean }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (isDisable) setFirstName(user?.firstName ? user?.firstName : firstName);
+
+    if (!formData.fieldChangedSet) throw new Error("formData.fieldChanged doesn't exist");
+
+    if (
+      firstName === user?.firstName
+      && formData.fieldChangedSet.has(FormField.firstName)
+    ) {
+      formData.fieldChangedSet.delete(FormField.firstName);
+    } else formData.fieldChangedSet.add(FormField.firstName);
+  }, [isDisable, firstName]);
+
   function checkName(name: string) {
     setFirstName(name);
     setIsValid(!validate('name', name));
@@ -44,11 +58,11 @@ function FirstNameProfile({ isDisable }: { isDisable: boolean }) {
     <TextField
       disabled={isDisable}
       value={firstName}
+      className="input-field-profile"
       id="first_name"
       label="First Name"
       autoComplete="off"
       type="Text"
-      style={{ marginBottom: '10px' }}
       required
       helperText={isValid ? '' : nameErrorMessage}
       FormHelperTextProps={{

@@ -20,6 +20,7 @@ export interface IFormContextType {
   shippingCode: IValidValue;
   billingCountry: IValidValue;
   shippingCountry: IValidValue;
+  fieldChangedSet?: Set<string>;
 }
 
 export const initialContext: IFormContextType = {

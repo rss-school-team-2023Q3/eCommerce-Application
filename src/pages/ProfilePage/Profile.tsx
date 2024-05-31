@@ -1,7 +1,6 @@
 import { Customer } from '@commercetools/platform-sdk';
-import { FormControlLabel, Switch } from '@mui/material';
-import dayjs from 'dayjs';
-import { IFormContextType } from 'pages/SignUpPage/formContext';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import { FormControlLabel, Switch, IconButton } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/authApi/store/store';
@@ -12,25 +11,11 @@ import LastNameProfile from 'shared/components/profileComponents/LastNameProfile
 import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
 
-import profileContext from './utils/profileContext.ts';
+import profileContext, {
+  initialContextProfile,
+} from './utils/profileContext.ts';
 
 import './Profile.modules.css';
-
-const initialContext: IFormContextType = {
-  email: { value: '', isValid: false },
-  password: { value: '', isValid: false },
-  name: { value: '', isValid: false },
-  lastName: { value: '', isValid: false },
-  date: { value: dayjs(''), isValid: false },
-  billingStreet: { value: '', isValid: false },
-  shippingStreet: { value: '', isValid: false },
-  billingCity: { value: '', isValid: false },
-  shippingCity: { value: '', isValid: false },
-  billingCode: { value: '', isValid: false },
-  shippingCode: { value: '', isValid: false },
-  billingCountry: { value: '', isValid: false },
-  shippingCountry: { value: '', isValid: false },
-};
 
 export default function Profile() {
   const customer: Customer | null = useSelector(
@@ -47,6 +32,8 @@ export default function Profile() {
 
   const [isDateChange, setDateChange] = useState(false);
 
+  const [isChanged, setIsChanged] = useState(!!formData.fieldChangedSet?.size);
+
   function dateChange() {
     setDateChange(!isDateChange);
   }
@@ -55,13 +42,24 @@ export default function Profile() {
     setDateChange(!isDateChange);
   }, [isDateChange]);
 
+  // useEffect(() => {
+  //   setIsChanged()
+  // }, [formData.isChangeField]);
+
   useEffect(() => {
-    formData = structuredClone(initialContext);
+    formData = structuredClone(initialContextProfile);
 
     return () => {
-      formData = structuredClone(initialContext);
+      formData = structuredClone(initialContextProfile);
     };
   }, []);
+
+  function onChangeForm() {
+    // console.log(formData);
+
+    setIsChanged(!!formData.fieldChangedSet?.size);
+    // console.log(isChanged);
+  }
 
   return (
     <div className="profile-wrapper">
@@ -69,7 +67,7 @@ export default function Profile() {
         <form
           className="profile-form"
           action="registration"
-          // onChange={validateForm}
+          onChange={onChangeForm}
         >
           <FormControlLabel
             control={(
@@ -82,6 +80,14 @@ export default function Profile() {
           />
 
           <div className="profile-form-field">
+            <IconButton
+              size="large"
+              // color="secondary"
+              className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
+            >
+              <SaveAsIcon />
+              save
+            </IconButton>
             <div className="user-field-profile">
               User Data
               <EmailProfile isDisable={isDisable} />
