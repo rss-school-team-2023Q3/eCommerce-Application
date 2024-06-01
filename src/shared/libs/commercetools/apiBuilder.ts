@@ -51,7 +51,7 @@ class ApiBuilder {
     const options = refreshAuthMiddlewareOptions;
 
     options.refreshToken = JSON.parse(
-      localStorage.getItem('tokenCacheGG') as string
+      localStorage.getItem('tokenCacheGG') as string,
     ).refreshToken;
     try {
       this.client = this.buildClient().withRefreshTokenFlow(options).build();
@@ -119,18 +119,18 @@ class ApiBuilder {
     try {
       resp = query.length
         ? await this.apiRoot
-            ?.products()
-            .get({
-              queryArgs: {
-                where: query,
-                limit: 50,
-              },
-            })
-            .execute()
+          ?.products()
+          .get({
+            queryArgs: {
+              where: query,
+              limit: 50,
+            },
+          })
+          .execute()
         : await this.apiRoot
-            ?.products()
-            .get({ queryArgs: { limit: 50 } })
-            .execute();
+          ?.products()
+          .get({ queryArgs: { limit: 50 } })
+          .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }

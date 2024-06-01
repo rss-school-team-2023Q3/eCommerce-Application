@@ -21,7 +21,8 @@ function FilterAside() {
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
   const [maxCost, setMaxCost] = useState(2000);
-  const onSaleQuery = 'masterData(current(masterVariant(prices(discounted is defined))))';
+  const onSaleQuery =
+    'masterData(current(masterVariant(prices(discounted is defined))))';
   const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
   const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
   const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
@@ -30,7 +31,7 @@ function FilterAside() {
     setIsOnSale(event.target.checked);
   };
   const handleChangeManufacture = (
-    event: SelectChangeEvent<typeof manufacture>,
+    event: SelectChangeEvent<typeof manufacture>
   ) => {
     setManufacture(event.target.value);
   };
@@ -54,7 +55,6 @@ function FilterAside() {
     const request = query.join(' and ');
 
     getProducts(request);
-    // console.log(query.join(' and '));
   };
 
   return (
@@ -62,13 +62,13 @@ function FilterAside() {
       <FormControlLabel
         checked={isOnSale}
         value="start"
-        control={(
+        control={
           <Switch
             checked={isOnSale}
             onChange={handleChangeSale}
             color="primary"
           />
-        )}
+        }
         label="On sale!"
         labelPlacement="end"
       />
