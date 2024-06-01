@@ -1,4 +1,4 @@
-import { ProductVariant } from '@commercetools/platform-sdk';
+// import { ProductVariant } from '@commercetools/platform-sdk';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import ProductListType from 'pages/App/types/types/ProductListType';
 
@@ -10,13 +10,6 @@ function setProductsArray(list: ProductListType) {
       variant: item.masterData.current.masterVariant,
       name: item.masterData.current.name,
       description: item.masterData.current.description,
-    });
-    item.masterData.current.variants.forEach((variant: ProductVariant) => {
-      newProducts.push({
-        variant,
-        name: item.masterData.current.name,
-        description: item.masterData.current.description,
-      });
     });
   });
 

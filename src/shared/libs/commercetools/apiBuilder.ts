@@ -15,7 +15,7 @@ import {
 } from './middlewareOptions.ts';
 import { tokenCache } from './tokenCache.ts';
 
-export class ApiBuilder {
+class ApiBuilder {
   private projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
   private client: Client | undefined;
@@ -116,17 +116,29 @@ export class ApiBuilder {
     return resp;
   }
 
-  public async getProducts() {
+  public async getProducts(query: string) {
     let resp;
     try {
-      resp = await this.apiRoot?.products().get().execute();
+      resp = query.length
+        ? await this.apiRoot
+          ?.products()
+          .get({
+            queryArgs: {
+              where: query,
+              limit: 50,
+            },
+          })
+          .execute()
+        : await this.apiRoot
+          ?.products()
+          .get({ queryArgs: { limit: 50 } })
+          .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
 
     return resp;
   }
-  // .get({queryArgs: {limit:10}})
 
   public async getProductsDiscount() {
     let resp;
@@ -138,4 +150,28 @@ export class ApiBuilder {
 
     return resp;
   }
+
+  public async getFilterProducts() {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.products()
+        .get({
+          queryArgs: {
+            where:
+              // ' masterData(current(masterVariant(prices(value(centAmount < 10000))))) and masterData(current(variants(prices(value(centAmount < 10000)))))',
+              // '   masterData(current(masterVariant(attributes(value="intel"))))',
+              'masterData(current(categories(id="d4228024-abd8-4162-8c68-7fb9f5537ff9")))',
+            // '    masterData(current(masterVariant(prices(discounted is defined))))',
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
 }
+
+export const currentClient = new ApiBuilder();
