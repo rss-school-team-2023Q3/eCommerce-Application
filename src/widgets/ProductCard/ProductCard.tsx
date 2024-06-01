@@ -8,7 +8,7 @@ import {
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 
 function ProductCard({
   product,
