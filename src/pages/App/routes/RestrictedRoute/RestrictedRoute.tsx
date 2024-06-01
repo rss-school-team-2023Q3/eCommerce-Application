@@ -1,7 +1,7 @@
 import RoutePropsType from 'pages/App/types/types/RoutePropsType';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 
 function RestrictedRoute({
   component: Component,
