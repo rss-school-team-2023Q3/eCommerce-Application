@@ -1,12 +1,11 @@
 import './App.css';
-import { Customer, ProductDiscount } from '@commercetools/platform-sdk';
+import { Customer } from '@commercetools/platform-sdk';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
-// import IUser from 'pages/App/types/interfaces/IUser';
 import CatalogPage from 'pages/CatalogPage/CatalogPage';
-import { lazy, useEffect, useState } from 'react';
-import Profile from 'pages/ProfilePage/Profile';
+import { lazy, useEffect } from 'react';
+
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
