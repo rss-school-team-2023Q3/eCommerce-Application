@@ -1,12 +1,15 @@
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
-import setProductsArray from './setProductsArray.ts';
+import { setProductsListArray } from './setProductsArray.ts';
 
-async function getProducts(request: string) {
+async function getProducts(
+  filterQuery = '',
+  sortQuery = 'masterData.current.name.en asc',
+) {
   return currentClient
-    .getProducts(request)
+    .getProducts(filterQuery, sortQuery)
     .then((resp) => resp?.body.results)
-    .then((resp) => setProductsArray(resp));
+    .then((resp) => setProductsListArray(resp));
 }
 
 export default getProducts;

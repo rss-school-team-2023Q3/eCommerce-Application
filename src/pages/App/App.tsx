@@ -24,11 +24,6 @@ const MainPage = lazy(() => import('pages/MainPage/Main'));
 function App() {
   const dispatch = useDispatch();
   const isRefreshing = false;
-  const currentClient = ApiBuilder.client;
-  const productsList: IProductData[] = [];
-  const discountsList: ProductDiscount[] = [];
-  const [products, setProducts] = useState(productsList);
-  const [discounts, setDiscounts] = useState(discountsList);
 
   useEffect(() => {
     const fetchData = async () => {

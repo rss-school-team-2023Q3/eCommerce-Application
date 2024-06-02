@@ -14,7 +14,8 @@ import {
 } from '@mui/material';
 import './FilterAside.modules.css';
 import IProductData from 'pages/App/types/interfaces/IProductData';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import getFilterProducts from 'shared/utils/getFilter';
 import getProducts from 'shared/utils/getProducts';
 
 interface IFilterInterface {
@@ -26,13 +27,22 @@ interface IFilterInterface {
 
 function FilterAside({ props }: IFilterInterface) {
   const [manufacture, setManufacture] = useState('All');
+  const [sort, setSort] = useState('name.en asc');
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
   const [maxCost, setMaxCost] = useState(2000);
-  const onSaleQuery = 'masterData(current(masterVariant(prices(discounted is defined))))';
-  const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
-  const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
-  const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
+  const [filterQuery, setFilterQuery] = useState('');
+  // const [sortQuery, setSortQuery] = useState('masterData.current.name.en asc');
+  // const [sortQuery, setSortQuery] = useState('name.en asc');
+  // const onSaleQuery =
+  //   'masterData(current(masterVariant(prices(discounted is defined))))';
+  // const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
+  // const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
+  // const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
+  // const onSaleQuery =
+  //   'masterData.current.masterVariant.prices.discounted is defined';
+  const manufactureQuery = 'masterVariant.attributes.value:"Palit"';
+  // const priceQuery = `variants.price.centAmount: range(${minCost * 100} to ${maxCost * 100})`;
 
   const handleChangeSale = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOnSale(event.target.checked);
@@ -49,9 +59,19 @@ function FilterAside({ props }: IFilterInterface) {
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
-    const filteredList = await getProducts('');
+    const filtered = await getProducts();
 
-    props.filteredList(filteredList);
+    props.filteredList(filtered);
+    props.setLoadState(false);
+  };
+
+  const handleChangeSort = async (event: SelectChangeEvent<typeof sort>) => {
+    props.setLoadState(true);
+    setSort(event.target.value);
+    const filtered = await getFilterProducts(filterQuery, event.target.value);
+
+    if (filtered) props.filteredList(filtered);
+
     props.setLoadState(false);
   };
 
@@ -59,18 +79,20 @@ function FilterAside({ props }: IFilterInterface) {
     props.setLoadState(true);
     const query = [];
 
-    if (isOnSale) query.push(onSaleQuery);
-
+    // if (isOnSale) query.push(onSaleQuery);
     if (manufacture !== 'All') query.push(manufactureQuery);
 
-    query.push(minPriceQuery);
-    query.push(maxPriceQuery);
-    const request = query.join(' and ');
-    const filteredList = await getProducts(request);
+    // query.push(minPriceQuery);
+    // query.push(priceQuery);
+    setFilterQuery(query.join(' and '));
+    const filtered = await getFilterProducts(filterQuery, sort);
 
-    props.filteredList(filteredList);
+    if (filtered) props.filteredList(filtered);
+
     props.setLoadState(false);
   };
+
+  useEffect(() => {}, [sort]);
 
   return (
     <aside className="catalog-aside">
@@ -152,6 +174,20 @@ function FilterAside({ props }: IFilterInterface) {
           Reset
         </Button>
       </div>
+      <FormControl className="sort-select">
+        <InputLabel id="sort">Sort</InputLabel>
+        <Select
+          labelId="sort"
+          value={sort}
+          label="Sort"
+          onChange={handleChangeSort}
+        >
+          <MenuItem value="name.en asc">Name A-Z</MenuItem>
+          <MenuItem value="name.en desc">Name Z-A</MenuItem>
+          <MenuItem value="price asc">Price ↑</MenuItem>
+          <MenuItem value="price desc">Price ↓</MenuItem>
+        </Select>
+      </FormControl>
     </aside>
   );
 }

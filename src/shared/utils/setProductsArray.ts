@@ -1,8 +1,8 @@
-// import { ProductVariant } from '@commercetools/platform-sdk';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import ProductListType from 'pages/App/types/types/ProductListType';
 
-function setProductsArray(list: ProductListType) {
+export function setProductsListArray(list: ProductListType) {
   const newProducts: IProductData[] = [];
 
   list?.forEach((item) => {
@@ -16,4 +16,16 @@ function setProductsArray(list: ProductListType) {
   return newProducts;
 }
 
-export default setProductsArray;
+export function setProductsProjectionArray(list: ProductProjection[]) {
+  const newProducts: IProductData[] = [];
+
+  list?.forEach((item) => {
+    newProducts.push({
+      variant: item.masterVariant,
+      name: item.name,
+      description: item.description,
+    });
+  });
+
+  return newProducts;
+}
