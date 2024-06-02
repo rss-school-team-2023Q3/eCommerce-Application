@@ -24,6 +24,11 @@ function CatalogPage() {
 
     return discont;
   }
+
+  const filterProducts = (productArray: IProductData[]) => {
+    setProducts(productArray);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setProducts(await getProducts(''));
@@ -37,7 +42,7 @@ function CatalogPage() {
 
   return (
     <div className="catalog-page">
-      <FilterAside />
+      <FilterAside filter={filterProducts} />
       <div className="catalog">
         {products.map((item) => {
           const isDiscont = getDiscont(item.variant.sku);

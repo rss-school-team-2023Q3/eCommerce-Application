@@ -13,16 +13,20 @@ import {
   Typography,
 } from '@mui/material';
 import './FilterAside.modules.css';
+import IProductData from 'pages/App/types/interfaces/IProductData';
 import { ChangeEvent, useState } from 'react';
 import getProducts from 'shared/utils/getProducts';
 
-function FilterAside() {
+interface IFilterInterface {
+  filter: (filteredList: IProductData[]) => void;
+}
+
+function FilterAside({ filter }: IFilterInterface) {
   const [manufacture, setManufacture] = useState('All');
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
   const [maxCost, setMaxCost] = useState(2000);
-  const onSaleQuery =
-    'masterData(current(masterVariant(prices(discounted is defined))))';
+  const onSaleQuery = 'masterData(current(masterVariant(prices(discounted is defined))))';
   const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
   const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
   const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
@@ -31,19 +35,22 @@ function FilterAside() {
     setIsOnSale(event.target.checked);
   };
   const handleChangeManufacture = (
-    event: SelectChangeEvent<typeof manufacture>
+    event: SelectChangeEvent<typeof manufacture>,
   ) => {
     setManufacture(event.target.value);
   };
 
-  const resetFilters = () => {
-    setManufacture('');
+  const resetFilters = async () => {
+    setManufacture('All');
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
+    const filteredList = await getProducts('');
+
+    filter(filteredList);
   };
 
-  const setFilter = () => {
+  const setFilter = async () => {
     const query = [];
 
     if (isOnSale) query.push(onSaleQuery);
@@ -53,8 +60,9 @@ function FilterAside() {
     query.push(minPriceQuery);
     query.push(maxPriceQuery);
     const request = query.join(' and ');
+    const filteredList = await getProducts(request);
 
-    getProducts(request);
+    filter(filteredList);
   };
 
   return (
@@ -62,13 +70,13 @@ function FilterAside() {
       <FormControlLabel
         checked={isOnSale}
         value="start"
-        control={
+        control={(
           <Switch
             checked={isOnSale}
             onChange={handleChangeSale}
             color="primary"
           />
-        }
+        )}
         label="On sale!"
         labelPlacement="end"
       />
