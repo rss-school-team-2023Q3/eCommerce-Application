@@ -12,6 +12,7 @@ const productSlice = createSlice({
     addProduct: (state, action: PayloadAction<IProductData>) => {
       state.products.push(action.payload);
     },
+
     removeProduct: (preState, action: PayloadAction<IProductData>) => {
       const state = preState;
 

@@ -13,10 +13,18 @@ import {
   Typography,
 } from '@mui/material';
 import './FilterAside.modules.css';
+import IProductData from 'pages/App/types/interfaces/IProductData';
 import { ChangeEvent, useState } from 'react';
 import getProducts from 'shared/utils/getProducts';
 
-function FilterAside() {
+interface IFilterInterface {
+  props: {
+    filteredList: (productArray: IProductData[]) => void;
+    setLoadState: (state: boolean) => void;
+  };
+}
+
+function FilterAside({ props }: IFilterInterface) {
   const [manufacture, setManufacture] = useState('All');
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
@@ -35,14 +43,20 @@ function FilterAside() {
     setManufacture(event.target.value);
   };
 
-  const resetFilters = () => {
-    setManufacture('');
+  const resetFilters = async () => {
+    props.setLoadState(true);
+    setManufacture('All');
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
+    const filteredList = await getProducts('');
+
+    props.filteredList(filteredList);
+    props.setLoadState(false);
   };
 
-  const setFilter = () => {
+  const setFilter = async () => {
+    props.setLoadState(true);
     const query = [];
 
     if (isOnSale) query.push(onSaleQuery);
@@ -52,8 +66,10 @@ function FilterAside() {
     query.push(minPriceQuery);
     query.push(maxPriceQuery);
     const request = query.join(' and ');
+    const filteredList = await getProducts(request);
 
-    getProducts(request);
+    props.filteredList(filteredList);
+    props.setLoadState(false);
   };
 
   return (
