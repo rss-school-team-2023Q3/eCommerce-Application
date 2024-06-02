@@ -3,8 +3,11 @@ import {
   CustomerDraft,
   createApiBuilderFromCtpClient,
   Customer,
+  MyCustomerChangePassword,
+  CustomerUpdateAction,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
+import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
 import {
@@ -168,6 +171,50 @@ class ApiBuilder {
         .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
+
+  public async updateUserData(
+    actions: IDataActions[],
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const body = {
+      version,
+      actions: actions as CustomerUpdateAction[],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async updatePassword(body: MyCustomerChangePassword) {
+    let resp;
+
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .password()
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
     }
 
     return resp;

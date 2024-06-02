@@ -5,7 +5,6 @@ import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
 import CatalogPage from 'pages/CatalogPage/CatalogPage';
 import { lazy, useEffect } from 'react';
-
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -24,11 +23,6 @@ const MainPage = lazy(() => import('pages/MainPage/Main'));
 function App() {
   const dispatch = useDispatch();
   const isRefreshing = false;
-  const currentClient = ApiBuilder.client;
-  const productsList: IProductData[] = [];
-  const discountsList: ProductDiscount[] = [];
-  const [products, setProducts] = useState(productsList);
-  const [discounts, setDiscounts] = useState(discountsList);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,25 +30,6 @@ function App() {
         const body: Customer | null = await currentClient.createRefreshTokenClient();
 
         if (body) {
-          // const { email, firstName, lastName } = body;
-
-          // if (
-          //   typeof email === 'string'
-          //   && typeof firstName === 'string'
-          //   && typeof lastName === 'string'
-          // ) {
-          //   const user: IUser = {
-          //     email,
-          //     firstName,
-          //     lastName,
-          //     country: body.addresses[1]
-          //       ? body.addresses[1].country
-          //       : body.addresses[0].country,
-          //   };
-
-          //   dispatch(setCredentials({ user }));
-          // }
-
           dispatch(setCredentials({ user: body }));
         }
       } else {

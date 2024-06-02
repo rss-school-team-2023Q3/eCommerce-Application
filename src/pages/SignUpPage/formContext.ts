@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Context, createContext } from 'react';
 
-interface IValidValue {
+export interface IValidValue {
   value: string;
   isValid: boolean;
 }
@@ -20,6 +20,10 @@ export interface IFormContextType {
   shippingCode: IValidValue;
   billingCountry: IValidValue;
   shippingCountry: IValidValue;
+  fieldChangedSet?: Set<string>;
+  defaultBillingAddressId?: string;
+  defaultShippingAddressId?: string;
+  oldPassword?: string;
 }
 
 export const initialContext: IFormContextType = {

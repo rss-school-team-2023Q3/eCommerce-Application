@@ -1,4 +1,6 @@
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { TextField } from '@mui/material';
+import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -24,7 +26,19 @@ function LastNameProfile({ isDisable }: { isDisable: boolean }) {
     return () => {
       formData.lastName.value = '';
     };
-  }, []);
+  }, [user, formData.lastName]);
+
+  useEffect(() => {
+    if (isDisable && user?.lastName) {
+      setLastName(user.lastName);
+    }
+
+    if (!formData.fieldChangedSet) throw new Error("formData.fieldChanged doesn't exist");
+
+    if (lastName === user?.lastName) {
+      formData.fieldChangedSet.delete(FormField.lastName);
+    } else formData.fieldChangedSet.add(FormField.lastName);
+  }, [isDisable, lastName, user?.lastName, formData.fieldChangedSet]);
 
   function checkLastName(name: string) {
     setLastName(name);
@@ -39,26 +53,33 @@ function LastNameProfile({ isDisable }: { isDisable: boolean }) {
     }
   }
 
+  const isLastNameChanged = lastName !== user?.lastName;
+
   return (
-    <TextField
-      disabled={isDisable}
-      value={lastName}
-      id="last_name"
-      label="Last Name"
-      autoComplete="off"
-      type="Text"
-      style={{ marginBottom: '10px' }}
-      helperText={isValid ? '' : lastNameErrorMessage}
-      FormHelperTextProps={{
-        sx: {
-          color: 'red',
-        },
-      }}
-      color={isValid ? 'primary' : 'error'}
-      required
-      size="small"
-      onChange={(e) => checkLastName(e.target.value)}
-    />
+    <div className="field-wrap">
+      <TextField
+        className="input-field-profile"
+        disabled={isDisable}
+        value={lastName}
+        id="last_name"
+        label="Last Name"
+        autoComplete="off"
+        type="Text"
+        helperText={isValid ? '' : lastNameErrorMessage}
+        FormHelperTextProps={{
+          sx: {
+            color: 'red',
+          },
+        }}
+        color={isValid ? 'primary' : 'error'}
+        required
+        size="small"
+        onChange={(e) => checkLastName(e.target.value)}
+      />
+      {isLastNameChanged && (
+        <PublishedWithChangesIcon className="change-icon" />
+      )}
+    </div>
   );
 }
 

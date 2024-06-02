@@ -1,9 +1,16 @@
 import { Customer } from '@commercetools/platform-sdk';
-import { FormControlLabel, Switch } from '@mui/material';
-import dayjs from 'dayjs';
-import { IFormContextType } from 'pages/SignUpPage/formContext';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+import {
+  FormControlLabel,
+  Switch,
+  IconButton,
+  FormControl,
+  RadioGroup,
+  Radio,
+} from '@mui/material';
+import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'shared/api/store.ts';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
@@ -12,30 +19,17 @@ import LastNameProfile from 'shared/components/profileComponents/LastNameProfile
 import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
 
-import profileContext from './utils/profileContext.ts';
+import profileContext, {
+  initialContextProfile,
+} from './utils/profileContext.ts';
 
 import './Profile.modules.css';
-
-const initialContext: IFormContextType = {
-  email: { value: '', isValid: false },
-  password: { value: '', isValid: false },
-  name: { value: '', isValid: false },
-  lastName: { value: '', isValid: false },
-  date: { value: dayjs(''), isValid: false },
-  billingStreet: { value: '', isValid: false },
-  shippingStreet: { value: '', isValid: false },
-  billingCity: { value: '', isValid: false },
-  shippingCity: { value: '', isValid: false },
-  billingCode: { value: '', isValid: false },
-  shippingCode: { value: '', isValid: false },
-  billingCountry: { value: '', isValid: false },
-  shippingCountry: { value: '', isValid: false },
-};
 
 export default function Profile() {
   const customer: Customer | null = useSelector(
     (state: RootState) => state.auth.user,
   );
+  const dispatch = useDispatch();
 
   const [isDisable, setIsDisable] = useState(true);
 
@@ -45,7 +39,16 @@ export default function Profile() {
 
   let formData = useContext(profileContext);
 
+  formData.defaultBillingAddressId = customer.defaultBillingAddressId
+    ? customer.defaultBillingAddressId
+    : '';
+  formData.defaultShippingAddressId = customer.defaultShippingAddressId
+    ? customer.defaultShippingAddressId
+    : '';
+
   const [isDateChange, setDateChange] = useState(false);
+
+  const [isChanged, setIsChanged] = useState(false);
 
   function dateChange() {
     setDateChange(!isDateChange);
@@ -56,12 +59,28 @@ export default function Profile() {
   }, [isDateChange]);
 
   useEffect(() => {
-    formData = structuredClone(initialContext);
+    setIsChanged(!!formData.fieldChangedSet?.size);
+  }, [formData.fieldChangedSet?.size]);
 
-    return () => {
-      formData = structuredClone(initialContext);
-    };
-  }, []);
+  useEffect(
+    () => () => {
+      formData = structuredClone(initialContextProfile);
+    },
+    [],
+  );
+
+  function onChangeForm() {}
+
+  async function onUpdate() {
+    await actionsSDK(
+      formData,
+      customer?.id as string,
+      customer?.version as number,
+      dispatch,
+    );
+    formData.fieldChangedSet = new Set();
+    setIsDisable(true);
+  }
 
   return (
     <div className="profile-wrapper">
@@ -69,18 +88,29 @@ export default function Profile() {
         <form
           className="profile-form"
           action="registration"
-          // onChange={validateForm}
+          onChange={onChangeForm}
         >
-          <FormControlLabel
-            control={(
-              <Switch
-                className="disable-switch"
-                onChange={() => setIsDisable(!isDisable)}
-              />
-            )}
-            label={isDisable ? 'Edit data' : 'Cancel data editing'}
-          />
-
+          <div className="switcher-wrap">
+            <FormControlLabel
+              control={(
+                <Switch
+                  checked={!isDisable}
+                  className="disable-switch"
+                  onChange={() => setIsDisable(!isDisable)}
+                />
+              )}
+              label={isDisable ? 'Edit data' : 'Cancel data editing'}
+            />
+            <IconButton
+              size="large"
+              // color="secondary"
+              className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
+              onClick={() => onUpdate()}
+            >
+              <SaveAsIcon />
+              save
+            </IconButton>
+          </div>
           <div className="profile-form-field">
             <div className="user-field-profile">
               User Data
@@ -97,63 +127,79 @@ export default function Profile() {
             </div>
             <div className="address-field">
               <div className="address-input-field">
-                <ul className="data-field-profile">
-                  <p> Billing Addresses</p>
-                  {customer.billingAddressIds
-                    && customer.billingAddressIds.map((id, index) => (
-                      <li key={id}>
-                        <ProfileAddress
-                          type="billing"
-                          addressId={id}
-                          index={index}
-                          isDisable={isDisable}
-                        />
-                      </li>
-                    ))}
-                </ul>
-                <ul className="data-field-profile">
-                  <p> Shipping Addresses</p>
-                  {customer.shippingAddressIds
-                    && customer.shippingAddressIds.map((id, index) => (
-                      <li key={id}>
-                        <ProfileAddress
-                          type="billing"
-                          addressId={id}
-                          index={index}
-                          isDisable={isDisable}
-                        />
-                      </li>
-                    ))}
-                  {/* {customer.shippingAddressIds
-                    && customer.shippingAddressIds.map((id, index) => {
-                      const currentAddress = customer.addresses.find(
-                        (el) => el.id === id,
-                      );
+                <FormControl
+                  className="data-field-profile"
+                  disabled={isDisable}
+                >
+                  <RadioGroup
+                    defaultValue={
+                      customer.defaultBillingAddressId
+                        ? customer.defaultBillingAddressId
+                        : ''
+                    }
+                    onChange={(e) => {
+                      formData.defaultBillingAddressId = e.target.value;
+                    }}
+                    aria-labelledby="radio-buttons-group-label"
+                    name="radio-buttons-billing"
+                  >
+                    <ul className="data-field-list">
+                      <p> Billing Addresses</p>
+                      {customer.billingAddressIds
+                        && customer.billingAddressIds.map((id, index) => (
+                          <li key={id}>
+                            <ProfileAddress
+                              type="billing"
+                              addressId={id}
+                              index={index}
+                              isDisable={isDisable}
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                    {!isDisable && (
+                      <FormControlLabel
+                        control={<Radio value="" />}
+                        label="reset default address"
+                      />
+                    )}
+                  </RadioGroup>
+                </FormControl>
 
-                      return currentAddress ? (
-                        <li key={id}>
-                          <ProfileAddress
-                            type="shipping"
-                            address={currentAddress}
-                            index={index}
-                          />
-                        </li>
-                      ) : (
-                        ''
-                      );
-                    })} */}
-                  {/* <FormControlLabel
-                      className="switch-field"
-                      control={(
-                        <Checkbox
-                          size="small"
-                          checked={isShippingDefaut}
-                          onChange={() => setShippingDefault(!isShippingDefaut)}
-                        />
-                      )}
-                      label="Use as default address"
-                    /> */}
-                </ul>
+                <FormControl
+                  className="data-field-profile"
+                  disabled={isDisable}
+                >
+                  <RadioGroup
+                    defaultValue={customer.defaultShippingAddressId}
+                    onChange={(e) => {
+                      formData.defaultShippingAddressId = e.target.value;
+                    }}
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    name="radio-buttons-shipping"
+                  >
+                    <ul className="data-field-list">
+                      <p> Shipping Addresses</p>
+                      {customer.shippingAddressIds
+                        && customer.shippingAddressIds.map((id, index) => (
+                          <li key={id}>
+                            <ProfileAddress
+                              type="shipping"
+                              addressId={id}
+                              index={index}
+                              isDisable={isDisable}
+                            />
+                          </li>
+                        ))}
+                    </ul>
+                    {!isDisable && (
+                      <FormControlLabel
+                        control={<Radio value="" />}
+                        label="reset default address"
+                      />
+                    )}
+                  </RadioGroup>
+                </FormControl>
               </div>
             </div>
           </div>
