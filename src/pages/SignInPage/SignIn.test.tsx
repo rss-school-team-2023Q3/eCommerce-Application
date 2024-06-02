@@ -1,6 +1,6 @@
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import store from 'shared/api/authApi/store/store.ts';
+import store from 'shared/api/store.ts';
 import { render, screen } from 'shared/utils/test-utils';
 import { describe, expect, it } from 'vitest';
 

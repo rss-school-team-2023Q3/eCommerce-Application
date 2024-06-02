@@ -1,15 +1,18 @@
 import { ProductDiscount } from '@commercetools/platform-sdk';
 import IProductData from 'pages/App/types/interfaces/IProductData';
-import ProductCard from 'widgets/ProductCard/ProductCard';
 import './CatalogPage.modules.css';
+import { useEffect, useState } from 'react';
+import getDiscounts from 'shared/utils/getDiscounts';
+import getProducts from 'shared/utils/getProducts';
+import FilterAside from 'widgets/FilterAside/FilterAside';
+import ProductCard from 'widgets/ProductCard/ProductCard';
 
-function CatalogPage({
-  products,
-  discounts,
-}: {
-  products: IProductData[];
-  discounts: ProductDiscount[];
-}) {
+function CatalogPage() {
+  const productsList: IProductData[] = [];
+  const discountsList: ProductDiscount[] = [];
+  const [products, setProducts] = useState(productsList);
+  const [discounts, setDiscounts] = useState(discountsList);
+
   function getDiscont(name: string | undefined) {
     let discont: ProductDiscount | boolean = false;
 
@@ -21,10 +24,20 @@ function CatalogPage({
 
     return discont;
   }
+  useEffect(() => {
+    const fetchData = async () => {
+      setProducts(await getProducts(''));
+      setDiscounts(await getDiscounts());
+    };
+
+    if (!products.length) {
+      fetchData();
+    }
+  }, [products]);
 
   return (
-    <>
-      <h1>Catalog</h1>
+    <div className="catalog-page">
+      <FilterAside />
       <div className="catalog">
         {products.map((item) => {
           const isDiscont = getDiscont(item.variant.sku);
@@ -38,7 +51,7 @@ function CatalogPage({
           );
         })}
       </div>
-    </>
+    </div>
   );
 }
 

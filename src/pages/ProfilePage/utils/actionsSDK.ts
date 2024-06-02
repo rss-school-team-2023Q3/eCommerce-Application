@@ -3,7 +3,7 @@ import { Dispatch } from '@reduxjs/toolkit';
 import IDataAction, { Keys } from 'pages/App/types/interfaces/IDataAction';
 import { IFormContextType, IValidValue } from 'pages/SignUpPage/formContext';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
+import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import capitalizeFirstLetter from 'shared/utils/capitalizeFirstLetter';
 import { toastSuccess } from 'shared/utils/notifications';
 
@@ -46,7 +46,7 @@ export default async function actionsSDK(
     return [...acc, { action: nameAction, [key]: data.value }];
   }, [] as IDataAction[]);
 
-  let res = await ApiBuilder.client.updateUserData(updateActions, id, version);
+  let res = await currentClient.updateUserData(updateActions, id, version);
 
   if (res?.statusCode === 200) {
     toastSuccess('User data updated');
@@ -61,7 +61,7 @@ export default async function actionsSDK(
 
   if (!formData.oldPassword) return res;
 
-  res = await ApiBuilder.client.updatePassword({
+  res = await currentClient.updatePassword({
     version,
     currentPassword: formData.oldPassword,
     newPassword: formData.password.value,
@@ -70,7 +70,7 @@ export default async function actionsSDK(
   if (res?.statusCode === 200) {
     toastSuccess('User password updated');
 
-    const loginResponse = await ApiBuilder.client.loginUser(
+    const loginResponse = await currentClient.loginUser(
       formData.email.value,
       formData.password.value,
     );

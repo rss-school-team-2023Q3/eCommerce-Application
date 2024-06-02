@@ -4,7 +4,7 @@ import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 import validate from 'shared/utils/validate';
 
 function EmailProfile({ isDisable }: { isDisable: boolean }) {

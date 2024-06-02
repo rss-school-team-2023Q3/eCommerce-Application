@@ -11,7 +11,7 @@ import {
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store.ts';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
 import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfile.tsx';
