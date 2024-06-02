@@ -5,6 +5,7 @@ import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
 import CatalogPage from 'pages/CatalogPage/CatalogPage';
 import { lazy, useEffect } from 'react';
+
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -23,6 +24,11 @@ const MainPage = lazy(() => import('pages/MainPage/Main'));
 function App() {
   const dispatch = useDispatch();
   const isRefreshing = false;
+  const currentClient = ApiBuilder.client;
+  const productsList: IProductData[] = [];
+  const discountsList: ProductDiscount[] = [];
+  const [products, setProducts] = useState(productsList);
+  const [discounts, setDiscounts] = useState(discountsList);
 
   useEffect(() => {
     const fetchData = async () => {
