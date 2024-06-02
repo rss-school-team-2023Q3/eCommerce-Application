@@ -23,6 +23,7 @@ export interface IFormContextType {
   fieldChangedSet?: Set<string>;
   defaultBillingAddressId?: string;
   defaultShippingAddressId?: string;
+  oldPassword?: string;
 }
 
 export const initialContext: IFormContextType = {

@@ -19,6 +19,7 @@ export const initialContextProfile: IFormContextType = {
   fieldChangedSet: new Set<string>(),
   defaultBillingAddressId: '',
   defaultShippingAddressId: '',
+  oldPassword: '',
 };
 
 const profileContext: Context<IFormContextType> = createContext(

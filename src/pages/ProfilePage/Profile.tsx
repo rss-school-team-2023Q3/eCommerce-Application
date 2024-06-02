@@ -11,7 +11,6 @@ import {
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCredentials } from 'shared/api/authApi/store/authSlice.ts';
 import { RootState } from 'shared/api/authApi/store/store';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
@@ -19,7 +18,6 @@ import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfi
 import LastNameProfile from 'shared/components/profileComponents/LastNameProfile.tsx';
 import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
-import { toastSuccess } from 'shared/utils/notifications.ts';
 
 import profileContext, {
   initialContextProfile,
@@ -74,16 +72,14 @@ export default function Profile() {
   function onChangeForm() {}
 
   async function onUpdate() {
-    const resp = await actionsSDK(
+    await actionsSDK(
       formData,
       customer?.id as string,
       customer?.version as number,
+      dispatch,
     );
-
-    if (resp?.statusCode === 200) {
-      toastSuccess('User updated');
-      dispatch(setCredentials({ user: resp.body }));
-    }
+    formData.fieldChangedSet = new Set();
+    setIsDisable(true);
   }
 
   return (
@@ -98,6 +94,7 @@ export default function Profile() {
             <FormControlLabel
               control={(
                 <Switch
+                  checked={!isDisable}
                   className="disable-switch"
                   onChange={() => setIsDisable(!isDisable)}
                 />

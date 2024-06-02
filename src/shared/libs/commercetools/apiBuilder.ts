@@ -4,6 +4,7 @@ import {
   createApiBuilderFromCtpClient,
   Customer,
   CustomerUpdateAction,
+  MyCustomerChangePassword,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 import IDataAction from 'pages/App/types/interfaces/IDataAction.ts';
@@ -156,6 +157,24 @@ export class ApiBuilder {
       resp = await this.apiRoot
         ?.customers()
         .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async updatePassword(body: MyCustomerChangePassword) {
+    let resp;
+
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .password()
         .post({
           body,
         })

@@ -1,14 +1,17 @@
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import validate from 'shared/utils/validate';
 
 function PasswordProfile({ isDisable }: { isDisable: boolean }) {
   const [isShowPasswordOld, setShowPasswordOld] = useState(false);
   const [isShowPasswordNew, setShowPasswordNew] = useState(false);
   const [isValid, setIsValid] = useState(true);
+  const [passwordOld, setPasswordOld] = useState('');
+  const [passwordNew, setPasswordNew] = useState('');
   const formData = useContext(profileContext);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const handleClickShowPasswordOld = () => {
@@ -18,7 +21,39 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
     setShowPasswordNew((show) => !show);
   };
 
+  useEffect(() => {
+    formData.oldPassword = '';
+    formData.password.value = '';
+    formData.password.isValid = false;
+    setIsValid(true);
+    setPasswordNew('');
+    setPasswordOld('');
+  }, [isDisable]);
+
+  useEffect(() => {
+    if (!formData.fieldChangedSet) {
+      throw new Error("formData.fieldChangedSet doesn't exist");
+    }
+
+    const isPasswords = !!passwordOld && formData.password.value;
+
+    if (
+      isPasswords
+      && formData.password.isValid
+      && formData.password.value !== passwordOld
+    ) {
+      formData.fieldChangedSet.add('password');
+    } else formData.fieldChangedSet.delete('password');
+  }, [
+    formData.password.isValid,
+    isDisable,
+    formData.fieldChangedSet,
+    passwordOld,
+    passwordNew,
+  ]);
+
   function checkPassword(pass: string) {
+    setPasswordNew(pass);
     setIsValid(!validate('password', pass));
     setPasswordErrorMessage(validate('password', pass));
 
@@ -30,15 +65,24 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
     }
   }
 
+  const isPasswordChanged = passwordOld !== passwordNew
+    && formData.password.isValid
+    && passwordOld
+    && passwordNew;
+
   return (
     !isDisable && (
-      <div>
+      <div className="field-wrap">
         <TextField
           autoComplete="off"
           style={{ marginBottom: '10px', width: '50%' }}
           size="small"
+          value={passwordOld}
           type={isShowPasswordOld ? 'text' : 'password'}
-          // onChange={(e) => checkPassword(e.target.value)}
+          onChange={(e) => {
+            setPasswordOld(e.target.value);
+            formData.oldPassword = e.target.value;
+          }}
           required
           id="passwordOld"
           label="Old password"
@@ -66,6 +110,7 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
         />
 
         <TextField
+          value={passwordNew}
           autoComplete="off"
           style={{ marginBottom: '10px', width: '50%' }}
           size="small"
@@ -96,6 +141,9 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
             ),
           }}
         />
+        {isPasswordChanged && (
+          <PublishedWithChangesIcon className="change-icon" />
+        )}
       </div>
     )
   );
