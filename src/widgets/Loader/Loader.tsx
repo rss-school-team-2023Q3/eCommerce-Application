@@ -1,3 +1,9 @@
+import { LinearProgress } from '@mui/material';
+
 export default function Loader() {
-  return <h2>Loading..</h2>;
+  return (
+    <LinearProgress
+      sx={{ width: '100%', alignSelf: 'center', padding: '10' }}
+    />
+  );
 }

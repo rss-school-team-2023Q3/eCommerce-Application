@@ -18,10 +18,13 @@ import { ChangeEvent, useState } from 'react';
 import getProducts from 'shared/utils/getProducts';
 
 interface IFilterInterface {
-  filter: (filteredList: IProductData[]) => void;
+  props: {
+    filteredList: (productArray: IProductData[]) => void;
+    setLoadState: (state: boolean) => void;
+  };
 }
 
-function FilterAside({ filter }: IFilterInterface) {
+function FilterAside({ props }: IFilterInterface) {
   const [manufacture, setManufacture] = useState('All');
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
@@ -41,16 +44,19 @@ function FilterAside({ filter }: IFilterInterface) {
   };
 
   const resetFilters = async () => {
+    props.setLoadState(true);
     setManufacture('All');
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
     const filteredList = await getProducts('');
 
-    filter(filteredList);
+    props.filteredList(filteredList);
+    props.setLoadState(false);
   };
 
   const setFilter = async () => {
+    props.setLoadState(true);
     const query = [];
 
     if (isOnSale) query.push(onSaleQuery);
@@ -62,7 +68,8 @@ function FilterAside({ filter }: IFilterInterface) {
     const request = query.join(' and ');
     const filteredList = await getProducts(request);
 
-    filter(filteredList);
+    props.filteredList(filteredList);
+    props.setLoadState(false);
   };
 
   return (
