@@ -157,7 +157,7 @@ class ApiBuilder {
     return resp;
   }
 
-  public async getFilterProducts(filterQuery: string, sortQuery: string) {
+  public async getFilterProducts(filterQuery: string[], sortQuery: string) {
     let resp;
     try {
       resp = filterQuery.length

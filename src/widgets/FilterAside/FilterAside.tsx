@@ -31,18 +31,10 @@ function FilterAside({ props }: IFilterInterface) {
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
   const [maxCost, setMaxCost] = useState(2000);
-  const [filterQuery, setFilterQuery] = useState('');
-  // const [sortQuery, setSortQuery] = useState('masterData.current.name.en asc');
-  // const [sortQuery, setSortQuery] = useState('name.en asc');
-  // const onSaleQuery =
-  //   'masterData(current(masterVariant(prices(discounted is defined))))';
-  // const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
-  // const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
-  // const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
-  // const onSaleQuery =
-  //   'masterData.current.masterVariant.prices.discounted is defined';
-  const manufactureQuery = 'masterVariant.attributes.value:"Palit"';
-  // const priceQuery = `variants.price.centAmount: range(${minCost * 100} to ${maxCost * 100})`;
+  const [filterQuery, setFilterQuery] = useState([] as string[]);
+  const onSaleQuery = 'variants.prices.discounted:exists';
+  const manufactureQuery = `variants.attributes.manufacture:"${manufacture}"`;
+  const priceQuery = `variants.price.centAmount: range(${minCost * 100} to ${maxCost * 100})`;
 
   const handleChangeSale = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOnSale(event.target.checked);
@@ -59,6 +51,8 @@ function FilterAside({ props }: IFilterInterface) {
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
+    setSort('name.en asc');
+    setFilterQuery([]);
     const filtered = await getProducts();
 
     props.filteredList(filtered);
@@ -77,15 +71,15 @@ function FilterAside({ props }: IFilterInterface) {
 
   const setFilter = async () => {
     props.setLoadState(true);
-    const query = [];
+    const filterArray = [];
 
-    // if (isOnSale) query.push(onSaleQuery);
-    if (manufacture !== 'All') query.push(manufactureQuery);
+    if (isOnSale) filterArray.push(onSaleQuery);
 
-    // query.push(minPriceQuery);
-    // query.push(priceQuery);
-    setFilterQuery(query.join(' and '));
-    const filtered = await getFilterProducts(filterQuery, sort);
+    if (manufacture !== 'All') filterArray.push(manufactureQuery);
+
+    filterArray.push(priceQuery);
+    setFilterQuery(filterArray);
+    const filtered = await getFilterProducts(filterArray, sort);
 
     if (filtered) props.filteredList(filtered);
 

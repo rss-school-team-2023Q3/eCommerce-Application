@@ -3,7 +3,10 @@ import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
 import { setProductsProjectionArray } from './setProductsArray.ts';
 
-async function getFilterProducts(filterQuery = '', sortQuery = 'price asc') {
+async function getFilterProducts(
+  filterQuery: string[],
+  sortQuery = 'price asc',
+) {
   return currentClient
     .getFilterProducts(filterQuery, sortQuery)
     .then((resp) => resp?.body.results)
