@@ -36,6 +36,10 @@
   padding: 1.5rem;
 }
 
+.disable-switch {
+  outline: none;
+}
+
 .profile-form-field {
   display: flex;
   flex-direction: column;
@@ -119,6 +123,31 @@
 
 .save-visible {
   transform: translateY(-0.5rem);
+}
+
+.change-icon {
+  position: absolute;
+  right: -1.5rem;
+  top: 0.5rem;
+
+  /* transform: translateX(0); */
+
+  /* transition: transform .3s linear; */
+}
+
+/* 
+.change-right{
+  transform: translateX(2rem);
+}
+
+.change-visible{
+  transform: translateX(2rem);
+} */
+
+.field-wrap {
+  position: relative;
+
+  /* overflow: hidden; */
 }
 
 .data-field-list {

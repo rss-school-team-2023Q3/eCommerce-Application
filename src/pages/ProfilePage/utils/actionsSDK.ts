@@ -17,11 +17,7 @@ export default async function actionsSDK(
 
     let fakeEl = key;
 
-    if (
-      key === 'date'
-      || key === 'defaultShippingAddressId'
-      || key === 'defaultBillingAddressId'
-    ) return acc;
+    if (key === 'defaultShippingAddressId' || key === 'defaultBillingAddressId') return acc;
 
     if ((key as string) === 'firstName') fakeEl = 'name';
 

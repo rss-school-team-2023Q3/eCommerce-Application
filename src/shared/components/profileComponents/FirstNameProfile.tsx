@@ -1,3 +1,4 @@
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { TextField } from '@mui/material';
 import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
@@ -25,20 +26,19 @@ function FirstNameProfile({ isDisable }: { isDisable: boolean }) {
     return () => {
       formData.name.value = '';
     };
-  }, []);
+  }, [user, formData.name]);
 
   useEffect(() => {
-    if (isDisable) setFirstName(user?.firstName ? user?.firstName : firstName);
+    if (isDisable && user?.firstName) setFirstName(user.firstName);
 
     if (!formData.fieldChangedSet) throw new Error("formData.fieldChangedSet doesn't exist");
 
-    if (
-      firstName === user?.firstName
-      && formData.fieldChangedSet.has(FormField.firstName)
-    ) {
-      formData.fieldChangedSet.delete(FormField.firstName);
-    } else if (firstName !== user?.firstName) formData.fieldChangedSet.add(FormField.firstName);
-  }, [isDisable, firstName]);
+    const isNameChanged = firstName !== user?.firstName;
+
+    if (isNameChanged) {
+      formData.fieldChangedSet.add(FormField.firstName);
+    } else formData.fieldChangedSet.delete(FormField.firstName);
+  }, [isDisable, firstName, user?.firstName, formData.fieldChangedSet]);
 
   function checkName(name: string) {
     setFirstName(name);
@@ -54,26 +54,31 @@ function FirstNameProfile({ isDisable }: { isDisable: boolean }) {
     }
   }
 
+  const isNameChanged = firstName !== user?.firstName;
+
   return (
-    <TextField
-      disabled={isDisable}
-      value={firstName}
-      className="input-field-profile"
-      id="first_name"
-      label="First Name"
-      autoComplete="off"
-      type="Text"
-      required
-      helperText={isValid ? '' : nameErrorMessage}
-      FormHelperTextProps={{
-        sx: {
-          color: 'red',
-        },
-      }}
-      color={isValid ? 'primary' : 'error'}
-      size="small"
-      onChange={(e) => checkName(e.target.value)}
-    />
+    <div className="field-wrap">
+      <TextField
+        disabled={isDisable}
+        value={firstName}
+        className="input-field-profile"
+        id="first_name"
+        label="First Name"
+        autoComplete="off"
+        type="Text"
+        required
+        helperText={isValid ? '' : nameErrorMessage}
+        FormHelperTextProps={{
+          sx: {
+            color: 'red',
+          },
+        }}
+        color={isValid ? 'primary' : 'error'}
+        size="small"
+        onChange={(e) => checkName(e.target.value)}
+      />
+      {isNameChanged && <PublishedWithChangesIcon className="change-icon" />}
+    </div>
   );
 }
 

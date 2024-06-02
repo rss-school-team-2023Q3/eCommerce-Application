@@ -1,3 +1,4 @@
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { TextField } from '@mui/material';
 import FormField from 'pages/App/types/enums/formField';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
@@ -10,6 +11,7 @@ function EmailProfile({ isDisable }: { isDisable: boolean }) {
   const [isValid, setIsValid] = useState(true);
   const [emailErrorMessage, setEmailErrorMessage] = useState('');
   const formData = useContext(profileContext);
+
   const user = useSelector((state: RootState) => state.auth.user);
 
   const [userEmail, setUserEmail] = useState(formData.email.value);
@@ -23,27 +25,35 @@ function EmailProfile({ isDisable }: { isDisable: boolean }) {
     return () => {
       formData.email.value = '';
     };
-  }, []);
+  }, [user, formData.email]);
 
   useEffect(() => {
-    if (isDisable) setUserEmail(user?.email ? user?.email : userEmail);
+    if (isDisable && user?.email) {
+      setUserEmail(user.email);
+    }
 
-    if (!formData.fieldChangedSet) throw new Error("formData.fieldChangedSet doesn't exist");
+    if (!formData.fieldChangedSet) {
+      throw new Error("formData.fieldChangedSet doesn't exist");
+    }
 
-    if (
-      userEmail === user?.email
-      && formData.fieldChangedSet.has(FormField.email)
-    ) {
+    const isEmailChanged = userEmail !== user?.email;
+
+    if (isEmailChanged) {
+      formData.fieldChangedSet.add(FormField.email);
+    } else {
       formData.fieldChangedSet.delete(FormField.email);
-    } else if (userEmail !== user?.email) formData.fieldChangedSet.add(FormField.email);
-  }, [isDisable, userEmail]);
+    }
+  }, [isDisable, userEmail, user?.email, formData.fieldChangedSet]);
 
   function checkEmail(email: string) {
     setUserEmail(email);
-    setIsValid(!validate('email', email));
-    setEmailErrorMessage(validate('email', email));
+    const emailValidationError = validate('email', email);
+    const isEmailValid = !emailValidationError;
 
-    if (!validate('email', email) && email.length > 1) {
+    setIsValid(isEmailValid);
+    setEmailErrorMessage(emailValidationError);
+
+    if (isEmailValid && email.length > 1) {
       formData.email.value = email;
       formData.email.isValid = true;
     } else {
@@ -51,26 +61,31 @@ function EmailProfile({ isDisable }: { isDisable: boolean }) {
     }
   }
 
+  const isEmailChanged = userEmail !== user?.email;
+
   return (
-    <TextField
-      disabled={isDisable}
-      value={userEmail}
-      type="email"
-      id="email"
-      label="Email"
-      autoComplete="off"
-      style={{ marginBottom: '10px' }}
-      required
-      helperText={isValid ? '' : emailErrorMessage}
-      FormHelperTextProps={{
-        sx: {
-          color: 'red',
-        },
-      }}
-      color={isValid ? 'primary' : 'error'}
-      size="small"
-      onChange={(e) => checkEmail(e.target.value)}
-    />
+    <div className="field-wrap">
+      <TextField
+        className="input-field-profile"
+        disabled={isDisable}
+        value={userEmail}
+        type="email"
+        id="email"
+        label="Email"
+        autoComplete="off"
+        required
+        helperText={isValid ? '' : emailErrorMessage}
+        FormHelperTextProps={{
+          sx: {
+            color: 'red',
+          },
+        }}
+        color={isValid ? 'primary' : 'error'}
+        size="small"
+        onChange={(e) => checkEmail(e.target.value)}
+      />
+      {isEmailChanged && <PublishedWithChangesIcon className="change-icon" />}
+    </div>
   );
 }
 
