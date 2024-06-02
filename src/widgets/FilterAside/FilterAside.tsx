@@ -14,7 +14,8 @@ import {
 } from '@mui/material';
 import './FilterAside.modules.css';
 import IProductData from 'pages/App/types/interfaces/IProductData';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import getFilterProducts from 'shared/utils/getFilter';
 import getProducts from 'shared/utils/getProducts';
 
 interface IFilterInterface {
@@ -26,13 +27,14 @@ interface IFilterInterface {
 
 function FilterAside({ props }: IFilterInterface) {
   const [manufacture, setManufacture] = useState('All');
+  const [sort, setSort] = useState('name.en asc');
   const [isOnSale, setIsOnSale] = useState(false);
   const [minCost, setMinCost] = useState(0);
   const [maxCost, setMaxCost] = useState(2000);
-  const onSaleQuery = 'masterData(current(masterVariant(prices(discounted is defined))))';
-  const manufactureQuery = `masterData(current(masterVariant(attributes(value="${manufacture}"))))`;
-  const minPriceQuery = `masterData(current(masterVariant(prices(value(centAmount > ${minCost * 100})))))`;
-  const maxPriceQuery = `masterData(current(masterVariant(prices(value(centAmount < ${maxCost * 100})))))`;
+  const [filterQuery, setFilterQuery] = useState([] as string[]);
+  const onSaleQuery = 'variants.prices.discounted:exists';
+  const manufactureQuery = `variants.attributes.manufacture:"${manufacture}"`;
+  const priceQuery = `variants.price.centAmount: range(${minCost * 100} to ${maxCost * 100})`;
 
   const handleChangeSale = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOnSale(event.target.checked);
@@ -49,28 +51,42 @@ function FilterAside({ props }: IFilterInterface) {
     setIsOnSale(false);
     setMinCost(0);
     setMaxCost(2000);
-    const filteredList = await getProducts('');
+    setSort('name.en asc');
+    setFilterQuery([]);
+    const filtered = await getProducts();
 
-    props.filteredList(filteredList);
+    props.filteredList(filtered);
+    props.setLoadState(false);
+  };
+
+  const handleChangeSort = async (event: SelectChangeEvent<typeof sort>) => {
+    props.setLoadState(true);
+    setSort(event.target.value);
+    const filtered = await getFilterProducts(filterQuery, event.target.value);
+
+    if (filtered) props.filteredList(filtered);
+
     props.setLoadState(false);
   };
 
   const setFilter = async () => {
     props.setLoadState(true);
-    const query = [];
+    const filterArray = [];
 
-    if (isOnSale) query.push(onSaleQuery);
+    if (isOnSale) filterArray.push(onSaleQuery);
 
-    if (manufacture !== 'All') query.push(manufactureQuery);
+    if (manufacture !== 'All') filterArray.push(manufactureQuery);
 
-    query.push(minPriceQuery);
-    query.push(maxPriceQuery);
-    const request = query.join(' and ');
-    const filteredList = await getProducts(request);
+    filterArray.push(priceQuery);
+    setFilterQuery(filterArray);
+    const filtered = await getFilterProducts(filterArray, sort);
 
-    props.filteredList(filteredList);
+    if (filtered) props.filteredList(filtered);
+
     props.setLoadState(false);
   };
+
+  useEffect(() => {}, [sort]);
 
   return (
     <aside className="catalog-aside">
@@ -152,6 +168,20 @@ function FilterAside({ props }: IFilterInterface) {
           Reset
         </Button>
       </div>
+      <FormControl className="sort-select">
+        <InputLabel id="sort">Sort</InputLabel>
+        <Select
+          labelId="sort"
+          value={sort}
+          label="Sort"
+          onChange={handleChangeSort}
+        >
+          <MenuItem value="name.en asc">Name A-Z</MenuItem>
+          <MenuItem value="name.en desc">Name Z-A</MenuItem>
+          <MenuItem value="price asc">Price ↑</MenuItem>
+          <MenuItem value="price desc">Price ↓</MenuItem>
+        </Select>
+      </FormControl>
     </aside>
   );
 }

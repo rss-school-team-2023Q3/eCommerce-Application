@@ -19,7 +19,9 @@ function ProductCard({
 }) {
   const img = product.variant.images && product.variant.images[0].url;
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const country = useSelector((state: RootState) => state.auth.user?.country);
+  const country = useSelector(
+    (state: RootState) => state.auth.user?.addresses[0].country,
+  );
 
   function selectPriceIndex(countryCode: string) {
     if (countryCode === 'US' || countryCode === 'CA') {
