@@ -8,7 +8,9 @@ import {
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
+import selectPriceIndex from 'shared/utils/selectPriceIndex';
 
 function ProductCard({
   product,
@@ -22,14 +24,7 @@ function ProductCard({
   const country = useSelector(
     (state: RootState) => state.auth.user?.addresses[0].country,
   );
-
-  function selectPriceIndex(countryCode: string) {
-    if (countryCode === 'US' || countryCode === 'CA') {
-      return '$';
-    }
-
-    return '€';
-  }
+  const navigate = useNavigate();
 
   function getPrice(item: IProductData) {
     let price: string | undefined;
@@ -67,11 +62,15 @@ function ProductCard({
     return false;
   }
 
+  function handleProductClick(productId: string | undefined) {
+    navigate(`/product/${productId}`);
+  }
+
   const price = getPrice(product);
   const discountPrice = getDiscountPrice(price);
 
   return (
-    <Card className="card" onClick={() => false}>
+    <Card className="card" onClick={() => handleProductClick(product.id)}>
       <CardMedia className="card-img" image={img} />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">

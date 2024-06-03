@@ -20,7 +20,7 @@ export const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
     clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
   },
   refreshToken: '',
-  // tokenCache, // may be delete for getting a new token
+  tokenCache,
   fetch,
 };
 
