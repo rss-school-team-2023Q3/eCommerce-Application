@@ -5,8 +5,8 @@ import { setProductsProjectionArray } from './setProductsArray.ts';
 
 async function getFilterProducts(
   filterQuery: string[],
-  sortQuery = 'price asc',
-  searchQuery = ''
+  sortQuery: string,
+  searchQuery = '',
 ) {
   return currentClient
     .getFilterProducts(filterQuery, sortQuery, searchQuery)

@@ -56,7 +56,7 @@ class ApiBuilder {
     const options = refreshAuthMiddlewareOptions;
 
     options.refreshToken = JSON.parse(
-      localStorage.getItem('tokenCacheGG') as string
+      localStorage.getItem('tokenCacheGG') as string,
     ).refreshToken;
     try {
       this.client = this.buildClient().withRefreshTokenFlow(options).build();
@@ -124,24 +124,24 @@ class ApiBuilder {
     try {
       resp = filterQuery.length
         ? await this.apiRoot
-            ?.products()
-            .get({
-              queryArgs: {
-                where: filterQuery,
-                sort: sortQuery,
-                limit: 50,
-              },
-            })
-            .execute()
+          ?.products()
+          .get({
+            queryArgs: {
+              where: filterQuery,
+              sort: sortQuery,
+              limit: 50,
+            },
+          })
+          .execute()
         : await this.apiRoot
-            ?.products()
-            .get({
-              queryArgs: {
-                limit: 50,
-                sort: sortQuery,
-              },
-            })
-            .execute();
+          ?.products()
+          .get({
+            queryArgs: {
+              limit: 50,
+              sort: sortQuery,
+            },
+          })
+          .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
@@ -163,36 +163,36 @@ class ApiBuilder {
   public async getFilterProducts(
     filterQuery: string[],
     sortQuery: string,
-    searchQuery: string
+    searchQuery: string,
   ) {
     let resp;
     try {
       resp = filterQuery.length
         ? await this.apiRoot
-            ?.productProjections()
-            .search()
-            .get({
-              queryArgs: {
-                fuzzy: true,
-                'text.en': searchQuery,
-                filter: filterQuery,
-                sort: sortQuery,
-                limit: 50,
-              },
-            })
-            .execute()
+          ?.productProjections()
+          .search()
+          .get({
+            queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
+              filter: filterQuery,
+              sort: sortQuery,
+              limit: 50,
+            },
+          })
+          .execute()
         : (resp = await this.apiRoot
-            ?.productProjections()
-            .search()
-            .get({
-              queryArgs: {
-                fuzzy: true,
-                'text.en': searchQuery,
-                sort: sortQuery,
-                limit: 50,
-              },
-            })
-            .execute());
+          ?.productProjections()
+          .search()
+          .get({
+            queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
+              sort: sortQuery,
+              limit: 50,
+            },
+          })
+          .execute());
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
@@ -203,7 +203,7 @@ class ApiBuilder {
   public async updateUserData(
     actions: IDataActions[],
     ID: string,
-    version: number
+    version: number,
   ) {
     let resp;
     const body = {
