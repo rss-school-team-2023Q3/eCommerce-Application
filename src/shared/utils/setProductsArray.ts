@@ -2,15 +2,16 @@
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import ProductListType from 'pages/App/types/types/ProductListType';
 
+import createProduct from './createProduct.ts';
+
 function setProductsArray(list: ProductListType) {
   const newProducts: IProductData[] = [];
 
   list?.forEach((item) => {
-    newProducts.push({
-      variant: item.masterData.current.masterVariant,
-      name: item.masterData.current.name,
-      description: item.masterData.current.description,
-    });
+    newProducts.push(createProduct(item));
+    // variant: item.masterData.current.masterVariant,
+    // name: item.masterData.current.name,
+    // description: item.masterData.current.description,
   });
 
   return newProducts;

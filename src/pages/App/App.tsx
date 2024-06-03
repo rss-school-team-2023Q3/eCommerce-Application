@@ -19,6 +19,7 @@ const SignInPage = lazy(() => import('pages/SignInPage/SignIn'));
 const Profile = lazy(() => import('pages/ProfilePage/Profile'));
 const SignUp = lazy(() => import('pages/SignUpPage/SignUp'));
 const MainPage = lazy(() => import('pages/MainPage/Main'));
+const ProductPage = lazy(() => import('pages/ProductPage/ProductPage'));
 
 function App() {
   const dispatch = useDispatch();
@@ -97,6 +98,7 @@ function App() {
                 <PrivateRoute redirectTo="/signin" component={<Profile />} />
               }
             />
+            <Route path="/product/:id" element={<ProductPage />} />
 
             <Route path="*" element={<NotFoundPage />} />
           </Route>
