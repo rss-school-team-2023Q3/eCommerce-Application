@@ -1,6 +1,6 @@
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
-import setProductsArray from './setProductsArray.ts';
+import { setProductsArray } from './setProductsArray.ts';
 
 async function getProducts(request: string) {
   return currentClient

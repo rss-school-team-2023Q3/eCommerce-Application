@@ -4,7 +4,7 @@ import ProductListType from 'pages/App/types/types/ProductListType';
 
 import createProduct from './createProduct.ts';
 
-function setProductsArray(list: ProductListType) {
+export function setProductsArray(list: ProductListType) {
   const newProducts: IProductData[] = [];
 
   list?.forEach((item) => {
@@ -16,5 +16,3 @@ function setProductsArray(list: ProductListType) {
 
   return newProducts;
 }
-
-export default setProductsArray;
