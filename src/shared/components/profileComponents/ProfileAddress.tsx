@@ -1,5 +1,6 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
 import { FormControlLabel, Radio } from '@mui/material';
+import createNewAddress from 'pages/ProfilePage/utils/createNewAddress.ts';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/store.ts';
@@ -35,9 +36,11 @@ export default function ProfileAddress({
 
   // const [isDefault, setIsDefault] = useState(customer[defaultType] === addressId);
   // formData[defaultType] = customer[defaultType];
-  const address: Address | undefined = customer.addresses.find(
+  let address: Address | undefined = customer.addresses.find(
     (addr) => addr.id === addressId,
   );
+
+  if (addressId === 'newShippingAddress' || addressId === 'newBillingAddress') address = createNewAddress(addressId);
 
   if (!address) throw new Error('Address dont find by id');
 
@@ -95,10 +98,16 @@ export default function ProfileAddress({
           type,
           profileStreet: address.streetName ? address.streetName : '',
           isDisable,
+          addressId,
         }}
       />
       <CityInputProfile
-        cityProps={{ type, profileCity: address.city, isDisable }}
+        cityProps={{
+          type,
+          profileCity: address.city,
+          isDisable,
+          addressId,
+        }}
       />
       <PostalCodeProfile
         postalProps={{
@@ -106,6 +115,7 @@ export default function ProfileAddress({
           type,
           profilePostalCode: address.postalCode,
           isDisable,
+          addressId,
         }}
       />
       <CountryProfile
@@ -114,6 +124,7 @@ export default function ProfileAddress({
           type,
           profileCountry: address.country,
           isDisable,
+          addressId,
         }}
       />
     </div>

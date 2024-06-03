@@ -20,6 +20,7 @@ export const initialContextProfile: IFormContextType = {
   defaultBillingAddressId: '',
   defaultShippingAddressId: '',
   oldPassword: '',
+  addresses: [],
 };
 
 const profileContext: Context<IFormContextType> = createContext(

@@ -139,6 +139,10 @@
   list-style: none;
 }
 
+.add-address-button {
+  max-width: 35rem;
+}
+
 @media (width <= 768px) {
   .data-field-profile {
     width: 100%;

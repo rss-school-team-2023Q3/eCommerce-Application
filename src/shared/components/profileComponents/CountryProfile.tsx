@@ -4,6 +4,8 @@ import {
 import changeCountryName from 'pages/ProfilePage/utils/changeCountryName';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'shared/api/store';
 
 interface ICountryInterface {
   countryProps: {
@@ -11,23 +13,36 @@ interface ICountryInterface {
     type: string;
     profileCountry?: string;
     isDisable: boolean;
+    addressId: string;
   };
 }
 
-type TypeCountry = 'billingCountry' | 'shippingCountry';
+// type TypeCountry = 'billingCountry' | 'shippingCountry';
 
 function CountryInput({ countryProps }: ICountryInterface) {
   const countries = ['Great Britain', 'Germany', 'Canada', 'USA'];
   const formData = useContext(profileContext);
 
-  const typeCountry: TypeCountry = `${countryProps.type}Country` as TypeCountry;
+  if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
+  // const typeCountry: TypeCountry = `${countryProps.type}Country` as TypeCountry;
 
-  formData[typeCountry].value = changeCountryName(countryProps.profileCountry);
-  // const [countryProfile, setContryProfile] = useState(changeCountryName(countryProps.profileCountry));
+  // formData[typeCountry].value = changeCountryName(countryProps.profileCountry);
+  const user = useSelector((state: RootState) => state.auth.user);
+  const userAddress = user?.addresses.find(
+    ({ id }) => countryProps.addressId === id,
+  );
+
+  // const [countryProfile, setCountryProfile] = useState(userAddress?.country);
+
+  const formAddress = formData.addresses.find(
+    (el) => countryProps.addressId === el.id,
+  );
 
   function selectCountry(country: string) {
-    formData[typeCountry].value = country;
-    formData[typeCountry].isValid = true;
+    if (!formAddress?.value) return;
+
+    formAddress.value.country.value = country;
+    formAddress.value.country.isValid = true;
     countryProps.isUpdate(countryProps.type);
   }
 
@@ -39,11 +54,7 @@ function CountryInput({ countryProps }: ICountryInterface) {
         style={{ marginBottom: '10px' }}
         labelId="country_select"
         label="Country"
-        defaultValue={
-          countryProps.profileCountry
-            ? changeCountryName(countryProps.profileCountry)
-            : ''
-        }
+        defaultValue={changeCountryName(userAddress?.country)}
         required
         onChange={(e) => selectCountry(e.target.value as string)}
       >

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import IMapAddresses from 'pages/App/types/interfaces/IValidateAddress';
 import { Context, createContext } from 'react';
 
 export interface IValidValue {
@@ -24,6 +25,7 @@ export interface IFormContextType {
   defaultBillingAddressId?: string;
   defaultShippingAddressId?: string;
   oldPassword?: string;
+  addresses?: IMapAddresses[];
 }
 
 export const initialContext: IFormContextType = {

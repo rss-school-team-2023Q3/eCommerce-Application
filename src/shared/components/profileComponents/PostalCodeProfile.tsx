@@ -2,9 +2,11 @@ import { TextField } from '@mui/material';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { postcodeValidator } from 'postcode-validator';
 import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'shared/api/store';
 import selectCountryCode from 'shared/utils/selectCountryCode';
 
-type TypePostal = 'billingCode' | 'shippingCode';
+// type TypePostal = 'billingCode' | 'shippingCode';
 
 interface IPostalPropsInterface {
   postalProps: {
@@ -12,56 +14,66 @@ interface IPostalPropsInterface {
     isChange: boolean;
     profilePostalCode?: string;
     isDisable: boolean;
+    addressId: string;
   };
 }
 
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   const formData = useContext(profileContext);
   const [isValid, setIsValid] = useState(true);
-  const typePostal: TypePostal = `${postalProps.type}Code` as TypePostal;
-
-  formData[typePostal].value = postalProps.profilePostalCode as TypePostal;
-
-  const [postalProfile, setPostalProfile] = useState(
-    formData[typePostal].value,
+  const user = useSelector((state: RootState) => state.auth.user);
+  const userAddress = user?.addresses.find(
+    ({ id }) => postalProps.addressId === id,
   );
-  const country = postalProps.type === 'shipping'
-    ? formData.shippingCountry.value
-    : formData.billingCountry.value;
 
-  function setPostalPropsContext(
-    value: string,
-    countryCode: string,
-    type: string,
-  ) {
-    if (postcodeValidator(value, countryCode) && type === 'shipping') {
-      formData.shippingCode.value = value;
-      formData.shippingCode.isValid = true;
-    } else if (postcodeValidator(value, countryCode) && type === 'billing') {
-      formData.billingCode.value = value;
-      formData.billingCode.isValid = true;
-    } else if (!postcodeValidator(value, countryCode) && type === 'billing') {
-      formData.billingCode.isValid = false;
-    } else if (!postcodeValidator(value, countryCode) && type === 'shipping') {
-      formData.shippingCode.isValid = false;
+  const [postalProfile, setPostalProfile] = useState(userAddress?.postalCode);
+
+  if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
+
+  const formAddress = formData.addresses.find(
+    (el) => postalProps.addressId === el.id,
+  );
+  // const [country, setCountry] = useState(formAddress?.value.country.value);
+
+  useEffect(() => {
+    if (formAddress?.value.postalCode) {
+      formAddress.value.postalCode.value = userAddress?.postalCode as string;
+      setPostalProfile(formAddress.value.postalCode.value);
+    }
+
+    return () => {
+      setPostalProfile('');
+    };
+  }, [user, userAddress]);
+
+  function setPostalPropsContext(value: string, countryCode: string) {
+    if (formAddress?.value) {
+      formAddress.value.postalCode.isValid = postcodeValidator(
+        value,
+        countryCode,
+      );
+      formAddress.value.postalCode.value = value;
     }
   }
 
   function checkCode(value: string) {
     setPostalProfile(value);
-    formData[typePostal].value = value;
+    // setCountry(formAddress?.value.country.value);
+    const country = formAddress?.value.country.value;
+
+    if (formAddress?.value) formAddress.value.postalCode.value = value;
 
     if (typeof country === 'string' && country.length > 1) {
       const countryCode = selectCountryCode(country);
 
       setIsValid(postcodeValidator(value, countryCode));
-      setPostalPropsContext(value, countryCode, postalProps.type);
+      setPostalPropsContext(value, countryCode);
     }
   }
 
   useEffect(() => {
-    checkCode(postalProfile);
-  }, [postalProps.isChange]);
+    checkCode(postalProfile || '');
+  }, [postalProps.isChange, formAddress?.value.country.value]);
 
   return (
     <TextField
