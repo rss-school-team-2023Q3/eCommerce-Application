@@ -7,7 +7,7 @@ export default function changeCountryName(name: string | undefined): string {
     case 'US':
       return 'USA';
     case 'GB':
-      return 'Great Britan';
+      return 'Great Britain';
     default:
       return '';
   }
