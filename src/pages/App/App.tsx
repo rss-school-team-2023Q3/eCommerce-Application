@@ -31,25 +31,6 @@ function App() {
         const body: Customer | null = await currentClient.createRefreshTokenClient();
 
         if (body) {
-          // const { email, firstName, lastName } = body;
-
-          // if (
-          //   typeof email === 'string'
-          //   && typeof firstName === 'string'
-          //   && typeof lastName === 'string'
-          // ) {
-          //   const user: IUser = {
-          //     email,
-          //     firstName,
-          //     lastName,
-          //     country: body.addresses[1]
-          //       ? body.addresses[1].country
-          //       : body.addresses[0].country,
-          //   };
-
-          //   dispatch(setCredentials({ user }));
-          // }
-
           dispatch(setCredentials({ user: body }));
         }
       } else {

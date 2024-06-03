@@ -28,6 +28,18 @@
   margin-bottom: 1.25rem;
 }
 
+.switcher-wrap {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem;
+}
+
+.disable-switch {
+  outline: none;
+}
+
 .profile-form-field {
   display: flex;
   flex-direction: column;
@@ -86,6 +98,45 @@
 
 .hundred-percent {
   width: 100%;
+}
+
+.save-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: all 0.3s;
+  outline: none;
+}
+
+.save-icon:hover {
+  color: blue;
+}
+
+.input-field-profile {
+  width: 100%;
+  margin-bottom: 0.625rem;
+}
+
+.save-unvisible {
+  transform: translateY(-4rem);
+}
+
+.save-visible {
+  transform: translateY(-0.5rem);
+}
+
+.change-icon {
+  position: absolute;
+  right: -1.5rem;
+  top: 0.5rem;
+}
+
+.field-wrap {
+  position: relative;
+}
+
+.data-field-list {
+  list-style: none;
 }
 
 @media (width <= 768px) {

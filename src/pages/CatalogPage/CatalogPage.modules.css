@@ -3,6 +3,8 @@
   flex-flow: row wrap;
   justify-content: space-between;
   gap: 0.625rem;
+  width: 100%;
+  margin: 0 0.625rem 0.625rem;
 }
 
 .catalog-page {

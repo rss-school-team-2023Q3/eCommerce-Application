@@ -8,5 +8,5 @@ export default async function logoutUser(dispatch: Dispatch) {
   tokenCache.clear();
 
   await currentClient.createAnonymousClient();
-  await currentClient.getProducts();
+  await currentClient.getProducts('');
 }
