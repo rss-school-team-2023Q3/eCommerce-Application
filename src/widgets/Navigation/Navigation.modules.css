@@ -1,0 +1,14 @@
+.button-text {
+  color: white;
+}
+
+@media (width <= 650px) {
+  .nav-button {
+    color: white;
+    padding: 0;
+  }
+
+  .button-text {
+    display: none;
+  }
+}
