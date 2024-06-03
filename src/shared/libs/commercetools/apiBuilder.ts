@@ -160,7 +160,11 @@ class ApiBuilder {
     return resp;
   }
 
-  public async getFilterProducts(filterQuery: string[], sortQuery: string) {
+  public async getFilterProducts(
+    filterQuery: string[],
+    sortQuery: string,
+    searchQuery: string,
+  ) {
     let resp;
     try {
       resp = filterQuery.length
@@ -169,6 +173,8 @@ class ApiBuilder {
           .search()
           .get({
             queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
               filter: filterQuery,
               sort: sortQuery,
               limit: 50,
@@ -180,6 +186,8 @@ class ApiBuilder {
           .search()
           .get({
             queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
               sort: sortQuery,
               limit: 50,
             },
