@@ -1,7 +1,7 @@
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder';
+import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
 interface IClient {
-  client: ApiBuilder;
+  client: typeof currentClient;
 }
 
 export default IClient;
