@@ -1,11 +1,8 @@
-import {
-  LocalizedString,
-  Product,
-  ProductVariant,
-  TypedMoney,
-} from '@commercetools/platform-sdk';
+import { Product, TypedMoney } from '@commercetools/platform-sdk';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
 import {
+  Button,
   Dialog,
   DialogContent,
   Grid,
@@ -14,20 +11,14 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import IProductData from 'pages/App/types/interfaces/IProductData';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 import CarouselComponent from 'shared/components/CarouselComponent/CarouselComponent';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import createProduct from 'shared/utils/createProduct';
-
-interface IProduct {
-  id: string;
-  variant: ProductVariant;
-  name: LocalizedString;
-  description: LocalizedString | undefined;
-}
 
 function ProductPage() {
   const { id } = useParams();
@@ -51,7 +42,7 @@ function ProductPage() {
     setIsModalOpen(false);
   };
 
-  const setProductPrice = (item: IProduct) => {
+  const setProductPrice = (item: IProductData) => {
     const price: {
       fullPrice: string | undefined | null;
       discountPrice: string | undefined | null;
@@ -142,6 +133,13 @@ function ProductPage() {
 
   return (
     <div>
+      <Button
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate('/catalog')}
+        variant="contained"
+      >
+        Back to catalog
+      </Button>
       {product && product.variant.images && (
         <Grid
           container
