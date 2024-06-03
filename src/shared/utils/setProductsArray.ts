@@ -22,6 +22,7 @@ export function setProductsProjectionArray(list: ProductProjection[]) {
 
   list?.forEach((item) => {
     newProducts.push({
+      id: item.id,
       variant: item.masterVariant,
       name: item.name,
       description: item.description,
