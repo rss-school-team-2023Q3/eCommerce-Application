@@ -3,10 +3,10 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import {
   FormControlLabel,
   Switch,
-  IconButton,
   FormControl,
   RadioGroup,
   Radio,
+  Button,
 } from '@mui/material';
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
 import { useContext, useEffect, useState } from 'react';
@@ -27,23 +27,24 @@ import './Profile.modules.css';
 
 export default function Profile() {
   const customer: Customer | null = useSelector(
-    (state: RootState) => state.auth.user,
+    (state: RootState) => state.auth.user
   );
   const dispatch = useDispatch();
 
   const [isDisable, setIsDisable] = useState(true);
 
-  if (!customer) {
-    throw new Error('Error Profile Page');
-  }
+  // if (!customer) {
+  // console.log('no customer');
+  // throw new Error('Error Profile Page');
+  // }
 
   let formData = useContext(profileContext);
 
-  formData.defaultBillingAddressId = customer.defaultBillingAddressId
-    ? customer.defaultBillingAddressId
+  formData.defaultBillingAddressId = customer?.defaultBillingAddressId
+    ? customer?.defaultBillingAddressId
     : '';
-  formData.defaultShippingAddressId = customer.defaultShippingAddressId
-    ? customer.defaultShippingAddressId
+  formData.defaultShippingAddressId = customer?.defaultShippingAddressId
+    ? customer?.defaultShippingAddressId
     : '';
 
   const [isDateChange, setDateChange] = useState(false);
@@ -66,7 +67,7 @@ export default function Profile() {
     () => () => {
       formData = structuredClone(initialContextProfile);
     },
-    [],
+    []
   );
 
   function onChangeForm() {}
@@ -76,7 +77,7 @@ export default function Profile() {
       formData,
       customer?.id as string,
       customer?.version as number,
-      dispatch,
+      dispatch
     );
     formData.fieldChangedSet = new Set();
     setIsDisable(true);
@@ -92,16 +93,16 @@ export default function Profile() {
         >
           <div className="switcher-wrap">
             <FormControlLabel
-              control={(
+              control={
                 <Switch
                   checked={!isDisable}
                   className="disable-switch"
                   onChange={() => setIsDisable(!isDisable)}
                 />
-              )}
+              }
               label={isDisable ? 'Edit data' : 'Cancel data editing'}
             />
-            <IconButton
+            <Button
               size="large"
               // color="secondary"
               className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
@@ -109,7 +110,7 @@ export default function Profile() {
             >
               <SaveAsIcon />
               save
-            </IconButton>
+            </Button>
           </div>
           <div className="profile-form-field">
             <div className="user-field-profile">
@@ -133,7 +134,7 @@ export default function Profile() {
                 >
                   <RadioGroup
                     defaultValue={
-                      customer.defaultBillingAddressId
+                      customer?.defaultBillingAddressId
                         ? customer.defaultBillingAddressId
                         : ''
                     }
@@ -145,8 +146,8 @@ export default function Profile() {
                   >
                     <ul className="data-field-list">
                       <p> Billing Addresses</p>
-                      {customer.billingAddressIds
-                        && customer.billingAddressIds.map((id, index) => (
+                      {customer?.billingAddressIds &&
+                        customer.billingAddressIds.map((id, index) => (
                           <li key={id}>
                             <ProfileAddress
                               type="billing"
@@ -171,7 +172,7 @@ export default function Profile() {
                   disabled={isDisable}
                 >
                   <RadioGroup
-                    defaultValue={customer.defaultShippingAddressId}
+                    defaultValue={customer?.defaultShippingAddressId}
                     onChange={(e) => {
                       formData.defaultShippingAddressId = e.target.value;
                     }}
@@ -180,8 +181,8 @@ export default function Profile() {
                   >
                     <ul className="data-field-list">
                       <p> Shipping Addresses</p>
-                      {customer.shippingAddressIds
-                        && customer.shippingAddressIds.map((id, index) => (
+                      {customer?.shippingAddressIds &&
+                        customer.shippingAddressIds.map((id, index) => (
                           <li key={id}>
                             <ProfileAddress
                               type="shipping"
