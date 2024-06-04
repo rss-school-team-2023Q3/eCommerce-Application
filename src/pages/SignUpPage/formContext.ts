@@ -22,6 +22,7 @@ export interface IFormContextType {
   billingCountry: IValidValue;
   shippingCountry: IValidValue;
   fieldChangedSet?: Set<string>;
+  fieldChangedSetAddr?: Set<string>;
   defaultBillingAddressId?: string;
   defaultShippingAddressId?: string;
   oldPassword?: string;

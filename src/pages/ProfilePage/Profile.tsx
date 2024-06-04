@@ -36,6 +36,8 @@ export default function Profile() {
 
   const [isDisable, setIsDisable] = useState(true);
 
+  const [isDisableAddr, setIsDisableAddr] = useState(true);
+
   const [isAddShipping, setIsAddShipping] = useState(false);
 
   const [isAddBilling, setIsAddBilling] = useState(false);
@@ -56,6 +58,7 @@ export default function Profile() {
   const [isDateChange, setDateChange] = useState(false);
 
   const [isChanged, setIsChanged] = useState(false);
+  const [isChangedAddr, setIsChangedAddr] = useState(false);
 
   const [shippingAddresses, setShippingAddresses] = useState(
     customer.shippingAddressIds || [],
@@ -78,6 +81,10 @@ export default function Profile() {
   }, [formData.fieldChangedSet?.size]);
 
   useEffect(() => {
+    setIsChangedAddr(!!formData.fieldChangedSetAddr?.size);
+  }, [formData.fieldChangedSetAddr?.size]);
+
+  useEffect(() => {
     formData.addresses = customer.addresses.reduce((acc, addr) => {
       if (formData.addresses) {
         acc.push(createFormAddress(addr));
@@ -92,6 +99,8 @@ export default function Profile() {
   }, []);
 
   function onChangeForm() {}
+
+  function onUpdateAddr() {}
 
   async function onUpdate() {
     await actionsSDK(
@@ -138,28 +147,28 @@ export default function Profile() {
           action="registration"
           onChange={onChangeForm}
         >
-          <div className="switcher-wrap">
-            <FormControlLabel
-              control={(
-                <Switch
-                  checked={!isDisable}
-                  className="disable-switch"
-                  onChange={() => setIsDisable(!isDisable)}
-                />
-              )}
-              label={isDisable ? 'Edit data' : 'Cancel data editing'}
-            />
-            <IconButton
-              size="large"
-              // color="secondary"
-              className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
-              onClick={() => onUpdate()}
-            >
-              <SaveAsIcon />
-              save
-            </IconButton>
-          </div>
           <div className="profile-form-field">
+            <div className="switcher-wrap">
+              <FormControlLabel
+                control={(
+                  <Switch
+                    checked={!isDisable}
+                    className="disable-switch"
+                    onChange={() => setIsDisable(!isDisable)}
+                  />
+                )}
+                label={isDisable ? 'Edit user data' : 'Cancel data editing'}
+              />
+              <IconButton
+                size="large"
+                // color="secondary"
+                className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
+                onClick={() => onUpdate()}
+              >
+                <SaveAsIcon />
+                save
+              </IconButton>
+            </div>
             <div className="user-field-profile">
               User Data
               <EmailProfile isDisable={isDisable} />
@@ -174,10 +183,33 @@ export default function Profile() {
               <PasswordProfile isDisable={isDisable} />
             </div>
             <div className="address-field">
+              <div className="switcher-wrap">
+                <FormControlLabel
+                  control={(
+                    <Switch
+                      checked={!isDisableAddr}
+                      className="disable-switch"
+                      onChange={() => setIsDisableAddr(!isDisableAddr)}
+                    />
+                  )}
+                  label={
+                    isDisableAddr ? 'Edit address data' : 'Cancel data editing'
+                  }
+                />
+                <IconButton
+                  size="large"
+                  // color="secondary"
+                  className={`save-icon ${isChangedAddr ? 'save-visible' : 'save-unvisible'}`}
+                  onClick={() => onUpdateAddr()}
+                >
+                  <SaveAsIcon />
+                  save
+                </IconButton>
+              </div>
               <div className="address-input-field">
                 <FormControl
                   className="data-field-profile"
-                  disabled={isDisable}
+                  disabled={isDisableAddr}
                 >
                   <RadioGroup
                     defaultValue={
@@ -199,22 +231,34 @@ export default function Profile() {
                             type="billing"
                             addressId={id}
                             index={index}
-                            isDisable={isDisable}
+                            isDisable={isDisableAddr}
                           />
                         </li>
                       ))}
                     </ul>
 
-                    <Button
-                      onClick={() => addAddress('billing')}
-                      className="add-address-button"
-                      variant="outlined"
-                      startIcon={<AddLocationAltIcon />}
-                    >
-                      {`${isAddBilling ? 'Save' : 'Add'} billing address`}
-                    </Button>
+                    {!isAddBilling && !isDisableAddr && (
+                      <Button
+                        onClick={() => addAddress('billing')}
+                        className="add-address-button"
+                        variant="outlined"
+                        startIcon={<AddLocationAltIcon />}
+                      >
+                        Add billing address
+                      </Button>
+                    )}
+                    {isAddBilling && (
+                      <Button
+                        onClick={() => addAddress('billing')}
+                        className="add-address-button"
+                        variant="outlined"
+                        startIcon={<AddLocationAltIcon />}
+                      >
+                        Save billing addres
+                      </Button>
+                    )}
 
-                    {!isDisable && (
+                    {!isDisableAddr && (
                       <FormControlLabel
                         control={<Radio value="" />}
                         label="reset default address"
@@ -225,7 +269,7 @@ export default function Profile() {
 
                 <FormControl
                   className="data-field-profile"
-                  disabled={isDisable}
+                  disabled={isDisableAddr}
                 >
                   <RadioGroup
                     defaultValue={customer.defaultShippingAddressId}
@@ -243,20 +287,33 @@ export default function Profile() {
                             type="shipping"
                             addressId={id}
                             index={index}
-                            isDisable={isDisable}
+                            isDisable={isDisableAddr}
                           />
                         </li>
                       ))}
                     </ul>
-                    <Button
-                      onClick={() => addAddress('shipping')}
-                      className="add-address-button"
-                      variant="outlined"
-                      startIcon={<AddLocationAltIcon />}
-                    >
-                      {`${isAddShipping ? 'Save' : 'Add'} shipping address`}
-                    </Button>
-                    {!isDisable && (
+                    {isAddShipping && (
+                      <Button
+                        onClick={() => addAddress('shipping')}
+                        className="add-address-button"
+                        variant="outlined"
+                        startIcon={<AddLocationAltIcon />}
+                      >
+                        Save shipping address
+                      </Button>
+                    )}
+
+                    {!isAddShipping && !isDisableAddr && (
+                      <Button
+                        onClick={() => addAddress('shipping')}
+                        className="add-address-button"
+                        variant="outlined"
+                        startIcon={<AddLocationAltIcon />}
+                      >
+                        Add shipping address
+                      </Button>
+                    )}
+                    {!isDisableAddr && (
                       <FormControlLabel
                         control={<Radio value="" />}
                         label="reset default address"

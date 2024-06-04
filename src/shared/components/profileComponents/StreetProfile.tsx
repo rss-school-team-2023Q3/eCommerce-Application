@@ -6,8 +6,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/store';
 import validate from 'shared/utils/validate';
 
-// type TypeStreet = 'billingStreet' | 'shippingStreet';
-
 interface IStreetInterface {
   streetProps: {
     type: string;
@@ -20,42 +18,26 @@ interface IStreetInterface {
 function StreetProfile({ streetProps }: IStreetInterface) {
   const [isValid, setIsValid] = useState(true);
   const [streetErrorMessage, setStreetErrorMessage] = useState('');
+  const [streetProfile, setStreetProfile] = useState<string>('');
 
   const user = useSelector((state: RootState) => state.auth.user);
   const userAddress = user?.addresses.find(
     ({ id }) => streetProps.addressId === id,
   );
 
-  const [streetProfile, setStreetProfile] = useState(streetProps.profileStreet);
   const formData = useContext(profileContext);
-  // const typeStreet: TypeStreet = `${streetProps.type}Street` as TypeStreet;
 
   if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
-
-  // useEffect(() => {
-  //   const addressUser = user?.addresses.find((ad) => ad.id === streetProps.addressId);
-
-  //   console.log(addressUser);
-
-  //   if (addressUser && formData.addresses) {
-  //     formData.addresses.set(streetProps.addressId, createFormAddress(addressUser));
-  //   }
-  // }, []);
 
   const formAddress = formData.addresses.find(
     (el) => streetProps.addressId === el.id,
   );
 
   useEffect(() => {
-    if (formAddress?.value.streetName) {
-      formAddress.value.streetName.value = userAddress?.streetName as string;
-      setStreetProfile(formAddress.value.streetName.value);
-    }
+    const initialStreetProfile = formAddress?.value.streetName.value || userAddress?.streetName || '';
 
-    return () => {
-      setStreetProfile('');
-    };
-  }, [user, userAddress]);
+    setStreetProfile(initialStreetProfile);
+  }, [formAddress, userAddress]);
 
   function checkStreet(street: string) {
     setStreetProfile(street);
@@ -68,7 +50,7 @@ function StreetProfile({ streetProps }: IStreetInterface) {
     formAddress.value.streetName.isValid = !validate('street', street);
   }
 
-  const isStreetChanged = false;
+  const isStreetChanged = streetProfile !== (userAddress?.streetName || '');
 
   return (
     <div className="field-wrap">

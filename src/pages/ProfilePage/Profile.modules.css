@@ -29,11 +29,12 @@
 }
 
 .switcher-wrap {
+  width: 100%;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: space-between;
-  padding: 1.5rem;
+  padding-top: 1.5rem;
 }
 
 .disable-switch {
@@ -137,6 +138,8 @@
 
 .data-field-list {
   list-style: none;
+  padding: 0;
+  margin-top: 0;
 }
 
 .add-address-button {

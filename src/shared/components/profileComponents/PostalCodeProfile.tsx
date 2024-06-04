@@ -26,13 +26,14 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
     ({ id }) => postalProps.addressId === id,
   );
 
-  const [postalProfile, setPostalProfile] = useState(userAddress?.postalCode);
-
   if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
 
   const formAddress = formData.addresses.find(
     (el) => postalProps.addressId === el.id,
   );
+  const initialPostalProfile = formAddress?.value.postalCode.value || userAddress?.postalCode || '';
+  const [postalProfile, setPostalProfile] = useState(initialPostalProfile);
+
   // const [country, setCountry] = useState(formAddress?.value.country.value);
 
   useEffect(() => {
@@ -72,8 +73,12 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   }
 
   useEffect(() => {
-    checkCode(postalProfile || '');
+    checkCode(postalProfile as string);
   }, [postalProps.isChange, formAddress?.value.country.value]);
+
+  useEffect(() => {
+    // console.log(formData.addresses);
+  }, []);
 
   return (
     <TextField

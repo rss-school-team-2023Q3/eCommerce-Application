@@ -1,7 +1,8 @@
 import { Address, Customer } from '@commercetools/platform-sdk';
 import { FormControlLabel, Radio } from '@mui/material';
 import createNewAddress from 'pages/ProfilePage/utils/createNewAddress.ts';
-import { useState } from 'react';
+import profileContext from 'pages/ProfilePage/utils/profileContext.ts';
+import { useContext, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/store.ts';
 import 'pages/ProfilePage/Profile.modules.css';
@@ -27,7 +28,7 @@ export default function ProfileAddress({
   const customer: Customer | null = useSelector(
     (state: RootState) => state.auth.user,
   );
-
+  const formData = useContext(profileContext);
   // const defaultType = `default${capitalizeFirstLetter(type)}AddressId` as DefaultType;
 
   if (!customer) {
@@ -40,7 +41,12 @@ export default function ProfileAddress({
     (addr) => addr.id === addressId,
   );
 
-  if (addressId === 'newShippingAddress' || addressId === 'newBillingAddress') address = createNewAddress(addressId);
+  if (
+    (addressId === 'newShippingAddress' || addressId === 'newBillingAddress')
+    && formData.addresses
+  ) {
+    address = createNewAddress(addressId, formData.addresses);
+  }
 
   if (!address) throw new Error('Address dont find by id');
 
@@ -50,18 +56,6 @@ export default function ProfileAddress({
   const [isShippingCountryChange, setShippingCountryChange] = useState(
     !!customer.defaultShippingAddressId,
   );
-  // const isAddresses = !!(billingAddressIds && shippingAddressIds);
-  // const [isSameAddress, setSameAddress] = useState(
-  //   isAddresses && billingAddressIds[0] === shippingAddressIds[0],
-  // );
-
-  // const [isDefaut, setDefault] = useState(
-  //   customer?.defaultShippingAddressId === addressId || customer?.defaultBillingAddressId === addressId,
-  // );
-  // useEffect(() => {
-  //   setIsDefault(formData[defaultType] === addressId);
-  //   console.log(isDefault);
-  // }, [formData[defaultType]]);
 
   const updateCountry = () => {
     switch (type) {

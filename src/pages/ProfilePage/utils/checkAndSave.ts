@@ -13,6 +13,6 @@ export default function checkAndSave(
   const address = addresses.find((el) => el.id === searchWord);
 
   // console.log(address);
-  return !!address;
-  // return true;
+
+  return !address;
 }
