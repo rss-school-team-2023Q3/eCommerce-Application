@@ -1,3 +1,4 @@
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { TextField } from '@mui/material';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useEffect, useState } from 'react';
@@ -49,24 +50,34 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
     formAddress.value.city.isValid = !validate('city', city);
   }
 
+  const isCityChanged = cityProfile !== (userAddress?.city || '');
+
   return (
-    <TextField
-      disabled={cityProps.isDisable}
-      value={cityProfile}
-      autoComplete="off"
-      type="Text"
-      size="small"
-      style={{ marginBottom: '10px' }}
-      required
-      onChange={(e) => checkCity(e.target.value)}
-      label="City"
-      helperText={isValid ? '' : cityErrorMessage}
-      FormHelperTextProps={{
-        sx: {
-          color: 'red',
-        },
-      }}
-      color={isValid ? 'primary' : 'error'}
-    />
+    <div className="field-wrap">
+      <TextField
+        className="input-field-profile"
+        disabled={cityProps.isDisable}
+        value={cityProfile}
+        autoComplete="off"
+        type="Text"
+        size="small"
+        style={{ marginBottom: '10px' }}
+        required
+        onChange={(e) => checkCity(e.target.value)}
+        label="City"
+        helperText={isValid ? '' : cityErrorMessage}
+        FormHelperTextProps={{
+          sx: {
+            color: 'red',
+          },
+        }}
+        color={isValid ? 'primary' : 'error'}
+      />
+      {isCityChanged && (
+        <PublishedWithChangesIcon
+          className={`change-icon-address ${cityProps.type === 'shipping' ? 'right-zero' : 'left-zero'}`}
+        />
+      )}
+    </div>
   );
 }

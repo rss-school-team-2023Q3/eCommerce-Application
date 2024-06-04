@@ -5,10 +5,10 @@ import IMapAddresses, {
 
 export default function createFormAddress(addr: Address): IMapAddresses {
   const value: ValidatedAddress = {
-    streetName: { value: addr.streetName as string, isValid: false },
-    city: { value: addr.city as string, isValid: false },
-    country: { value: addr.country as string, isValid: false },
-    postalCode: { value: addr.postalCode as string, isValid: false },
+    streetName: { value: addr.streetName as string, isValid: true },
+    city: { value: addr.city as string, isValid: true },
+    country: { value: addr.country as string, isValid: true },
+    postalCode: { value: addr.postalCode as string, isValid: true },
   };
 
   return {

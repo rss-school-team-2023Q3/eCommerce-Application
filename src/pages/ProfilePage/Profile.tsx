@@ -106,17 +106,37 @@ export default function Profile() {
     if (delAddrIndex) formData.addresses?.splice(delAddrIndex, 1);
   }, [customer.shippingAddressIds?.length]);
 
-  // useEffect(() => {
-  //   setShippingAddresses(customer.shippingAddressIds || []);
-  //   const delAddrIndex1 = formData.addresses?.findIndex((el) => el.id === '"newShippingAddress"');
+  useEffect(() => {
+    // setShippingAddresses(customer.shippingAddressIds || []);
+    // const delAddrIndex1 = formData.addresses?.findIndex((el) => el.id === '"newShippingAddress"');
 
-  //   if (delAddrIndex1) formData.addresses?.splice(delAddrIndex1, 1);
+    // if (delAddrIndex1) formData.addresses?.splice(delAddrIndex1, 1);
 
-  //   setBillingAddresses(customer.billingAddressIds || []);
-  //   const delAddrIndex2 = formData.addresses?.findIndex((el) => el.id === '"newBillingAddress"');
+    // setBillingAddresses(customer.billingAddressIds || []);
+    // const delAddrIndex2 = formData.addresses?.findIndex((el) => el.id === '"newBillingAddress"');
 
-  //   if (delAddrIndex2) formData.addresses?.splice(delAddrIndex2, 1);
-  // }, [customer.addresses?.length]);
+    // if (delAddrIndex2) formData.addresses?.splice(delAddrIndex2, 1);
+    setIsDisableAddr(true);
+  }, [customer.addresses?.length]);
+
+  useEffect(() => {
+    if (formData.addresses && customer.addresses) {
+      formData.addresses = customer.addresses.reduce((acc, addr) => {
+        if (formData.addresses) {
+          acc.push(createFormAddress(addr));
+        }
+
+        return acc;
+      }, [] as IMapAddresses[]);
+      setBillingAddresses(customer.billingAddressIds || []);
+      setShippingAddresses(customer.shippingAddressIds || []);
+    }
+
+    setIsAddShipping(false);
+    setIsAddBilling(false);
+    setIsValidShipping(false);
+    setIsValidBilling(false);
+  }, [isDisableAddr]);
 
   useEffect(() => {
     formData.addresses = customer.addresses.reduce((acc, addr) => {
@@ -215,14 +235,16 @@ export default function Profile() {
         dispatch,
       );
 
-      if (result && type === 'shipping') {
+      if (result?.statusCode === 200 && type === 'shipping') {
         setIsAddShipping(false);
         setIsValidShipping(false);
+        setIsDisableAddr(true);
       }
 
-      if (result && type === 'billing') {
+      if (result?.statusCode === 200 && type === 'billing') {
         setIsAddBilling(false);
         setIsValidBilling(false);
+        setIsDisableAddr(true);
       }
     }
   }

@@ -7,6 +7,9 @@ import {
   CustomerUpdateAction,
   Address,
   MyCustomerUpdateAction,
+  MyCustomerChangeAddressAction,
+  MyCustomerSetDefaultShippingAddressAction,
+  MyCustomerSetDefaultBillingAddressAction,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
@@ -303,6 +306,38 @@ class ApiBuilder {
     return resp;
   }
 
+  public async changeAddress(
+    newAddress: Address,
+    addressId: string,
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const changeAddressAction: MyCustomerChangeAddressAction = {
+      action: 'changeAddress',
+      addressId,
+      address: newAddress,
+    };
+    const body = {
+      version,
+      actions: [changeAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
   public async removeAddress(addressId: string, ID: string, version: number) {
     let resp;
     const removeAddressAction: MyCustomerUpdateAction = {
@@ -312,6 +347,66 @@ class ApiBuilder {
     const body = {
       version,
       actions: [removeAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async setDefaultBillingAddress(
+    addressId: string,
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const setDefaultAddressAction: MyCustomerSetDefaultBillingAddressAction = {
+      action: 'setDefaultBillingAddress',
+      addressId,
+    };
+    const body = {
+      version,
+      actions: [setDefaultAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async setDefaultShippingAddress(
+    addressId: string,
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const setDefaultAddressAction: MyCustomerSetDefaultShippingAddressAction = {
+      action: 'setDefaultShippingAddress',
+      addressId,
+    };
+    const body = {
+      version,
+      actions: [setDefaultAddressAction],
     };
 
     try {

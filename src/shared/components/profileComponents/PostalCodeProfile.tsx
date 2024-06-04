@@ -1,3 +1,4 @@
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import { TextField } from '@mui/material';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { postcodeValidator } from 'postcode-validator';
@@ -80,25 +81,36 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   //   console.log(formData.addresses);
   // }, []);
 
+  const isPostalChanged = postalProfile !== (userAddress?.postalCode || '');
+
   return (
-    <TextField
-      disabled={postalProps.isDisable}
-      value={postalProfile}
-      autoComplete="off"
-      type="Text"
-      style={{ marginBottom: '10px' }}
-      required
-      size="small"
-      onChange={(e) => checkCode(e.target.value)}
-      label={postalProps.profilePostalCode ? '' : 'Postal Code'}
-      helperText={isValid ? '' : 'Enter valid postal code'}
-      FormHelperTextProps={{
-        sx: {
-          color: 'red',
-        },
-      }}
-      color={isValid ? 'primary' : 'error'}
-    />
+    <div className="field-wrap">
+      <TextField
+        className="input-field-profile"
+        disabled={postalProps.isDisable}
+        value={postalProfile}
+        autoComplete="off"
+        type="Text"
+        style={{ marginBottom: '10px' }}
+        required
+        size="small"
+        onChange={(e) => checkCode(e.target.value)}
+        label={postalProps.profilePostalCode ? '' : 'Postal Code'}
+        helperText={isValid ? '' : 'Enter valid postal code'}
+        FormHelperTextProps={{
+          sx: {
+            color: 'red',
+          },
+        }}
+        color={isValid ? 'primary' : 'error'}
+      />
+
+      {isPostalChanged && (
+        <PublishedWithChangesIcon
+          className={`change-icon-address ${postalProps.type === 'shipping' ? 'right-zero' : 'left-zero'}`}
+        />
+      )}
+    </div>
   );
 }
 

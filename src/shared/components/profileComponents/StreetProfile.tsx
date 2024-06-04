@@ -73,7 +73,12 @@ function StreetProfile({ streetProps }: IStreetInterface) {
         }}
         color={isValid ? 'primary' : 'error'}
       />
-      {isStreetChanged && <PublishedWithChangesIcon className="change-icon" />}
+
+      {isStreetChanged && (
+        <PublishedWithChangesIcon
+          className={`change-icon-address ${streetProps.type === 'shipping' ? 'right-zero' : 'left-zero'}`}
+        />
+      )}
     </div>
   );
 }
