@@ -24,28 +24,28 @@ export default function ProfileAddress({
   isDisable: boolean;
 }) {
   const customer: Customer | null = useSelector(
-    (state: RootState) => state.auth.user,
+    (state: RootState) => state.auth.user
   );
 
   // const defaultType = `default${capitalizeFirstLetter(type)}AddressId` as DefaultType;
 
-  if (!customer) {
-    throw new Error('Error Profile Page');
-  }
+  // if (!customer) {
+  // throw new Error('Error Profile Page');
+  // }
 
   // const [isDefault, setIsDefault] = useState(customer[defaultType] === addressId);
   // formData[defaultType] = customer[defaultType];
-  const address: Address | undefined = customer.addresses.find(
-    (addr) => addr.id === addressId,
+  const address: Address | undefined = customer?.addresses.find(
+    (addr) => addr.id === addressId
   );
 
   if (!address) throw new Error('Address dont find by id');
 
   const [isBillingCountryChange, setBillingCountryChange] = useState(
-    !!customer.defaultBillingAddressId,
+    !!customer?.defaultBillingAddressId
   );
   const [isShippingCountryChange, setShippingCountryChange] = useState(
-    !!customer.defaultShippingAddressId,
+    !!customer?.defaultShippingAddressId
   );
   // const isAddresses = !!(billingAddressIds && shippingAddressIds);
   // const [isSameAddress, setSameAddress] = useState(
@@ -80,14 +80,14 @@ export default function ProfileAddress({
     <div className="data-field-input">
       <p>{`${index + 1} Address`}</p>
       <FormControlLabel
-        control={(
+        control={
           <Radio
             value={addressId}
             // onChange={() => {
             //   setIsDefault(!isDefault);
             // }}
           />
-        )}
+        }
         label=" default address"
       />
       <StreetInputProfile
