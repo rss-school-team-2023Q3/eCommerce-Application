@@ -17,8 +17,6 @@ export default async function actionsSDK(
 
   if (!formData.fieldChangedSet?.size) return null;
 
-  // console.log(formData);
-
   const arr = Array.from(formData.fieldChangedSet) as Keys[];
 
   const updateActions = arr.reduce((acc, key) => {

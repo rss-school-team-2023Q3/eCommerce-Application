@@ -22,10 +22,10 @@ import LastNameProfile from 'shared/components/profileComponents/LastNameProfile
 import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
 
-import checkAndSave from './utils/checkAndSave.ts';
+import actionsAddressAddSDK from './utils/actionsAddressSDK.ts';
 import createFormAddress from './utils/createFormAddress.ts';
-
 import profileContext from './utils/profileContext.ts';
+
 import './Profile.modules.css';
 
 export default function Profile() {
@@ -41,6 +41,10 @@ export default function Profile() {
   const [isAddShipping, setIsAddShipping] = useState(false);
 
   const [isAddBilling, setIsAddBilling] = useState(false);
+
+  const [isValidShipping, setIsValidShipping] = useState(false);
+
+  const [isValidBilling, setIsValidBilling] = useState(false);
 
   if (!customer) {
     throw new Error('Error Profile Page');
@@ -85,6 +89,36 @@ export default function Profile() {
   }, [formData.fieldChangedSetAddr?.size]);
 
   useEffect(() => {
+    setBillingAddresses(customer.billingAddressIds || []);
+    const delAddrIndex = formData.addresses?.findIndex(
+      (el) => el.id === '"newBillingAddress"',
+    );
+
+    if (delAddrIndex) formData.addresses?.splice(delAddrIndex, 1);
+  }, [customer.billingAddressIds?.length]);
+
+  useEffect(() => {
+    setShippingAddresses(customer.shippingAddressIds || []);
+    const delAddrIndex = formData.addresses?.findIndex(
+      (el) => el.id === '"newShippingAddress"',
+    );
+
+    if (delAddrIndex) formData.addresses?.splice(delAddrIndex, 1);
+  }, [customer.shippingAddressIds?.length]);
+
+  // useEffect(() => {
+  //   setShippingAddresses(customer.shippingAddressIds || []);
+  //   const delAddrIndex1 = formData.addresses?.findIndex((el) => el.id === '"newShippingAddress"');
+
+  //   if (delAddrIndex1) formData.addresses?.splice(delAddrIndex1, 1);
+
+  //   setBillingAddresses(customer.billingAddressIds || []);
+  //   const delAddrIndex2 = formData.addresses?.findIndex((el) => el.id === '"newBillingAddress"');
+
+  //   if (delAddrIndex2) formData.addresses?.splice(delAddrIndex2, 1);
+  // }, [customer.addresses?.length]);
+
+  useEffect(() => {
     formData.addresses = customer.addresses.reduce((acc, addr) => {
       if (formData.addresses) {
         acc.push(createFormAddress(addr));
@@ -98,7 +132,37 @@ export default function Profile() {
     };
   }, []);
 
-  function onChangeForm() {}
+  function onChangeAddressForm() {
+    const formAddresses = formData.addresses;
+
+    if (!formAddresses) return;
+
+    const newIdShipping = formAddresses.find(
+      (el) => el.id === 'newShippingAddress',
+    );
+
+    if (newIdShipping) {
+      const isValidShipp = Object.values(newIdShipping.value).every(
+        (el) => el.isValid,
+      );
+
+      setIsValidShipping(isValidShipp);
+    }
+
+    const newIdBilling = formAddresses.find(
+      (el) => el.id === 'newBillingAddress',
+    );
+
+    if (newIdBilling) {
+      const isValidBill = Object.values(newIdBilling.value).every(
+        (el) => el.isValid,
+      );
+
+      setIsValidBilling(isValidBill);
+    }
+  }
+
+  function onChangeUserForm() {}
 
   function onUpdateAddr() {}
 
@@ -120,8 +184,9 @@ export default function Profile() {
 
     if (typeAddress === 'billing') {
       if (isAddBilling && formAddress) {
-        isCheckAndSaveBilling = checkAndSave(typeAddress, formAddress);
-      } else {
+        // isCheckAndSaveBilling = checkAndSave(typeAddress, formAddress);
+        isCheckAndSaveBilling = true;
+      } else if (!isAddBilling) {
         setBillingAddresses([...billingAddresses, 'newBillingAddress']);
         isCheckAndSaveBilling = true;
       }
@@ -129,7 +194,8 @@ export default function Profile() {
       if (isCheckAndSaveBilling) setIsAddBilling(!isAddBilling);
     } else {
       if (isAddShipping && formAddress) {
-        isCheckAndSaveShipping = checkAndSave(typeAddress, formAddress);
+        // isCheckAndSaveShipping = checkAndSave(typeAddress, formAddress);
+        isCheckAndSaveShipping = true;
       } else {
         setShippingAddresses([...shippingAddresses, 'newShippingAddress']);
         isCheckAndSaveShipping = true;
@@ -139,15 +205,33 @@ export default function Profile() {
     }
   }
 
+  async function saveAddress(type: 'shipping' | 'billing') {
+    if (customer) {
+      const result = await actionsAddressAddSDK(
+        formData,
+        type,
+        customer.id,
+        customer.version,
+        dispatch,
+      );
+
+      if (result && type === 'shipping') {
+        setIsAddShipping(false);
+        setIsValidShipping(false);
+      }
+
+      if (result && type === 'billing') {
+        setIsAddBilling(false);
+        setIsValidBilling(false);
+      }
+    }
+  }
+
   return (
     <div className="profile-wrapper">
       <profileContext.Provider value={formData}>
-        <form
-          className="profile-form"
-          action="registration"
-          onChange={onChangeForm}
-        >
-          <div className="profile-form-field">
+        <div className="profile-form-field">
+          <form className="profile-form" onChange={onChangeUserForm}>
             <div className="switcher-wrap">
               <FormControlLabel
                 control={(
@@ -182,6 +266,8 @@ export default function Profile() {
               />
               <PasswordProfile isDisable={isDisable} />
             </div>
+          </form>
+          <form className="profile-form" onChange={onChangeAddressForm}>
             <div className="address-field">
               <div className="switcher-wrap">
                 <FormControlLabel
@@ -227,12 +313,16 @@ export default function Profile() {
                       <p> Billing Addresses</p>
                       {billingAddresses.map((id, index) => (
                         <li key={id}>
-                          <ProfileAddress
-                            type="billing"
-                            addressId={id}
-                            index={index}
-                            isDisable={isDisableAddr}
-                          />
+                          {customer.addresses.find(
+                            (el) => el.id === id || id === 'newBillingAddress',
+                          ) && (
+                            <ProfileAddress
+                              type="billing"
+                              addressId={id}
+                              index={index}
+                              isDisable={isDisableAddr}
+                            />
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -247,14 +337,14 @@ export default function Profile() {
                         Add billing address
                       </Button>
                     )}
-                    {isAddBilling && (
+                    {isAddBilling && isValidBilling && (
                       <Button
-                        onClick={() => addAddress('billing')}
+                        onClick={() => saveAddress('billing')}
                         className="add-address-button"
                         variant="outlined"
                         startIcon={<AddLocationAltIcon />}
                       >
-                        Save billing addres
+                        Save billing address
                       </Button>
                     )}
 
@@ -283,18 +373,22 @@ export default function Profile() {
                       <p> Shipping Addresses</p>
                       {shippingAddresses.map((id, index) => (
                         <li key={id}>
-                          <ProfileAddress
-                            type="shipping"
-                            addressId={id}
-                            index={index}
-                            isDisable={isDisableAddr}
-                          />
+                          {customer.addresses.find(
+                            (el) => el.id === id || id === 'newShippingAddress',
+                          ) && (
+                            <ProfileAddress
+                              type="shipping"
+                              addressId={id}
+                              index={index}
+                              isDisable={isDisableAddr}
+                            />
+                          )}
                         </li>
                       ))}
                     </ul>
-                    {isAddShipping && (
+                    {isAddShipping && isValidShipping && (
                       <Button
-                        onClick={() => addAddress('shipping')}
+                        onClick={() => saveAddress('shipping')}
                         className="add-address-button"
                         variant="outlined"
                         startIcon={<AddLocationAltIcon />}
@@ -323,8 +417,8 @@ export default function Profile() {
                 </FormControl>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </profileContext.Provider>
     </div>
   );

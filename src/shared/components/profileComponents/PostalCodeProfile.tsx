@@ -76,9 +76,9 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
     checkCode(postalProfile as string);
   }, [postalProps.isChange, formAddress?.value.country.value]);
 
-  useEffect(() => {
-    // console.log(formData.addresses);
-  }, []);
+  // useEffect(() => {
+  //   console.log(formData.addresses);
+  // }, []);
 
   return (
     <TextField

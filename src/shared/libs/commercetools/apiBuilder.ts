@@ -5,9 +5,12 @@ import {
   Customer,
   MyCustomerChangePassword,
   CustomerUpdateAction,
+  Address,
+  MyCustomerUpdateAction,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
+import capitalizeFirstLetter from 'shared/utils/capitalizeFirstLetter.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
 import {
@@ -225,6 +228,96 @@ class ApiBuilder {
       resp = await this.apiRoot
         ?.me()
         .password()
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async addNewAddress(ID: string, version: number, address: Address) {
+    const actions: CustomerUpdateAction[] = [
+      {
+        action: 'addAddress',
+        address,
+      },
+    ];
+    const body = {
+      version,
+      actions,
+    };
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async setShippingOrBillingAddress(
+    ID: string,
+    addressId: string,
+    version: number,
+    type: 'shipping' | 'billing',
+  ) {
+    type AddressIdType = 'addShippingAddressId' | 'addBillingAddressId';
+    const action = `add${capitalizeFirstLetter(type)}AddressId` as AddressIdType;
+
+    if (action !== 'addShippingAddressId' && action !== 'addBillingAddressId') return null;
+
+    const actions: CustomerUpdateAction[] = [
+      {
+        action,
+        addressId,
+      },
+    ];
+    const body = {
+      version,
+      actions,
+    };
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async removeAddress(addressId: string, ID: string, version: number) {
+    let resp;
+    const removeAddressAction: MyCustomerUpdateAction = {
+      action: 'removeAddress',
+      addressId,
+    };
+    const body = {
+      version,
+      actions: [removeAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
         .post({
           body,
         })
