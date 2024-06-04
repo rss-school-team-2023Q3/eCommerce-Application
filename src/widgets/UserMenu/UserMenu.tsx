@@ -2,6 +2,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import './UserMenu.modules.css';
 import { Button, Box, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store.ts';
 
 import logoutUser from './utils/logoutUser.ts';
@@ -9,6 +10,8 @@ import logoutUser from './utils/logoutUser.ts';
 export default function UserMenu() {
   const user = useSelector((state: RootState) => state.auth.user);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -32,7 +35,13 @@ export default function UserMenu() {
           color="error"
           type="button"
           sx={{ height: 'max-content' }}
-          onClick={() => logoutUser(dispatch)}
+          onClick={() => {
+            if (location.pathname === '/profile') {
+              navigate('/signin');
+            }
+
+            logoutUser(dispatch);
+          }}
         >
           <span className="button-text">Log Out</span>
         </Button>
