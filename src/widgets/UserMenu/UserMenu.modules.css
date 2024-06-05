@@ -1,0 +1,5 @@
+@media (width <= 650px) {
+  .user-greeting {
+    display: none;
+  }
+}

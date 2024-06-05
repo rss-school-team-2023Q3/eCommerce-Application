@@ -4,10 +4,10 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import {
   FormControlLabel,
   Switch,
-  IconButton,
   FormControl,
   RadioGroup,
   Button,
+  IconButton,
 } from '@mui/material';
 import IMapAddresses from 'pages/App/types/interfaces/IValidateAddress.ts';
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
@@ -64,11 +64,11 @@ export default function Profile() {
 
   const formData = useContext(profileContext);
 
-  formData.defaultBillingAddressId = customer.defaultBillingAddressId
-    ? customer.defaultBillingAddressId
+  formData.defaultBillingAddressId = customer?.defaultBillingAddressId
+    ? customer?.defaultBillingAddressId
     : '';
-  formData.defaultShippingAddressId = customer.defaultShippingAddressId
-    ? customer.defaultShippingAddressId
+  formData.defaultShippingAddressId = customer?.defaultShippingAddressId
+    ? customer?.defaultShippingAddressId
     : '';
 
   const [isDateChange, setDateChange] = useState(false);
@@ -207,7 +207,6 @@ export default function Profile() {
 
     if (typeAddress === 'billing') {
       if (isAddBilling && formAddress) {
-        // isCheckAndSaveBilling = checkAndSave(typeAddress, formAddress);
         isCheckAndSaveBilling = true;
       } else if (!isAddBilling) {
         setBillingAddresses([...billingAddresses, 'newBillingAddress']);
@@ -286,27 +285,6 @@ export default function Profile() {
       setIsDisableAddr(true);
     }
 
-    // if (customer) {
-    //   const result = await actionsAddressAddSDK(
-    //     formData,
-    //     type,
-    //     customer.id,
-    //     customer.version,
-    //     dispatch,
-    //   );
-
-    //   if (result?.statusCode === 200 && type === 'shipping') {
-    //     setIsAddShipping(false);
-    //     setIsValidShipping(false);
-    //     setIsDisableAddr(true);
-    //   }
-
-    //   if (result?.statusCode === 200 && type === 'billing') {
-    //     setIsAddBilling(false);
-    //     setIsValidBilling(false);
-    //     setIsDisableAddr(true);
-    //   }
-    // }
     return null;
   }
 
@@ -382,7 +360,7 @@ export default function Profile() {
                 >
                   <RadioGroup
                     defaultValue={
-                      customer.defaultBillingAddressId
+                      customer?.defaultBillingAddressId
                         ? customer.defaultBillingAddressId
                         : ''
                     }

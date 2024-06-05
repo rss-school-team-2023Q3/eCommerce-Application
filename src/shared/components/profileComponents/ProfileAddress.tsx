@@ -40,17 +40,10 @@ export default function ProfileAddress({
     (state: RootState) => state.auth.user,
   );
   const formData = useContext(profileContext);
-  // const defaultType = `default${capitalizeFirstLetter(type)}AddressId` as DefaultType;
 
-  if (!customer) {
-    throw new Error('Error Profile Page');
-  }
-
-  // const [isDefault, setIsDefault] = useState(customer[defaultType] === addressId);
-  // formData[defaultType] = customer[defaultType];
   const [isChanged, setIsChanged] = useState(false);
 
-  let address: Address | undefined = customer.addresses.find(
+  let address: Address | undefined = customer?.addresses.find(
     (addr) => addr.id === addressId,
   );
 
@@ -65,10 +58,10 @@ export default function ProfileAddress({
 
   const formAddr = formData.addresses?.find((el) => el.id === addressId)?.value;
   const [isBillingCountryChange, setBillingCountryChange] = useState(
-    !!customer.defaultBillingAddressId,
+    !!customer?.defaultBillingAddressId,
   );
   const [isShippingCountryChange, setShippingCountryChange] = useState(
-    !!customer.defaultShippingAddressId,
+    !!customer?.defaultShippingAddressId,
   );
 
   useEffect(() => {

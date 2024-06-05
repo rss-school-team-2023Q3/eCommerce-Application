@@ -36,8 +36,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions);
+    // .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -166,7 +166,11 @@ class ApiBuilder {
     return resp;
   }
 
-  public async getFilterProducts(filterQuery: string[], sortQuery: string) {
+  public async getFilterProducts(
+    filterQuery: string[],
+    sortQuery: string,
+    searchQuery: string,
+  ) {
     let resp;
     try {
       resp = filterQuery.length
@@ -175,6 +179,8 @@ class ApiBuilder {
           .search()
           .get({
             queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
               filter: filterQuery,
               sort: sortQuery,
               limit: 50,
@@ -186,6 +192,8 @@ class ApiBuilder {
           .search()
           .get({
             queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
               sort: sortQuery,
               limit: 50,
             },
@@ -237,6 +245,17 @@ class ApiBuilder {
         .execute();
     } catch (error) {
       if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getProduct(id: string) {
+    let resp;
+    try {
+      resp = await this.apiRoot?.products().withId({ ID: id }).get().execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
     }
 
     return resp;
