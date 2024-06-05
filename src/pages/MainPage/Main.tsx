@@ -10,6 +10,9 @@ export default function Main() {
         <NavLink className="login-link" to="/catalog">
           Catalog
         </NavLink>
+        <NavLink className="login-link" to="/profile">
+          Profile
+        </NavLink>
         <NavLink className="login-link" to="/signup">
           Sign Up
         </NavLink>
