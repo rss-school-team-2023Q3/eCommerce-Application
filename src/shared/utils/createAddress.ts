@@ -1,6 +1,6 @@
 import selectCountryCode from 'shared/utils/selectCountryCode';
 
-interface IAddressData {
+export interface IAddressData {
   [key: string]: {
     value: string;
   };
