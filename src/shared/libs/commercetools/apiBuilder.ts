@@ -364,7 +364,7 @@ class ApiBuilder {
     return resp;
   }
 
-  public async setDefaultBillingAddress(
+  public async setDefaultBillingAddr(
     addressId: string,
     ID: string,
     version: number,
@@ -394,7 +394,7 @@ class ApiBuilder {
     return resp;
   }
 
-  public async setDefaultShippingAddress(
+  public async setDefaultShippingAddr(
     addressId: string,
     ID: string,
     version: number,

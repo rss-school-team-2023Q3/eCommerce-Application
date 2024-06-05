@@ -7,13 +7,15 @@ import {
   IconButton,
   FormControl,
   RadioGroup,
-  Radio,
   Button,
 } from '@mui/material';
 import IMapAddresses from 'pages/App/types/interfaces/IValidateAddress.ts';
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
-import { useContext, useEffect, useState } from 'react';
+import {
+  ChangeEvent, useContext, useEffect, useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setCredentials } from 'shared/api/authApi/store/authSlice.ts';
 import { RootState } from 'shared/api/store.ts';
 import DateInputProfile from 'shared/components/profileComponents/DateInputProfile';
 import EmailProfile from 'shared/components/profileComponents/EmailProfile.tsx';
@@ -21,6 +23,8 @@ import FirstNameProfile from 'shared/components/profileComponents/FirstNameProfi
 import LastNameProfile from 'shared/components/profileComponents/LastNameProfile.tsx';
 import PasswordProfile from 'shared/components/profileComponents/PasswordProfle';
 import ProfileAddress from 'shared/components/profileComponents/ProfileAddress';
+import { currentClient } from 'shared/libs/commercetools/apiBuilder.ts';
+import { toastSuccess } from 'shared/utils/notifications.ts';
 
 import actionsAddressAddSDK from './utils/actionsAddressSDK.ts';
 import createFormAddress from './utils/createFormAddress.ts';
@@ -45,6 +49,14 @@ export default function Profile() {
   const [isValidShipping, setIsValidShipping] = useState(false);
 
   const [isValidBilling, setIsValidBilling] = useState(false);
+
+  const [defaultBiilingAddr, setDefaultBiilingAddr] = useState(
+    customer?.defaultBillingAddressId || '',
+  );
+
+  const [defaultShippingAddr, setDefaultShippingAddr] = useState(
+    customer?.defaultShippingAddressId || '',
+  );
 
   if (!customer) {
     throw new Error('Error Profile Page');
@@ -107,15 +119,6 @@ export default function Profile() {
   }, [customer.shippingAddressIds?.length]);
 
   useEffect(() => {
-    // setShippingAddresses(customer.shippingAddressIds || []);
-    // const delAddrIndex1 = formData.addresses?.findIndex((el) => el.id === '"newShippingAddress"');
-
-    // if (delAddrIndex1) formData.addresses?.splice(delAddrIndex1, 1);
-
-    // setBillingAddresses(customer.billingAddressIds || []);
-    // const delAddrIndex2 = formData.addresses?.findIndex((el) => el.id === '"newBillingAddress"');
-
-    // if (delAddrIndex2) formData.addresses?.splice(delAddrIndex2, 1);
     setIsDisableAddr(true);
   }, [customer.addresses?.length]);
 
@@ -249,6 +252,64 @@ export default function Profile() {
     }
   }
 
+  async function changeDefaultAddress(
+    e: ChangeEvent<HTMLInputElement>,
+    type: 'shipping' | 'billing',
+  ) {
+    const addressId = e.target.value;
+
+    if (!addressId || !customer?.id || !customer?.version) return null;
+
+    let res;
+
+    if (type === 'shipping') {
+      setDefaultShippingAddr(addressId);
+      res = await currentClient.setDefaultShippingAddr(
+        addressId,
+        customer.id,
+        customer.version,
+      );
+    }
+
+    if (type === 'billing') {
+      setDefaultBiilingAddr(addressId);
+      res = await currentClient.setDefaultBillingAddr(
+        addressId,
+        customer.id,
+        customer.version,
+      );
+    }
+
+    if (res?.statusCode === 200) {
+      toastSuccess(`default ${type} address changed`);
+      dispatch(setCredentials({ user: res.body }));
+      setIsDisableAddr(true);
+    }
+
+    // if (customer) {
+    //   const result = await actionsAddressAddSDK(
+    //     formData,
+    //     type,
+    //     customer.id,
+    //     customer.version,
+    //     dispatch,
+    //   );
+
+    //   if (result?.statusCode === 200 && type === 'shipping') {
+    //     setIsAddShipping(false);
+    //     setIsValidShipping(false);
+    //     setIsDisableAddr(true);
+    //   }
+
+    //   if (result?.statusCode === 200 && type === 'billing') {
+    //     setIsAddBilling(false);
+    //     setIsValidBilling(false);
+    //     setIsDisableAddr(true);
+    //   }
+    // }
+    return null;
+  }
+
   return (
     <div className="profile-wrapper">
       <profileContext.Provider value={formData}>
@@ -325,9 +386,8 @@ export default function Profile() {
                         ? customer.defaultBillingAddressId
                         : ''
                     }
-                    onChange={(e) => {
-                      formData.defaultBillingAddressId = e.target.value;
-                    }}
+                    value={defaultBiilingAddr}
+                    onChange={(e) => changeDefaultAddress(e, 'billing')}
                     aria-labelledby="radio-buttons-group-label"
                     name="radio-buttons-billing"
                   >
@@ -370,12 +430,12 @@ export default function Profile() {
                       </Button>
                     )}
 
-                    {!isDisableAddr && (
+                    {/* {!isDisableAddr && (
                       <FormControlLabel
                         control={<Radio value="" />}
                         label="reset default address"
                       />
-                    )}
+                    )} */}
                   </RadioGroup>
                 </FormControl>
 
@@ -385,9 +445,8 @@ export default function Profile() {
                 >
                   <RadioGroup
                     defaultValue={customer.defaultShippingAddressId}
-                    onChange={(e) => {
-                      formData.defaultShippingAddressId = e.target.value;
-                    }}
+                    value={defaultShippingAddr}
+                    onChange={(e) => changeDefaultAddress(e, 'shipping')}
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-shipping"
                   >
@@ -429,12 +488,12 @@ export default function Profile() {
                         Add shipping address
                       </Button>
                     )}
-                    {!isDisableAddr && (
+                    {/* {!isDisableAddr && (
                       <FormControlLabel
                         control={<Radio value="" />}
                         label="reset default address"
                       />
-                    )}
+                    )} */}
                   </RadioGroup>
                 </FormControl>
               </div>
