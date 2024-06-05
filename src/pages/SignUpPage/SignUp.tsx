@@ -82,7 +82,7 @@ function SignUp({ client }: IClient) {
 
     const addresses = [
       createAddress(addressData, 'billing'),
-      ...(isSameAdress ? [] : [createAddress(addressData, 'shipping')]),
+      createAddress(addressData, 'shipping'),
     ];
 
     if (isValid) {
@@ -94,12 +94,13 @@ function SignUp({ client }: IClient) {
         dateOfBirth: formData.date.value.format('YYYY-MM-DD'),
         addresses,
         billingAddresses: [0],
-        shippingAddresses: isSameAdress ? [0] : [1],
+        shippingAddresses: [1],
         ...(isBillingDefaut && { defaultBillingAddress: 0 }),
         ...(isSameAdress
-          ? isBillingDefaut && { defaultShippingAddress: 0 }
+          ? isBillingDefaut && { defaultShippingAddress: 1 }
           : isShippingDefaut && { defaultShippingAddress: 1 }),
       };
+
       try {
         await client.registerUser(userData);
 
