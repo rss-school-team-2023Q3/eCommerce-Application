@@ -24,17 +24,18 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
 
   const user = useSelector((state: RootState) => state.auth.user);
   const userAddress = user?.addresses.find(
-    ({ id }) => cityProps.addressId === id,
+    ({ id }) => cityProps.addressId === id
   );
 
-  if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
+  // if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
 
-  const formAddress = formData.addresses.find(
-    (el) => cityProps.addressId === el.id,
+  const formAddress = formData.addresses?.find(
+    (el) => cityProps.addressId === el.id
   );
 
   useEffect(() => {
-    const initialCityProfile = formAddress?.value.city.value || userAddress?.city || '';
+    const initialCityProfile =
+      formAddress?.value.city.value || userAddress?.city || '';
 
     setCityProfile(initialCityProfile);
   }, [formAddress, userAddress]);
@@ -44,10 +45,10 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
     setIsValid(!validate('city', city));
     setCityErrorMessage(validate('city', city));
 
-    if (!formAddress?.value.city) throw new Error("formAddress.city doesn't define");
-
-    formAddress.value.city.value = city;
-    formAddress.value.city.isValid = !validate('city', city);
+    if (formAddress?.value.city) {
+      formAddress.value.city.value = city;
+      formAddress.value.city.isValid = !validate('city', city);
+    }
   }
 
   const isCityChanged = cityProfile !== (userAddress?.city || '');

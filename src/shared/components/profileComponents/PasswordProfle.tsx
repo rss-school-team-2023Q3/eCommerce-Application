@@ -31,19 +31,19 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
   }, [isDisable]);
 
   useEffect(() => {
-    if (!formData.fieldChangedSet) {
-      throw new Error("formData.fieldChangedSet doesn't exist");
-    }
+    // if (!formData.fieldChangedSet) {
+    //   throw new Error("formData.fieldChangedSet doesn't exist");
+    // }
 
     const isPasswords = !!passwordOld && formData.password.value;
 
     if (
-      isPasswords
-      && formData.password.isValid
-      && formData.password.value !== passwordOld
+      isPasswords &&
+      formData.password.isValid &&
+      formData.password.value !== passwordOld
     ) {
-      formData.fieldChangedSet.add('password');
-    } else formData.fieldChangedSet.delete('password');
+      formData.fieldChangedSet?.add('password');
+    } else formData.fieldChangedSet?.delete('password');
   }, [
     formData.password.isValid,
     isDisable,
@@ -65,10 +65,11 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
     }
   }
 
-  const isPasswordChanged = passwordOld !== passwordNew
-    && formData.password.isValid
-    && passwordOld
-    && passwordNew;
+  const isPasswordChanged =
+    passwordOld !== passwordNew &&
+    formData.password.isValid &&
+    passwordOld &&
+    passwordNew;
 
   return (
     !isDisable && (

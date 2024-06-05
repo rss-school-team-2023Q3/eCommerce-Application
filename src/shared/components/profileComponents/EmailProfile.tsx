@@ -32,16 +32,16 @@ function EmailProfile({ isDisable }: { isDisable: boolean }) {
       setUserEmail(user.email);
     }
 
-    if (!formData.fieldChangedSet) {
-      throw new Error("formData.fieldChangedSet doesn't exist");
-    }
+    // if (!formData.fieldChangedSet) {
+    //   throw new Error("formData.fieldChangedSet doesn't exist");
+    // }
 
     const isEmailChanged = userEmail !== user?.email;
 
     if (isEmailChanged) {
-      formData.fieldChangedSet.add(FormField.email);
+      formData.fieldChangedSet?.add(FormField.email);
     } else {
-      formData.fieldChangedSet.delete(FormField.email);
+      formData.fieldChangedSet?.delete(FormField.email);
     }
   }, [isDisable, userEmail, user?.email, formData.fieldChangedSet]);
 

@@ -22,19 +22,20 @@ function StreetProfile({ streetProps }: IStreetInterface) {
 
   const user = useSelector((state: RootState) => state.auth.user);
   const userAddress = user?.addresses.find(
-    ({ id }) => streetProps.addressId === id,
+    ({ id }) => streetProps.addressId === id
   );
 
   const formData = useContext(profileContext);
 
-  if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
+  // if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
 
-  const formAddress = formData.addresses.find(
-    (el) => streetProps.addressId === el.id,
+  const formAddress = formData.addresses?.find(
+    (el) => streetProps.addressId === el.id
   );
 
   useEffect(() => {
-    const initialStreetProfile = formAddress?.value.streetName.value || userAddress?.streetName || '';
+    const initialStreetProfile =
+      formAddress?.value.streetName.value || userAddress?.streetName || '';
 
     setStreetProfile(initialStreetProfile);
   }, [formAddress, userAddress]);
@@ -44,10 +45,10 @@ function StreetProfile({ streetProps }: IStreetInterface) {
     setIsValid(!validate('street', street));
     setStreetErrorMessage(validate('street', street));
 
-    if (!formAddress?.value.streetName) throw new Error("formAddress.streetName doesn't define");
-
-    formAddress.value.streetName.value = street;
-    formAddress.value.streetName.isValid = !validate('street', street);
+    if (formAddress?.value.streetName) {
+      formAddress.value.streetName.value = street;
+      formAddress.value.streetName.isValid = !validate('street', street);
+    }
   }
 
   const isStreetChanged = streetProfile !== (userAddress?.streetName || '');

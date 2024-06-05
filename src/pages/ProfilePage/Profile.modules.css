@@ -68,7 +68,7 @@
   flex-direction: column;
   color: #1342fe;
   width: 100%;
-
+  gap: 5px;
   /* max-width: 35rem; */
 }
 
@@ -111,6 +111,7 @@
 
 .save-icon:hover {
   color: blue;
+  background: inherit;
 }
 
 .input-field-profile {

@@ -31,13 +31,13 @@ function FirstNameProfile({ isDisable }: { isDisable: boolean }) {
   useEffect(() => {
     if (isDisable && user?.firstName) setFirstName(user.firstName);
 
-    if (!formData.fieldChangedSet) throw new Error("formData.fieldChangedSet doesn't exist");
+    // if (!formData.fieldChangedSet) throw new Error("formData.fieldChangedSet doesn't exist");
 
     const isNameChanged = firstName !== user?.firstName;
 
     if (isNameChanged) {
-      formData.fieldChangedSet.add(FormField.firstName);
-    } else formData.fieldChangedSet.delete(FormField.firstName);
+      formData.fieldChangedSet?.add(FormField.firstName);
+    } else formData.fieldChangedSet?.delete(FormField.firstName);
   }, [isDisable, firstName, user?.firstName, formData.fieldChangedSet]);
 
   function checkName(name: string) {

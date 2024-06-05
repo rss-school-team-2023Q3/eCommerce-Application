@@ -11,9 +11,7 @@ import {
 } from '@mui/material';
 import IMapAddresses from 'pages/App/types/interfaces/IValidateAddress.ts';
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
-import {
-  ChangeEvent, useContext, useEffect, useState,
-} from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from 'shared/api/authApi/store/authSlice.ts';
 import { RootState } from 'shared/api/store.ts';
@@ -34,7 +32,7 @@ import './Profile.modules.css';
 
 export default function Profile() {
   const customer: Customer | null = useSelector(
-    (state: RootState) => state.auth.user,
+    (state: RootState) => state.auth.user
   );
   const dispatch = useDispatch();
 
@@ -51,16 +49,16 @@ export default function Profile() {
   const [isValidBilling, setIsValidBilling] = useState(false);
 
   const [defaultBiilingAddr, setDefaultBiilingAddr] = useState(
-    customer?.defaultBillingAddressId || '',
+    customer?.defaultBillingAddressId || ''
   );
 
   const [defaultShippingAddr, setDefaultShippingAddr] = useState(
-    customer?.defaultShippingAddressId || '',
+    customer?.defaultShippingAddressId || ''
   );
 
-  if (!customer) {
-    throw new Error('Error Profile Page');
-  }
+  // if (!customer) {
+  //   throw new Error('Error Profile Page');
+  // }
 
   const formData = useContext(profileContext);
 
@@ -77,11 +75,11 @@ export default function Profile() {
   const [isChangedAddr, setIsChangedAddr] = useState(false);
 
   const [shippingAddresses, setShippingAddresses] = useState(
-    customer.shippingAddressIds || [],
+    customer?.shippingAddressIds || []
   );
 
   const [billingAddresses, setBillingAddresses] = useState(
-    customer.billingAddressIds || [],
+    customer?.billingAddressIds || []
   );
 
   function dateChange() {
@@ -101,38 +99,38 @@ export default function Profile() {
   }, [formData.fieldChangedSetAddr?.size]);
 
   useEffect(() => {
-    setBillingAddresses(customer.billingAddressIds || []);
+    setBillingAddresses(customer?.billingAddressIds || []);
     const delAddrIndex = formData.addresses?.findIndex(
-      (el) => el.id === '"newBillingAddress"',
+      (el) => el.id === '"newBillingAddress"'
     );
 
     if (delAddrIndex) formData.addresses?.splice(delAddrIndex, 1);
-  }, [customer.billingAddressIds?.length]);
+  }, [customer?.billingAddressIds?.length]);
 
   useEffect(() => {
-    setShippingAddresses(customer.shippingAddressIds || []);
+    setShippingAddresses(customer?.shippingAddressIds || []);
     const delAddrIndex = formData.addresses?.findIndex(
-      (el) => el.id === '"newShippingAddress"',
+      (el) => el.id === '"newShippingAddress"'
     );
 
     if (delAddrIndex) formData.addresses?.splice(delAddrIndex, 1);
-  }, [customer.shippingAddressIds?.length]);
+  }, [customer?.shippingAddressIds?.length]);
 
   useEffect(() => {
     setIsDisableAddr(true);
-  }, [customer.addresses?.length]);
+  }, [customer?.addresses?.length]);
 
   useEffect(() => {
-    if (formData.addresses && customer.addresses) {
-      formData.addresses = customer.addresses.reduce((acc, addr) => {
+    if (formData.addresses && customer?.addresses) {
+      formData.addresses = customer?.addresses.reduce((acc, addr) => {
         if (formData.addresses) {
           acc.push(createFormAddress(addr));
         }
 
         return acc;
       }, [] as IMapAddresses[]);
-      setBillingAddresses(customer.billingAddressIds || []);
-      setShippingAddresses(customer.shippingAddressIds || []);
+      setBillingAddresses(customer?.billingAddressIds || []);
+      setShippingAddresses(customer?.shippingAddressIds || []);
     }
 
     setIsAddShipping(false);
@@ -142,7 +140,7 @@ export default function Profile() {
   }, [isDisableAddr]);
 
   useEffect(() => {
-    formData.addresses = customer.addresses.reduce((acc, addr) => {
+    formData.addresses = customer?.addresses.reduce((acc, addr) => {
       if (formData.addresses) {
         acc.push(createFormAddress(addr));
       }
@@ -161,24 +159,24 @@ export default function Profile() {
     if (!formAddresses) return;
 
     const newIdShipping = formAddresses.find(
-      (el) => el.id === 'newShippingAddress',
+      (el) => el.id === 'newShippingAddress'
     );
 
     if (newIdShipping) {
       const isValidShipp = Object.values(newIdShipping.value).every(
-        (el) => el.isValid,
+        (el) => el.isValid
       );
 
       setIsValidShipping(isValidShipp);
     }
 
     const newIdBilling = formAddresses.find(
-      (el) => el.id === 'newBillingAddress',
+      (el) => el.id === 'newBillingAddress'
     );
 
     if (newIdBilling) {
       const isValidBill = Object.values(newIdBilling.value).every(
-        (el) => el.isValid,
+        (el) => el.isValid
       );
 
       setIsValidBilling(isValidBill);
@@ -194,7 +192,7 @@ export default function Profile() {
       formData,
       customer?.id as string,
       customer?.version as number,
-      dispatch,
+      dispatch
     );
     formData.fieldChangedSet = new Set();
     setIsDisable(true);
@@ -234,7 +232,7 @@ export default function Profile() {
         type,
         customer.id,
         customer.version,
-        dispatch,
+        dispatch
       );
 
       if (result?.statusCode === 200 && type === 'shipping') {
@@ -253,7 +251,7 @@ export default function Profile() {
 
   async function changeDefaultAddress(
     e: ChangeEvent<HTMLInputElement>,
-    type: 'shipping' | 'billing',
+    type: 'shipping' | 'billing'
   ) {
     const addressId = e.target.value;
 
@@ -266,7 +264,7 @@ export default function Profile() {
       res = await currentClient.setDefaultShippingAddr(
         addressId,
         customer.id,
-        customer.version,
+        customer.version
       );
     }
 
@@ -275,7 +273,7 @@ export default function Profile() {
       res = await currentClient.setDefaultBillingAddr(
         addressId,
         customer.id,
-        customer.version,
+        customer.version
       );
     }
 
@@ -295,13 +293,13 @@ export default function Profile() {
           <form className="profile-form" onChange={onChangeUserForm}>
             <div className="switcher-wrap">
               <FormControlLabel
-                control={(
+                control={
                   <Switch
                     checked={!isDisable}
                     className="disable-switch"
                     onChange={() => setIsDisable(!isDisable)}
                   />
-                )}
+                }
                 label={isDisable ? 'Edit user data' : 'Cancel data editing'}
               />
               <IconButton
@@ -332,18 +330,18 @@ export default function Profile() {
             <div className="address-field">
               <div className="switcher-wrap">
                 <FormControlLabel
-                  control={(
+                  control={
                     <Switch
                       checked={!isDisableAddr}
                       className="disable-switch"
                       onChange={() => setIsDisableAddr(!isDisableAddr)}
                     />
-                  )}
+                  }
                   label={
                     isDisableAddr ? 'Edit address data' : 'Cancel data editing'
                   }
                 />
-                <IconButton
+                <Button
                   size="large"
                   // color="secondary"
                   className={`save-icon ${isChangedAddr ? 'save-visible' : 'save-unvisible'}`}
@@ -351,7 +349,7 @@ export default function Profile() {
                 >
                   <SaveAsIcon />
                   save
-                </IconButton>
+                </Button>
               </div>
               <div className="address-input-field">
                 <FormControl
@@ -373,8 +371,8 @@ export default function Profile() {
                       <p> Billing Addresses</p>
                       {billingAddresses.map((id, index) => (
                         <li key={id}>
-                          {customer.addresses.find(
-                            (el) => el.id === id || id === 'newBillingAddress',
+                          {customer?.addresses.find(
+                            (el) => el.id === id || id === 'newBillingAddress'
                           ) && (
                             <ProfileAddress
                               type="billing"
@@ -422,7 +420,7 @@ export default function Profile() {
                   disabled={isDisableAddr}
                 >
                   <RadioGroup
-                    defaultValue={customer.defaultShippingAddressId}
+                    defaultValue={customer?.defaultShippingAddressId}
                     value={defaultShippingAddr}
                     onChange={(e) => changeDefaultAddress(e, 'shipping')}
                     aria-labelledby="demo-radio-buttons-group-label"
@@ -432,8 +430,8 @@ export default function Profile() {
                       <p> Shipping Addresses</p>
                       {shippingAddresses.map((id, index) => (
                         <li key={id}>
-                          {customer.addresses.find(
-                            (el) => el.id === id || id === 'newShippingAddress',
+                          {customer?.addresses.find(
+                            (el) => el.id === id || id === 'newShippingAddress'
                           ) && (
                             <ProfileAddress
                               type="shipping"

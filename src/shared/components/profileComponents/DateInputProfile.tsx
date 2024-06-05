@@ -46,9 +46,9 @@ function DateInput({ dateProps }: IDateInterface) {
   }, [dateProps.isDisable]);
 
   useEffect(() => {
-    if (!formData.fieldChangedSet) {
-      throw new Error("formData.fieldChangedSet doesn't exist");
-    }
+    // if (!formData.fieldChangedSet) {
+    //   throw new Error("formData.fieldChangedSet doesn't exist");
+    // }
 
     if (dateProps.isDisable && user?.dateOfBirth) {
       const userDateOfBirth = dayjs(user.dateOfBirth);
@@ -56,18 +56,19 @@ function DateInput({ dateProps }: IDateInterface) {
       setDateBirth(userDateOfBirth);
 
       setIsDateChanged(false);
-      formData.fieldChangedSet.delete(FormField.dateOfBirth);
+      formData.fieldChangedSet?.delete(FormField.dateOfBirth);
     } else if (!dateProps.isDisable) {
-      const isDateHasChanged = isValid
-        && formData.date.value.format('YYYY-MM-DD') !== user?.dateOfBirth;
+      const isDateHasChanged =
+        isValid &&
+        formData.date.value.format('YYYY-MM-DD') !== user?.dateOfBirth;
 
       setIsDateChanged(isDateHasChanged);
 
       if (isDateHasChanged) {
-        formData.fieldChangedSet.add(FormField.dateOfBirth);
+        formData.fieldChangedSet?.add(FormField.dateOfBirth);
       } else {
         // setIsDateChanged(false)
-        formData.fieldChangedSet.delete(FormField.dateOfBirth);
+        formData.fieldChangedSet?.delete(FormField.dateOfBirth);
       }
     }
   }, [dateProps.isDisable, isValid, user?.dateOfBirth, formData]);

@@ -33,11 +33,11 @@ function LastNameProfile({ isDisable }: { isDisable: boolean }) {
       setLastName(user.lastName);
     }
 
-    if (!formData.fieldChangedSet) throw new Error("formData.fieldChanged doesn't exist");
+    // if (!formData.fieldChangedSet) throw new Error("formData.fieldChanged doesn't exist");
 
     if (lastName === user?.lastName) {
-      formData.fieldChangedSet.delete(FormField.lastName);
-    } else formData.fieldChangedSet.add(FormField.lastName);
+      formData.fieldChangedSet?.delete(FormField.lastName);
+    } else formData.fieldChangedSet?.add(FormField.lastName);
   }, [isDisable, lastName, user?.lastName, formData.fieldChangedSet]);
 
   function checkLastName(name: string) {
