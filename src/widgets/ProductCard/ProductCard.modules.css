@@ -14,12 +14,28 @@
   height: 15.625rem;
 }
 
+.card-bottom {
+  margin-top: 0.625rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-cart {
+  transform: scale(1);
+  transition: transform 0.25s linear;
+  cursor: pointer;
+}
+
+.card-cart:hover {
+  transform: scale(1.1);
+}
+
 .card-price {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   gap: 0.3125rem;
-  margin-top: 0.625rem;
 }
 
 .card:hover {
@@ -29,3 +45,7 @@
 .card:hover > .card-img {
   transform: scale(1.1);
 }
+
+/* .card-cart {
+  align-self: start;
+} */

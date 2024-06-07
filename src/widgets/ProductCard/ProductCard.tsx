@@ -2,11 +2,18 @@ import {
   ProductDiscount,
   ProductDiscountValueRelative,
 } from '@commercetools/platform-sdk';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import {
-  Card, CardMedia, CardContent, Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  IconButton,
 } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
@@ -25,6 +32,7 @@ function ProductCard({
     (state: RootState) => state.auth.user?.addresses[0].country,
   );
   const navigate = useNavigate();
+  const [isInCart, setIsInCart] = useState(false);
 
   function getPrice(item: IProductData) {
     let price: string | undefined;
@@ -80,22 +88,48 @@ function ProductCard({
           {product.description
             && `${product.description.en}: ${product.name.en}`}
         </Typography>
-        <div className="card-price">
-          <Typography
-            sx={{
-              textDecorationLine: discountPrice ? 'line-through' : 'none',
-            }}
-            variant="h5"
-          >
-            {price}
-          </Typography>
-          {discountPrice ? (
-            <Typography variant="h5" color="red">
-              {discountPrice}
-            </Typography>
-          ) : (
-            ''
+        <div className="card-bottom">
+          {!isInCart && (
+            <IconButton
+              className="card-cart"
+              aria-label="add in cart"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsInCart(true);
+              }}
+            >
+              <AddShoppingCartIcon />
+            </IconButton>
           )}
+          {isInCart && (
+            <IconButton
+              className="card-cart"
+              aria-label="remove from cart"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsInCart(false);
+              }}
+            >
+              <RemoveShoppingCartIcon />
+            </IconButton>
+          )}
+          <div className="card-price">
+            <Typography
+              sx={{
+                textDecorationLine: discountPrice ? 'line-through' : 'none',
+              }}
+              variant="h5"
+            >
+              {price}
+            </Typography>
+            {discountPrice ? (
+              <Typography variant="h5" color="red">
+                {discountPrice}
+              </Typography>
+            ) : (
+              ''
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

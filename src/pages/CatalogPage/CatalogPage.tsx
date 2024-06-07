@@ -15,6 +15,7 @@ function CatalogPage() {
   const [products, setProducts] = useState(productsList);
   const [discounts, setDiscounts] = useState(discountsList);
   const [isLoad, setIsLoad] = useState(true);
+  // const [isInCart, setIsInCart] = useState(false);
 
   function getDiscont(name: string | undefined) {
     let discont: ProductDiscount | boolean = false;
@@ -67,6 +68,7 @@ function CatalogPage() {
                   key={item.variant.key}
                   product={item}
                   discount={isDiscont}
+                  // isInCart={isInCart}
                 />
               );
             });
