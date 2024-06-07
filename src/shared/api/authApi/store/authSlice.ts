@@ -1,6 +1,6 @@
+import { Customer } from '@commercetools/platform-sdk';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import IAuthState from 'pages/App/types/interfaces/IAuthState';
-import IUser from 'pages/App/types/interfaces/IUser';
 
 const initialState: IAuthState = {
   isLoggedIn: false,
@@ -11,7 +11,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (preState, action: PayloadAction<{ user: IUser }>) => {
+    setCredentials: (preState, action: PayloadAction<{ user: Customer }>) => {
       const { user } = action.payload;
       const state = preState;
 

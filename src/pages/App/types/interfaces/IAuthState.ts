@@ -1,9 +1,9 @@
-import IUser from 'pages/App/types/interfaces/IUser';
+import { Customer } from '@commercetools/platform-sdk';
 
 interface IAuthState {
   isLoggedIn: boolean;
   isLoading?: boolean;
-  user: IUser | null;
+  user: Customer | null;
   token?: string | null;
 }
 

@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import formContext from 'pages/SignUpPage/formContext.ts';
+import formContext from 'pages/SignUpPage/formContext';
 import { useContext, useState } from 'react';
 import validate from 'shared/utils/validate';
 

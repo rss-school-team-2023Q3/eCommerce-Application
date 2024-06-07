@@ -19,6 +19,7 @@ function selectCountryCode(country: string): string {
       break;
     }
     default: {
+      value = country;
       break;
     }
   }

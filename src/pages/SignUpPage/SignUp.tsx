@@ -1,5 +1,6 @@
 import './SignUp.modules.css';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import IClient from 'pages/App/types/interfaces/IClientInterface.ts';
 import signInStoreLogic from 'pages/SignInPage/utils/signInStoreLogic.ts';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,20 +14,15 @@ import LastNameInput from 'shared/components/InputComponents/LastNameInput';
 import PasswordInput from 'shared/components/InputComponents/PasswordInput';
 import PostalCodeInput from 'shared/components/InputComponents/PostalCodeInput';
 import StreetInput from 'shared/components/InputComponents/StreetInput';
-import { ApiBuilder } from 'shared/libs/commercetools/apiBuilder.ts';
 import { createAddress } from 'shared/utils/createAddress.ts';
 import { toastError, toastSuccess } from 'shared/utils/notifications.ts';
 
-import formContext from './formContext.ts';
+import formContext, { initialContext } from './formContext.ts';
 
-interface ISignupInterface {
-  client: ApiBuilder;
-}
-
-function SignUp({ client }: ISignupInterface) {
+function SignUp({ client }: IClient) {
   const dispatch = useDispatch();
   const [isValid, setValid] = useState(false);
-  const formData = useContext(formContext);
+  let formData = useContext(formContext);
   const [isBillingCountryChange, setBillingCountryChange] = useState(false);
   const [isShippingCountryChange, setShippingCountryChange] = useState(false);
   const [isSameAdress, setSameAdress] = useState(false);
@@ -86,7 +82,7 @@ function SignUp({ client }: ISignupInterface) {
 
     const addresses = [
       createAddress(addressData, 'billing'),
-      ...(isSameAdress ? [] : [createAddress(addressData, 'shipping')]),
+      createAddress(addressData, 'shipping'),
     ];
 
     if (isValid) {
@@ -98,14 +94,16 @@ function SignUp({ client }: ISignupInterface) {
         dateOfBirth: formData.date.value.format('YYYY-MM-DD'),
         addresses,
         billingAddresses: [0],
-        shippingAddresses: isSameAdress ? [0] : [1],
+        shippingAddresses: [1],
         ...(isBillingDefaut && { defaultBillingAddress: 0 }),
         ...(isSameAdress
-          ? isBillingDefaut && { defaultShippingAddress: 0 }
+          ? isBillingDefaut && { defaultShippingAddress: 1 }
           : isShippingDefaut && { defaultShippingAddress: 1 }),
       };
+
       try {
         await client.registerUser(userData);
+
         await signInStoreLogic(userData.email, userData.password, dispatch);
         toastSuccess('User created');
       } catch (error) {
@@ -137,6 +135,14 @@ function SignUp({ client }: ISignupInterface) {
   function dateChange() {
     setDateChange(!isDateChange);
   }
+
+  useEffect(() => {
+    formData = structuredClone(initialContext);
+
+    return () => {
+      formData = structuredClone(initialContext);
+    };
+  }, []);
 
   useEffect(() => {
     validateForm();

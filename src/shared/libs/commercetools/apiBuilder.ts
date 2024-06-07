@@ -2,9 +2,18 @@ import {
   ByProjectKeyRequestBuilder,
   CustomerDraft,
   createApiBuilderFromCtpClient,
+  Customer,
+  MyCustomerChangePassword,
+  CustomerUpdateAction,
+  Address,
+  MyCustomerUpdateAction,
+  MyCustomerChangeAddressAction,
+  MyCustomerSetDefaultShippingAddressAction,
+  MyCustomerSetDefaultBillingAddressAction,
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
-
+import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
+import capitalizeFirstLetter from 'shared/utils/capitalizeFirstLetter.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
 import {
@@ -15,18 +24,20 @@ import {
 } from './middlewareOptions.ts';
 import { tokenCache } from './tokenCache.ts';
 
-export class ApiBuilder {
+class ApiBuilder {
   private projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
   private client: Client | undefined;
 
   private apiRoot: ByProjectKeyRequestBuilder | undefined;
 
+  static client = new ApiBuilder();
+
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions);
+    // .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -47,7 +58,7 @@ export class ApiBuilder {
     this.apiRoot = this.createApiRoot(this.client);
   }
 
-  public async createRefreshTokenClient() {
+  public async createRefreshTokenClient(): Promise<Customer | null> {
     const options = refreshAuthMiddlewareOptions;
 
     options.refreshToken = JSON.parse(
@@ -114,11 +125,323 @@ export class ApiBuilder {
     return resp;
   }
 
-  public async getProducts() {
+  public async getProducts(filterQuery: string, sortQuery: string) {
+    let resp;
     try {
-      await this.apiRoot?.products().get().execute();
+      resp = filterQuery.length
+        ? await this.apiRoot
+          ?.products()
+          .get({
+            queryArgs: {
+              where: filterQuery,
+              sort: sortQuery,
+              limit: 50,
+            },
+          })
+          .execute()
+        : await this.apiRoot
+          ?.products()
+          .get({
+            queryArgs: {
+              limit: 50,
+              sort: sortQuery,
+            },
+          })
+          .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
+
+    return resp;
+  }
+
+  public async getProductsDiscount() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.productDiscounts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getFilterProducts(
+    filterQuery: string[],
+    sortQuery: string,
+    searchQuery: string,
+  ) {
+    let resp;
+    try {
+      resp = filterQuery.length
+        ? await this.apiRoot
+          ?.productProjections()
+          .search()
+          .get({
+            queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
+              filter: filterQuery,
+              sort: sortQuery,
+              limit: 50,
+            },
+          })
+          .execute()
+        : (resp = await this.apiRoot
+          ?.productProjections()
+          .search()
+          .get({
+            queryArgs: {
+              fuzzy: true,
+              'text.en': searchQuery,
+              sort: sortQuery,
+              limit: 50,
+            },
+          })
+          .execute());
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
+
+  public async updateUserData(
+    actions: IDataActions[],
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const body = {
+      version,
+      actions: actions as CustomerUpdateAction[],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async updatePassword(body: MyCustomerChangePassword) {
+    let resp;
+
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .password()
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getProduct(id: string) {
+    let resp;
+    try {
+      resp = await this.apiRoot?.products().withId({ ID: id }).get().execute();
+    } catch (error) {
+      if (error instanceof Error) throw new Error(error.message);
+    }
+
+    return resp;
+  }
+
+  public async addNewAddress(ID: string, version: number, address: Address) {
+    const actions: CustomerUpdateAction[] = [
+      {
+        action: 'addAddress',
+        address,
+      },
+    ];
+    const body = {
+      version,
+      actions,
+    };
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async setShippingOrBillingAddress(
+    ID: string,
+    addressId: string,
+    version: number,
+    type: 'shipping' | 'billing',
+  ) {
+    type AddressIdType = 'addShippingAddressId' | 'addBillingAddressId';
+    const action = `add${capitalizeFirstLetter(type)}AddressId` as AddressIdType;
+
+    if (action !== 'addShippingAddressId' && action !== 'addBillingAddressId') return null;
+
+    const actions: CustomerUpdateAction[] = [
+      {
+        action,
+        addressId,
+      },
+    ];
+    const body = {
+      version,
+      actions,
+    };
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async changeAddress(
+    newAddress: Address,
+    addressId: string,
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const changeAddressAction: MyCustomerChangeAddressAction = {
+      action: 'changeAddress',
+      addressId,
+      address: newAddress,
+    };
+    const body = {
+      version,
+      actions: [changeAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async removeAddress(addressId: string, ID: string, version: number) {
+    let resp;
+    const removeAddressAction: MyCustomerUpdateAction = {
+      action: 'removeAddress',
+      addressId,
+    };
+    const body = {
+      version,
+      actions: [removeAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async setDefaultBillingAddr(
+    addressId: string,
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const setDefaultAddressAction: MyCustomerSetDefaultBillingAddressAction = {
+      action: 'setDefaultBillingAddress',
+      addressId,
+    };
+    const body = {
+      version,
+      actions: [setDefaultAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async setDefaultShippingAddr(
+    addressId: string,
+    ID: string,
+    version: number,
+  ) {
+    let resp;
+    const setDefaultAddressAction: MyCustomerSetDefaultShippingAddressAction = {
+      action: 'setDefaultShippingAddress',
+      addressId,
+    };
+    const body = {
+      version,
+      actions: [setDefaultAddressAction],
+    };
+
+    try {
+      resp = await this.apiRoot
+        ?.customers()
+        .withId({ ID })
+        .post({
+          body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
   }
 }
+
+export const currentClient = new ApiBuilder();

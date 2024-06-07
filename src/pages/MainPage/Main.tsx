@@ -7,8 +7,11 @@ export default function Main() {
       <Navigate to="/main" />
       <h2>Main page</h2>
       <div className="main-links">
-        <NavLink className="login-link" to="/signin">
-          Sign In
+        <NavLink className="login-link" to="/catalog">
+          Catalog
+        </NavLink>
+        <NavLink className="login-link" to="/profile">
+          Profile
         </NavLink>
         <NavLink className="login-link" to="/signup">
           Sign Up

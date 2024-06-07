@@ -1,6 +1,6 @@
 import { Container, AppBar, Toolbar } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { RootState } from 'shared/api/authApi/store/store';
+import { RootState } from 'shared/api/store';
 import AuthNav from 'widgets/AuthNav/AuthNav';
 import Navigation from 'widgets/Navigation/Navigation';
 import UserMenu from 'widgets/UserMenu/UserMenu';
