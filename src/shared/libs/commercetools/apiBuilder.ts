@@ -466,6 +466,18 @@ class ApiBuilder {
     return resp;
   }
 
+  public async getCartById(ID: string) {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().carts().withId({ ID }).get()
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
   public async createCart() {
     let resp;
     try {
@@ -473,7 +485,7 @@ class ApiBuilder {
         ?.me()
         .carts()
         .post({
-          body: { currency: 'USD' },
+          body: { currency: 'EUR' },
         })
         .execute();
     } catch (error) {
@@ -490,6 +502,33 @@ class ApiBuilder {
       .withId({ ID })
       .delete({ queryArgs: { version: vers } })
       .execute();
+  }
+
+  public async addToCart(ID: string, productId: string, version: number) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'addLineItem',
+                productId,
+                quantity: 1,
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
   }
 }
 

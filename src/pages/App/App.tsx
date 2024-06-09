@@ -41,9 +41,13 @@ function App() {
       const carts = await currentClient.getCarts();
 
       if (!carts) {
-        currentClient.createCart();
+        currentClient.createCart().then((resp) => {
+          localStorage.setItem('cartId', resp?.body.id as string);
+        });
       } else {
-        currentClient.getCartList();
+        currentClient.getCartList().then((resp) => {
+          localStorage.setItem('cartId', resp?.body.results[0].id as string);
+        });
       }
     };
 
