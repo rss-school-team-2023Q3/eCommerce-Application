@@ -20,6 +20,7 @@ const Profile = lazy(() => import('pages/ProfilePage/Profile'));
 const SignUp = lazy(() => import('pages/SignUpPage/SignUp'));
 const MainPage = lazy(() => import('pages/MainPage/Main'));
 const ProductPage = lazy(() => import('pages/ProductPage/ProductPage'));
+const BasketPage = lazy(() => import('pages/BasketPage/BasketPage'));
 
 function App() {
   const dispatch = useDispatch();
@@ -35,6 +36,14 @@ function App() {
         }
       } else {
         await currentClient.createAnonymousClient();
+      }
+
+      const carts = await currentClient.getCarts();
+
+      if (!carts) {
+        currentClient.createCart();
+      } else {
+        currentClient.getCartList();
       }
     };
 
@@ -62,6 +71,7 @@ function App() {
               )}
             />
             <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="/basket" element={<BasketPage />} />
 
             <Route
               path="/signin"

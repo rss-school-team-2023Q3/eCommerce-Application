@@ -36,8 +36,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions);
-    // .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions)
+      .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -111,6 +111,7 @@ class ApiBuilder {
           body: {
             email,
             password,
+            activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
@@ -441,6 +442,54 @@ class ApiBuilder {
     }
 
     return resp;
+  }
+
+  public async getCarts() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().carts().head().execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getCartList() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().carts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async createCart() {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .post({
+          body: { currency: 'USD' },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async removeCart(ID: string, vers: number) {
+    this.apiRoot
+      ?.me()
+      .carts()
+      .withId({ ID })
+      .delete({ queryArgs: { version: vers } })
+      .execute();
   }
 }
 

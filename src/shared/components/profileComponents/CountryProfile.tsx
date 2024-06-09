@@ -1,5 +1,7 @@
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {
+  FormControl, InputLabel, Select, MenuItem,
+} from '@mui/material';
 import changeCountryName from 'pages/ProfilePage/utils/changeCountryName';
 import profileContext from 'pages/ProfilePage/utils/profileContext';
 import { useContext, useState } from 'react';
@@ -29,15 +31,15 @@ function CountryInput({ countryProps }: ICountryInterface) {
   // formData[typeCountry].value = changeCountryName(countryProps.profileCountry);
   const user = useSelector((state: RootState) => state.auth.user);
   const userAddress = user?.addresses.find(
-    ({ id }) => countryProps.addressId === id
+    ({ id }) => countryProps.addressId === id,
   );
   const [countryProfile, setCountryProfile] = useState(
-    changeCountryName(userAddress?.country)
+    changeCountryName(userAddress?.country),
   );
 
   const [isChangeCountry, setIsChangeCountry] = useState(false);
   const formAddress = formData.addresses?.find(
-    (el) => countryProps.addressId === el.id
+    (el) => countryProps.addressId === el.id,
   );
 
   function selectCountry(country: string) {
@@ -49,8 +51,8 @@ function CountryInput({ countryProps }: ICountryInterface) {
     formAddress.value.country.isValid = true;
     countryProps.isUpdate(countryProps.type);
     setIsChangeCountry(
-      selectCountryCode(formAddress?.value.country.value as string) !==
-        userAddress?.country
+      selectCountryCode(formAddress?.value.country.value as string)
+        !== userAddress?.country,
     );
   }
 
