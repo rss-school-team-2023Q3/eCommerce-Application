@@ -68,7 +68,8 @@
   flex-direction: column;
   color: #1342fe;
   width: 100%;
-  gap: 5px;
+  gap: 0.3125rem;
+
   /* max-width: 35rem; */
 }
 
