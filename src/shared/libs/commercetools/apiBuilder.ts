@@ -36,8 +36,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions);
-    // .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions)
+      .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -100,21 +100,37 @@ class ApiBuilder {
   }
 
   public async loginUser(email: string, password: string) {
-    this.createWithPasswordClient(email, password);
     let resp;
     try {
-      tokenCache.clear();
       resp = await this.apiRoot
         ?.me()
-        .login()
+        ?.login()
         .post({
           body: {
             email,
             password,
+            activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
-      localStorage.setItem('tokenCacheGG', JSON.stringify(tokenCache.get()));
+
+      if (resp?.statusCode === 200) {
+        tokenCache.clear();
+        this.createWithPasswordClient(email, password);
+        this.getCartList().then((response) => {
+          response?.body.results.map((item) => {
+            if (item.cartState !== 'Active') this.removeCart(item.id, item.version);
+
+            return false;
+          });
+        });
+        setTimeout(() => {
+          localStorage.setItem(
+            'tokenCacheGG',
+            JSON.stringify(tokenCache.get()),
+          );
+        }, 1000);
+      }
     } catch (error) {
       if (error instanceof Error) {
         resp = error.message;
@@ -434,6 +450,106 @@ class ApiBuilder {
         .withId({ ID })
         .post({
           body,
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getCarts() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().carts().head().execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getCartList() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().carts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getActiveCart() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().activeCart().get().execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getCartById(ID: string) {
+    if (!ID) return null;
+
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().carts().withId({ ID }).get()
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async createCart() {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .post({
+          body: { currency: 'EUR' },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async removeCart(ID: string, vers: number) {
+    this.apiRoot
+      ?.me()
+      .carts()
+      .withId({ ID })
+      .delete({ queryArgs: { version: vers } })
+      .execute();
+  }
+
+  public async addToCart(ID: string, productId: string, version: number) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'addLineItem',
+                productId,
+                quantity: 1,
+              },
+            ],
+          },
         })
         .execute();
     } catch (error) {
