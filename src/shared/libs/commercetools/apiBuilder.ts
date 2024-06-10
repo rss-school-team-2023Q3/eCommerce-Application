@@ -13,6 +13,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
+import { LIMIT, OFFSET } from 'shared/constants';
 import capitalizeFirstLetter from 'shared/utils/capitalizeFirstLetter.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
@@ -125,7 +126,12 @@ class ApiBuilder {
     return resp;
   }
 
-  public async getProducts(filterQuery: string, sortQuery: string) {
+  public async getProducts(
+    filterQuery: string,
+    sortQuery: string,
+    limit: number = LIMIT,
+    offset: number = OFFSET,
+  ) {
     let resp;
     try {
       resp = filterQuery.length
@@ -135,7 +141,8 @@ class ApiBuilder {
             queryArgs: {
               where: filterQuery,
               sort: sortQuery,
-              limit: 50,
+              limit,
+              offset,
             },
           })
           .execute()
@@ -143,7 +150,8 @@ class ApiBuilder {
           ?.products()
           .get({
             queryArgs: {
-              limit: 50,
+              limit,
+              offset,
               sort: sortQuery,
             },
           })
@@ -151,6 +159,7 @@ class ApiBuilder {
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
+    // console.log(resp);
 
     return resp;
   }
@@ -170,6 +179,8 @@ class ApiBuilder {
     filterQuery: string[],
     sortQuery: string,
     searchQuery: string,
+    limit: number = LIMIT,
+    offset: number = OFFSET,
   ) {
     let resp;
     try {
@@ -183,7 +194,8 @@ class ApiBuilder {
               'text.en': searchQuery,
               filter: filterQuery,
               sort: sortQuery,
-              limit: 50,
+              limit,
+              offset,
             },
           })
           .execute()
@@ -195,7 +207,8 @@ class ApiBuilder {
               fuzzy: true,
               'text.en': searchQuery,
               sort: sortQuery,
-              limit: 50,
+              limit,
+              offset,
             },
           })
           .execute());

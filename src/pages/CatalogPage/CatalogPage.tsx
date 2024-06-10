@@ -3,6 +3,7 @@ import { Divider } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './CatalogPage.modules.css';
 import { useEffect, useState } from 'react';
+import { Paginator } from 'shared/components/Paginator/Paginator';
 import getDiscounts from 'shared/utils/getDiscounts';
 import getProducts from 'shared/utils/getProducts';
 import FilterAside from 'widgets/FilterAside/FilterAside';
@@ -16,6 +17,7 @@ function CatalogPage() {
   const [discounts, setDiscounts] = useState(discountsList);
   const [isLoad, setIsLoad] = useState(true);
   // const [isInCart, setIsInCart] = useState(false);
+  const [page, setPage] = useState(1);
 
   function getDiscont(name: string | undefined) {
     let discont: ProductDiscount | boolean = false;
@@ -78,6 +80,7 @@ function CatalogPage() {
             <h2 style={{ alignSelf: 'center', width: '100%' }}>No items</h2>
           );
         })()}
+        <Paginator pageQty={products.length} page={page} setPage={setPage} />
       </div>
     </div>
   );
