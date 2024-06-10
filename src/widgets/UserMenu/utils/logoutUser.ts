@@ -9,4 +9,7 @@ export default async function logoutUser(dispatch: Dispatch) {
 
   await currentClient.createAnonymousClient();
   await currentClient.getProducts('', 'masterData.current.name.en asc');
+  currentClient.createCart().then((resp) => {
+    localStorage.setItem('cartId', resp?.body.id as string);
+  });
 }

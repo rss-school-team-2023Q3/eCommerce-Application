@@ -17,7 +17,8 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
-import selectPriceIndex from 'shared/utils/selectPriceIndex';
+// import selectPriceIndex from 'shared/utils/selectPriceIndex';
+import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
 function ProductCard({
   product,
@@ -33,19 +34,21 @@ function ProductCard({
   );
   const navigate = useNavigate();
   const [isInCart, setIsInCart] = useState(false);
+  const id = localStorage.getItem('cartId') as string;
 
   function getPrice(item: IProductData) {
     let price: string | undefined;
 
     if (isLoggedIn && country) {
-      price = item.variant.prices
-        && `${selectPriceIndex(country)}${String(
-          (
-            item.variant.prices.filter((value) => value.country === country)[0]
-              .value.centAmount / 100
-          ).toFixed(2),
-        )}`;
-    } else {
+      //   price =
+      //     item.variant.prices &&
+      //     `${selectPriceIndex(country)}${String(
+      //       (
+      //         item.variant.prices.filter((value) => value.country === country)[0]
+      //           .value.centAmount / 100
+      //       ).toFixed(2)
+      //     )}`;
+      // } else {
       price = `$${
         item.variant.prices
         && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
@@ -70,9 +73,24 @@ function ProductCard({
     return false;
   }
 
+  async function addToCart(cartId: string, productId: string) {
+    setIsInCart(!isInCart);
+    const cart = await currentClient.getCartById(id);
+
+    await currentClient.addToCart(
+      cartId,
+      productId,
+      cart?.body.version as number,
+    );
+  }
+
   function handleProductClick(productId: string | undefined) {
     navigate(`/product/${productId}`);
   }
+
+  // const { lineItems } = cart;
+  // const currItem = lineItems?.find((item) => item?.productId === productId) as LineItem;
+  // const quantity = currItem?.quantity ?? 0;
 
   const price = getPrice(product);
   const discountPrice = getDiscountPrice(price);
@@ -95,7 +113,7 @@ function ProductCard({
               aria-label="add in cart"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsInCart(true);
+                addToCart(id, product.id);
               }}
             >
               <AddShoppingCartIcon />
@@ -107,7 +125,7 @@ function ProductCard({
               aria-label="remove from cart"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsInCart(false);
+                addToCart(id, product.id);
               }}
             >
               <RemoveShoppingCartIcon />

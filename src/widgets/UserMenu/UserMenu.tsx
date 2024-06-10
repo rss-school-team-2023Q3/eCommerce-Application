@@ -40,6 +40,7 @@ export default function UserMenu() {
               navigate('/signin');
             }
 
+            navigate('/main');
             logoutUser(dispatch);
           }}
         >

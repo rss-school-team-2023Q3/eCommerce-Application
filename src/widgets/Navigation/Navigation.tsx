@@ -1,6 +1,7 @@
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import { Toolbar, Button, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -34,6 +35,18 @@ export default function Navigation() {
             variant="outlined"
           >
             <span className="button-text">Catalog</span>
+          </Button>
+        </Tooltip>
+      </NavLink>
+      <NavLink to="/basket">
+        <Tooltip title="Basket">
+          <Button
+            startIcon={<ShoppingBasketIcon />}
+            className="nav-button"
+            sx={{ color: 'white' }}
+            variant="outlined"
+          >
+            <span className="button-text">Basket</span>
           </Button>
         </Tooltip>
       </NavLink>
