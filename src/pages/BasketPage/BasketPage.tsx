@@ -3,14 +3,22 @@ import { useEffect, useState } from 'react';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
 import BasketItem from './BasketItem.tsx';
+// import { Button } from '@mui/material';
 
 function BasketPage() {
   const [cart, setCart] = useState(Array<LineItem>);
 
   useEffect(() => {
     async function getCartItems() {
-      const id = localStorage.getItem('cartId') as string;
-      const resp = await currentClient.getCartById(id);
+      let resp;
+
+      if (!localStorage.getItem('tokenCacheGG')) {
+        const id = localStorage.getItem('cartId') as string;
+
+        resp = await currentClient.getCartById(id);
+      } else {
+        resp = await currentClient.getActiveCart();
+      }
 
       if (resp) setCart(resp?.body.lineItems);
     }
@@ -24,10 +32,15 @@ function BasketPage() {
       ) : (
         <h1>No items</h1>
       )}
+      {/* <Button
+        onClick={() =>
+          currentClient.removeCart('feae7df9-e360-4e6a-aac4-aa3758b334dd', 9)
+        }
+      >
+        Remove
+      </Button> */}
     </div>
   );
 }
 
 export default BasketPage;
-
-// 26009c15-fa69-4fd5-89d1-5d4470c2c4e2

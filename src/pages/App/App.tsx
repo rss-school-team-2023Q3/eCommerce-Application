@@ -44,11 +44,10 @@ function App() {
         currentClient.createCart().then((resp) => {
           localStorage.setItem('cartId', resp?.body.id as string);
         });
-      } else {
-        currentClient.getCartList().then((resp) => {
-          localStorage.setItem('cartId', resp?.body.results[0].id as string);
-        });
       }
+      // else {
+      //   currentClient.getCartList();
+      // }
     };
 
     fetchData();

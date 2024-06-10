@@ -103,12 +103,13 @@ class ApiBuilder {
     let resp;
     try {
       resp = await this.apiRoot
+        ?.me()
         ?.login()
         .post({
           body: {
             email,
             password,
-            anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+            activeCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
@@ -117,10 +118,11 @@ class ApiBuilder {
         tokenCache.clear();
         this.createWithPasswordClient(email, password);
         this.getCartList().then((response) => {
-          localStorage.setItem(
-            'cartId',
-            response?.body.results[0].id as string,
-          );
+          response?.body.results.map((item) => {
+            if (item.cartState !== 'Active') this.removeCart(item.id, item.version);
+
+            return false;
+          });
         });
         setTimeout(() => {
           localStorage.setItem(
@@ -472,6 +474,17 @@ class ApiBuilder {
     let resp;
     try {
       resp = await this.apiRoot?.me().carts().get().execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async getActiveCart() {
+    let resp;
+    try {
+      resp = await this.apiRoot?.me().activeCart().get().execute();
     } catch (error) {
       if (error instanceof Error) toastError(error.message);
     }
