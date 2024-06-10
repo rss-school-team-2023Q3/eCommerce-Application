@@ -100,22 +100,35 @@ class ApiBuilder {
   }
 
   public async loginUser(email: string, password: string) {
-    this.createWithPasswordClient(email, password);
     let resp;
     try {
-      tokenCache.clear();
       resp = await this.apiRoot
-        ?.me()
-        .login()
+        ?.login()
         .post({
           body: {
             email,
             password,
-            activeCartSignInMode: 'MergeWithExistingCustomerCart',
+            anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
           },
         })
         .execute();
-      localStorage.setItem('tokenCacheGG', JSON.stringify(tokenCache.get()));
+
+      if (resp?.statusCode === 200) {
+        tokenCache.clear();
+        this.createWithPasswordClient(email, password);
+        this.getCartList().then((response) => {
+          localStorage.setItem(
+            'cartId',
+            response?.body.results[0].id as string,
+          );
+        });
+        setTimeout(() => {
+          localStorage.setItem(
+            'tokenCacheGG',
+            JSON.stringify(tokenCache.get()),
+          );
+        }, 1000);
+      }
     } catch (error) {
       if (error instanceof Error) {
         resp = error.message;
@@ -467,6 +480,8 @@ class ApiBuilder {
   }
 
   public async getCartById(ID: string) {
+    if (!ID) return null;
+
     let resp;
     try {
       resp = await this.apiRoot?.me().carts().withId({ ID }).get()

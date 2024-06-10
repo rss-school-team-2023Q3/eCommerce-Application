@@ -1,0 +1,10 @@
+.cart-item {
+  display: flex;
+  flex-direction: row;
+}
+
+.cart-img {
+  transition: all 0.5s;
+  width: 10rem;
+  height: 10rem;
+}

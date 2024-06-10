@@ -1,15 +1,29 @@
-import { Button } from '@mui/material';
+import { LineItem } from '@commercetools/platform-sdk';
+import { useEffect, useState } from 'react';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
+import BasketItem from './BasketItem.tsx';
+
 function BasketPage() {
+  const [cart, setCart] = useState(Array<LineItem>);
+
+  useEffect(() => {
+    async function getCartItems() {
+      const id = localStorage.getItem('cartId') as string;
+      const resp = await currentClient.getCartById(id);
+
+      if (resp) setCart(resp?.body.lineItems);
+    }
+    getCartItems();
+  }, []);
+
   return (
     <div>
-      <h1>No items</h1>
-      <Button
-        onClick={() => currentClient.removeCart('e2108d8f-b321-43dd-99a5-6c1d8a415353', 1)}
-      >
-        Remove
-      </Button>
+      {cart.length ? (
+        cart.map((item) => <BasketItem key={item.id} item={item} />)
+      ) : (
+        <h1>No items</h1>
+      )}
     </div>
   );
 }
