@@ -73,15 +73,26 @@ function ProductCard({
     return false;
   }
 
-  async function addToCart(cartId: string, productId: string) {
+  async function addToCart(productId: string) {
     setIsInCart(!isInCart);
-    const cart = await currentClient.getCartById(id);
 
-    await currentClient.addToCart(
-      cartId,
-      productId,
-      cart?.body.version as number,
-    );
+    if (isLoggedIn) {
+      const cart = await currentClient.getActiveCart();
+
+      await currentClient.addToCart(
+        cart?.body.id as string,
+        productId,
+        cart?.body.version as number,
+      );
+    } else {
+      const cart = await currentClient.getCartById(id);
+
+      await currentClient.addToCart(
+        cart?.body.id as string,
+        productId,
+        cart?.body.version as number,
+      );
+    }
   }
 
   function handleProductClick(productId: string | undefined) {
@@ -113,7 +124,7 @@ function ProductCard({
               aria-label="add in cart"
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(id, product.id);
+                addToCart(product.id);
               }}
             >
               <AddShoppingCartIcon />
@@ -125,7 +136,7 @@ function ProductCard({
               aria-label="remove from cart"
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(id, product.id);
+                addToCart(product.id);
               }}
             >
               <RemoveShoppingCartIcon />
