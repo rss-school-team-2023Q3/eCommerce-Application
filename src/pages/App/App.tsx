@@ -21,6 +21,7 @@ const SignUp = lazy(() => import('pages/SignUpPage/SignUp'));
 const MainPage = lazy(() => import('pages/MainPage/Main'));
 const ProductPage = lazy(() => import('pages/ProductPage/ProductPage'));
 const BasketPage = lazy(() => import('pages/BasketPage/BasketPage'));
+const AboutUsPage = lazy(() => import('pages/AboutUsPage/AboutUsPage'));
 
 function App() {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ function App() {
             />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/basket" element={<BasketPage />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
 
             <Route
               path="/signin"
