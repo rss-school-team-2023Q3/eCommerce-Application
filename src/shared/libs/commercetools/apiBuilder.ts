@@ -571,6 +571,38 @@ class ApiBuilder {
 
     return resp;
   }
+
+  public async changeItemQuantity(
+    ID: string,
+    version: number,
+    lineItemId: string,
+    count: number,
+  ) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'changeLineItemQuantity',
+                lineItemId,
+                quantity: count,
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
 }
 
 export const currentClient = new ApiBuilder();
