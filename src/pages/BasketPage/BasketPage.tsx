@@ -26,7 +26,7 @@ function BasketPage() {
   }, []);
 
   return (
-    <div>
+    <div className="basket-page">
       {cart.length ? (
         cart.map((item) => <BasketItem key={item.id} item={item} />)
       ) : (
