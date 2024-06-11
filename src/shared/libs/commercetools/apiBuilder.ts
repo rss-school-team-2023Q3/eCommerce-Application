@@ -13,7 +13,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
-import { LIMIT, OFFSET } from 'shared/constants';
+import { LIMIT_MOBILE, OFFSET } from 'shared/constants';
 import capitalizeFirstLetter from 'shared/utils/capitalizeFirstLetter.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
@@ -146,7 +146,7 @@ class ApiBuilder {
     filterQuery: string,
     sortQuery: string,
     offset: number = OFFSET,
-    limit: number = LIMIT,
+    limit: number = LIMIT_MOBILE,
   ) {
     let resp;
     try {
@@ -196,7 +196,7 @@ class ApiBuilder {
     sortQuery: string,
     searchQuery: string,
     offset: number = OFFSET,
-    limit: number = LIMIT,
+    limit: number = LIMIT_MOBILE,
   ) {
     let resp;
     try {

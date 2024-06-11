@@ -98,8 +98,8 @@ function ProductCard({
   return (
     <Card className="card" onClick={() => handleProductClick(product.id)}>
       <CardMedia className="card-img" image={img} />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+      <CardContent sx={{ p: 1.5 }}>
+        <Typography gutterBottom variant="h5" component="h5">
           {product.variant.key}
         </Typography>
         <Typography variant="body2" color="text.secondary">

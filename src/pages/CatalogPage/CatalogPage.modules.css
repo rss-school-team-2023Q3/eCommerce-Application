@@ -1,7 +1,10 @@
 .catalog {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
+  display: grid;
+
+  /* flex-flow: row wrap;
+  justify-content: center; */
+  grid-template-columns: 1fr;
+  justify-items: center;
   gap: 0.625rem;
   width: 100%;
   margin: 0 0.625rem 0.625rem;
@@ -29,5 +32,17 @@
 
   .catalog {
     justify-content: center;
+  }
+}
+
+@media screen and (width >= 890px) {
+  .catalog {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (width >= 1174px) {
+  .catalog {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

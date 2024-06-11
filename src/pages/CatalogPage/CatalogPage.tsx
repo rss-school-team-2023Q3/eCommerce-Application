@@ -1,10 +1,10 @@
 import { ProductDiscount } from '@commercetools/platform-sdk';
-import { Divider } from '@mui/material';
+import { Divider, useMediaQuery } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './CatalogPage.modules.css';
 import { useEffect, useState } from 'react';
 import { Paginator } from 'shared/components/Paginator/Paginator';
-import { LIMIT } from 'shared/constants';
+import { LIMIT_LARGE, LIMIT_TABLET, LIMIT_MOBILE } from 'shared/constants';
 import getDiscounts from 'shared/utils/getDiscounts';
 import getProducts from 'shared/utils/getProducts';
 import { setProductsListArray } from 'shared/utils/setProductsArray';
@@ -13,6 +13,16 @@ import Loader from 'widgets/Loader/Loader';
 import ProductCard from 'widgets/ProductCard/ProductCard';
 
 function CatalogPage() {
+  let mediaQueryLimit = LIMIT_MOBILE;
+  const isLargeScreen = useMediaQuery('(min-width: 1174px)');
+  const isTabletScreen = useMediaQuery('(min-width: 890px)');
+
+  const isMobileScreen = useMediaQuery('(min-width: 580px)');
+
+  if (isTabletScreen) mediaQueryLimit = LIMIT_TABLET;
+
+  if (isLargeScreen) mediaQueryLimit = LIMIT_LARGE;
+
   const productsList: IProductData[] = [];
   const discountsList: ProductDiscount[] = [];
   const [products, setProducts] = useState(productsList);
@@ -20,7 +30,7 @@ function CatalogPage() {
   const [isLoad, setIsLoad] = useState(true);
   // const [isInCart, setIsInCart] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageQty, setPageQty] = useState(LIMIT);
+  const [pageQty, setPageQty] = useState(mediaQueryLimit);
 
   function getDiscont(name: string | undefined) {
     let discont: ProductDiscount | boolean = false;
@@ -44,12 +54,19 @@ function CatalogPage() {
 
   const fetchData = async () => {
     setTimeout(async () => {
-      const res = await getProducts('', 'masterData.current.name.en asc');
+      const res = await getProducts(
+        '',
+        'masterData.current.name.en asc',
+        0,
+        mediaQueryLimit,
+      );
 
       setProducts(setProductsListArray(res?.body.results));
       setDiscounts(await getDiscounts());
       setIsLoad(false);
-      setPageQty(Math.ceil((res?.body.total ?? LIMIT) / LIMIT));
+      setPageQty(
+        Math.ceil((res?.body.total ?? mediaQueryLimit) / mediaQueryLimit),
+      );
     }, 100);
   };
 
@@ -57,13 +74,39 @@ function CatalogPage() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      const paginator: Element | null = document.querySelector('.paginator');
+
+      if (paginator) {
+        paginator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 0);
+  }, [products[0], mediaQueryLimit]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setPage(1);
+    }, 200);
+  }, [mediaQueryLimit]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const paginator: Element | null = document.querySelector('.paginator');
+
+      if (paginator) {
+        paginator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 200);
+  }, [isMobileScreen]);
+
   return (
     <div className="catalog-page">
       <FilterAside
         props={{
           filteredList,
           setLoadState,
-          offset: (page - 1) * LIMIT,
+          offset: (page - 1) * mediaQueryLimit,
           setTotal: setPageQty,
         }}
       />
@@ -84,7 +127,6 @@ function CatalogPage() {
                     key={item.variant.key}
                     product={item}
                     discount={isDiscont}
-                    // isInCart={isInCart}
                   />
                 );
               });
@@ -96,7 +138,9 @@ function CatalogPage() {
           })()}
         </div>
         {!!products.length && (
-          <Paginator pageQty={pageQty} page={page} setPage={setPage} />
+          <div className="paginator">
+            <Paginator pageQty={pageQty} page={page} setPage={setPage} />
+          </div>
         )}
       </div>
     </div>

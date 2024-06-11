@@ -21,6 +21,10 @@ export function Paginator({ pageQty, page, setPage }: IPaginatorProps) {
       page={page}
       onChange={handleChange}
       siblingCount={0}
+      variant="outlined"
+      color="primary"
+      shape="rounded"
+      size="large"
       renderItem={(item) => (
         <PaginationItem
           // eslint-disable-next-line react/jsx-props-no-spreading
