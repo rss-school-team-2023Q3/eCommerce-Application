@@ -1,3 +1,4 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
 import {
   Button,
   Divider,
@@ -11,17 +12,26 @@ import {
   Switch,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import './FilterAside.modules.css';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { LIMIT_LARGE, LIMIT_TABLET, LIMIT_MOBILE } from 'shared/constants';
 import getFilterProducts from 'shared/utils/getFilter';
 import getProducts from 'shared/utils/getProducts';
+import { toastError } from 'shared/utils/notifications';
+import {
+  setProductsListArray,
+  setProductsProjectionArray,
+} from 'shared/utils/setProductsArray';
 
 interface IFilterInterface {
   props: {
     filteredList: (productArray: IProductData[]) => void;
     setLoadState: (state: boolean) => void;
+    setTotal: (total: number) => void;
+    offset: number;
   };
 }
 
@@ -36,6 +46,13 @@ function FilterAside({ props }: IFilterInterface) {
   const onSaleQuery = 'variants.prices.discounted:exists';
   const manufactureQuery = `variants.attributes.manufacture:"${manufacture}"`;
   const priceQuery = `variants.price.centAmount: range(${minCost * 100} to ${maxCost * 100})`;
+  let mediaQueryLimit = LIMIT_MOBILE;
+  const isLargeScreen = useMediaQuery('(min-width: 1174px)');
+  const isTabletScreen = useMediaQuery('(min-width: 890px)');
+
+  if (isTabletScreen) mediaQueryLimit = LIMIT_TABLET;
+
+  if (isLargeScreen) mediaQueryLimit = LIMIT_LARGE;
 
   const handleChangeSale = (event: ChangeEvent<HTMLInputElement>) => {
     setIsOnSale(event.target.checked);
@@ -55,19 +72,33 @@ function FilterAside({ props }: IFilterInterface) {
     setSort('name.en asc');
     setFilterQuery([]);
     setSearchValue('');
-    const filtered = await getProducts();
+    const filtered = await getProducts(
+      '',
+      'masterData.current.name.en asc',
+      0,
+      mediaQueryLimit,
+    );
 
-    props.filteredList(filtered);
+    props.setTotal(
+      Math.ceil((filtered?.body?.total ?? mediaQueryLimit) / mediaQueryLimit),
+    );
+    props.filteredList(setProductsListArray(filtered?.body.results));
     props.setLoadState(false);
   };
 
   const handleChangeSort = async (event: SelectChangeEvent<typeof sort>) => {
     props.setLoadState(true);
     setSort(event.target.value);
-    const filtered = await getFilterProducts(
+    const response = await getFilterProducts(
       filterQuery,
       event.target.value,
       searchValue,
+      props.offset,
+      mediaQueryLimit,
+    );
+
+    const filtered = setProductsProjectionArray(
+      response?.body.results as ProductProjection[],
     );
 
     if (filtered) props.filteredList(filtered);
@@ -85,10 +116,23 @@ function FilterAside({ props }: IFilterInterface) {
 
     filterArray.push(priceQuery);
     setFilterQuery(filterArray);
-    const filtered = await getFilterProducts(filterArray, sort, searchValue);
+    const response = await getFilterProducts(
+      filterArray,
+      sort,
+      searchValue,
+      props.offset,
+      mediaQueryLimit,
+    );
+
+    const filtered = setProductsProjectionArray(
+      response?.body.results as ProductProjection[],
+    );
 
     if (filtered) props.filteredList(filtered);
 
+    props.setTotal(
+      Math.ceil((response?.body?.total ?? mediaQueryLimit) / mediaQueryLimit),
+    );
     props.setLoadState(false);
   };
 
@@ -97,6 +141,37 @@ function FilterAside({ props }: IFilterInterface) {
   };
 
   useEffect(() => {}, [sort]);
+
+  useEffect(() => {
+    props.setLoadState(true);
+    const fetchDataUE = async () => {
+      const response = await getFilterProducts(
+        filterQuery,
+        sort,
+        searchValue,
+        props.offset,
+        mediaQueryLimit,
+      );
+
+      return response;
+    };
+
+    fetchDataUE()
+      .then((res) => res?.body)
+      .then((body) => {
+        const filtered = setProductsProjectionArray(
+          body?.results as ProductProjection[],
+        );
+
+        if (filtered) props.filteredList(filtered);
+
+        props.setTotal(
+          Math.ceil((body?.total ?? mediaQueryLimit) / mediaQueryLimit),
+        );
+        props.setLoadState(false);
+      })
+      .catch(() => toastError('Don`t fetch data'));
+  }, [props.offset, mediaQueryLimit]);
 
   return (
     <aside className="catalog-aside">
