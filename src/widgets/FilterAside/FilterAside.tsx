@@ -1,3 +1,4 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
 import {
   Button,
   Divider,
@@ -15,13 +16,21 @@ import {
 import './FilterAside.modules.css';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { LIMIT } from 'shared/constants';
 import getFilterProducts from 'shared/utils/getFilter';
 import getProducts from 'shared/utils/getProducts';
+import { toastError } from 'shared/utils/notifications';
+import {
+  setProductsListArray,
+  setProductsProjectionArray,
+} from 'shared/utils/setProductsArray';
 
 interface IFilterInterface {
   props: {
     filteredList: (productArray: IProductData[]) => void;
     setLoadState: (state: boolean) => void;
+    setTotal: (total: number) => void;
+    offset: number;
   };
 }
 
@@ -57,17 +66,23 @@ function FilterAside({ props }: IFilterInterface) {
     setSearchValue('');
     const filtered = await getProducts();
 
-    props.filteredList(filtered);
+    props.setTotal(Math.ceil((filtered?.body?.total ?? LIMIT) / LIMIT));
+    props.filteredList(setProductsListArray(filtered?.body.results));
     props.setLoadState(false);
   };
 
   const handleChangeSort = async (event: SelectChangeEvent<typeof sort>) => {
     props.setLoadState(true);
     setSort(event.target.value);
-    const filtered = await getFilterProducts(
+    const response = await getFilterProducts(
       filterQuery,
       event.target.value,
       searchValue,
+      props.offset,
+    );
+
+    const filtered = setProductsProjectionArray(
+      response?.body.results as ProductProjection[],
     );
 
     if (filtered) props.filteredList(filtered);
@@ -85,10 +100,20 @@ function FilterAside({ props }: IFilterInterface) {
 
     filterArray.push(priceQuery);
     setFilterQuery(filterArray);
-    const filtered = await getFilterProducts(filterArray, sort, searchValue);
+    const response = await getFilterProducts(
+      filterArray,
+      sort,
+      searchValue,
+      props.offset,
+    );
+
+    const filtered = setProductsProjectionArray(
+      response?.body.results as ProductProjection[],
+    );
 
     if (filtered) props.filteredList(filtered);
 
+    props.setTotal(Math.ceil((response?.body?.total ?? LIMIT) / LIMIT));
     props.setLoadState(false);
   };
 
@@ -97,6 +122,34 @@ function FilterAside({ props }: IFilterInterface) {
   };
 
   useEffect(() => {}, [sort]);
+
+  useEffect(() => {
+    props.setLoadState(true);
+    const fetchDataUE = async () => {
+      const response = await getFilterProducts(
+        filterQuery,
+        sort,
+        searchValue,
+        props.offset,
+      );
+
+      return response;
+    };
+
+    fetchDataUE()
+      .then((res) => res?.body)
+      .then((body) => {
+        const filtered = setProductsProjectionArray(
+          body?.results as ProductProjection[],
+        );
+
+        if (filtered) props.filteredList(filtered);
+
+        props.setTotal(Math.ceil((body?.total ?? LIMIT) / LIMIT));
+        props.setLoadState(false);
+      })
+      .catch(() => toastError('Don`t fetch data'));
+  }, [props.offset]);
 
   return (
     <aside className="catalog-aside">

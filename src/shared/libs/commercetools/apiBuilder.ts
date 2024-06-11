@@ -145,8 +145,8 @@ class ApiBuilder {
   public async getProducts(
     filterQuery: string,
     sortQuery: string,
-    limit: number = LIMIT,
     offset: number = OFFSET,
+    limit: number = LIMIT,
   ) {
     let resp;
     try {
@@ -195,8 +195,8 @@ class ApiBuilder {
     filterQuery: string[],
     sortQuery: string,
     searchQuery: string,
-    limit: number = LIMIT,
     offset: number = OFFSET,
+    limit: number = LIMIT,
   ) {
     let resp;
     try {
