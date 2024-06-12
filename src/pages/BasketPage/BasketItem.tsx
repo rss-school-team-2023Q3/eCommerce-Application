@@ -1,8 +1,14 @@
 import { LineItem } from '@commercetools/platform-sdk';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import {
-  Card, CardMedia, CardContent, Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 import './Basket.modules.css';
 import { useState } from 'react';
@@ -44,7 +50,7 @@ function BasketItem({ item }: { item: LineItem }) {
     }
   }
 
-  function handleChangeQuantity(action: string) {
+  const handleChangeQuantity = (action: string) => {
     switch (action) {
       case 'up': {
         setQuantity(quantity + 1);
@@ -67,7 +73,13 @@ function BasketItem({ item }: { item: LineItem }) {
         break;
       }
     }
-  }
+  };
+
+  const removeFromCart = () => {
+    setQuantity(0);
+    changeQuantity(0);
+    toastInfo('removed from cart');
+  };
 
   return (
     <Card className={quantity > 0 ? 'cart-item' : 'removed'}>
@@ -92,6 +104,15 @@ function BasketItem({ item }: { item: LineItem }) {
             total: $
             {(cost / 100).toFixed(2)}
           </div>
+          {/* <RemoveShoppingCartIcon />
+          <Button onClick={removeFromCart} variant="contained">
+            Remove from cart
+          </Button> */}
+          <Tooltip title="Remove from cart">
+            <IconButton onClick={removeFromCart}>
+              <RemoveShoppingCartIcon />
+            </IconButton>
+          </Tooltip>
         </div>
       </CardContent>
     </Card>
