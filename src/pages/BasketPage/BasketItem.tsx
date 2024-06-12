@@ -21,18 +21,31 @@ function BasketItem({ item }: { item: LineItem }) {
   const id = localStorage.getItem('cartId') as string;
   const img = item.variant.images && item.variant.images[0].url;
   const [quantity, setQuantity] = useState(item.quantity);
+  const [cost, setCost] = useState(item.totalPrice.centAmount);
 
   async function changeQuantity(count: number) {
+    let cart;
+
     if (isLoggedIn) {
-      const cart = await currentClient.getActiveCart();
-      const body = cart?.body;
-
-      if (body) currentClient.changeItemQuantity(body.id, body.version, item.id, count);
+      cart = await currentClient.getActiveCart();
     } else {
-      const cart = await currentClient.getCartById(id);
-      const body = cart?.body;
+      cart = await currentClient.getCartById(id);
+    }
 
-      if (body) currentClient.changeItemQuantity(body.id, body.version, item.id, count);
+    const body = cart?.body;
+
+    if (body) {
+      const response = await currentClient.changeItemQuantity(
+        body.id,
+        body.version,
+        item.id,
+        count,
+      );
+      const itemResp = response?.body.lineItems.filter(
+        (lineItem) => lineItem.id === item.id,
+      );
+
+      if (itemResp) setCost(itemResp[0].totalPrice.centAmount);
     }
   }
 
@@ -82,7 +95,7 @@ function BasketItem({ item }: { item: LineItem }) {
           </div>
           <div className="cart-item-cost">
             total: $
-            {(item.totalPrice.centAmount / 100).toFixed(2)}
+            {(cost / 100).toFixed(2)}
           </div>
         </div>
       </CardContent>
