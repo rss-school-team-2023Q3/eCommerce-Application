@@ -57,3 +57,7 @@
 .cart-item-arrow:hover {
   color: red;
 }
+
+.removed {
+  display: none;
+}

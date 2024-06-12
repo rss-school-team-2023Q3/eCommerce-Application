@@ -2,19 +2,14 @@ import { LineItem } from '@commercetools/platform-sdk';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  // CardActions,
-  // Button,
+  Card, CardMedia, CardContent, Typography,
 } from '@mui/material';
 import './Basket.modules.css';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'shared/api/store';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
-import { toastError } from 'shared/utils/notifications';
+import { toastInfo } from 'shared/utils/notifications';
 
 function BasketItem({ item }: { item: LineItem }) {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -45,7 +40,7 @@ function BasketItem({ item }: { item: LineItem }) {
         (lineItem) => lineItem.id === item.id,
       );
 
-      if (itemResp) setCost(itemResp[0].totalPrice.centAmount);
+      if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
     }
   }
 
@@ -61,7 +56,9 @@ function BasketItem({ item }: { item: LineItem }) {
           setQuantity(quantity - 1);
           changeQuantity(quantity - 1);
         } else {
-          toastError('poka net');
+          setQuantity(quantity - 1);
+          changeQuantity(quantity - 1);
+          toastInfo('removed from cart');
         }
 
         break;
@@ -72,10 +69,8 @@ function BasketItem({ item }: { item: LineItem }) {
     }
   }
 
-  // console.log(item);
-
   return (
-    <Card className="cart-item">
+    <Card className={quantity > 0 ? 'cart-item' : 'removed'}>
       <CardMedia className="cart-item-img" image={img} title={item.name.en} />
       <CardContent className="cart-item-content">
         <Typography gutterBottom variant="body1" component="div">
@@ -99,10 +94,6 @@ function BasketItem({ item }: { item: LineItem }) {
           </div>
         </div>
       </CardContent>
-      {/* <CardActions>
-          <Button size="small">Share</Button>
-          <Button size="small">Learn More</Button>
-        </CardActions> */}
     </Card>
   );
 }

@@ -37,8 +37,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions);
+    // .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -526,7 +526,7 @@ class ApiBuilder {
         ?.me()
         .carts()
         .post({
-          body: { currency: 'EUR' },
+          body: { currency: 'USD' },
         })
         .execute();
     } catch (error) {
