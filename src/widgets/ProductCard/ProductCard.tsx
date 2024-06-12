@@ -29,31 +29,31 @@ function ProductCard({
 }) {
   const img = product.variant.images && product.variant.images[0].url;
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const country = useSelector(
-    (state: RootState) => state.auth.user?.addresses[0].country,
-  );
+  // const country = useSelector(
+  //   (state: RootState) => state.auth.user?.addresses[0].country
+  // );
   const navigate = useNavigate();
   const [isInCart, setIsInCart] = useState(false);
   const id = localStorage.getItem('cartId') as string;
 
   function getPrice(item: IProductData) {
-    let price: string | undefined;
+    // let price: string | undefined;
 
-    if (isLoggedIn && country) {
-      //   price =
-      //     item.variant.prices &&
-      //     `${selectPriceIndex(country)}${String(
-      //       (
-      //         item.variant.prices.filter((value) => value.country === country)[0]
-      //           .value.centAmount / 100
-      //       ).toFixed(2)
-      //     )}`;
-      // } else {
-      price = `$${
-        item.variant.prices
-        && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
-      }`;
-    }
+    // if (isLoggedIn && country) {
+    //   price =
+    //     item.variant.prices &&
+    //     `${selectPriceIndex(country)}${String(
+    //       (
+    //         item.variant.prices.filter((value) => value.country === country)[0]
+    //           .value.centAmount / 100
+    //       ).toFixed(2)
+    //     )}`;
+    // } else {
+    const price = `$${
+      item.variant.prices
+      && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+    }`;
+    // }
 
     return price;
   }
@@ -98,10 +98,6 @@ function ProductCard({
   function handleProductClick(productId: string | undefined) {
     navigate(`/product/${productId}`);
   }
-
-  // const { lineItems } = cart;
-  // const currItem = lineItems?.find((item) => item?.productId === productId) as LineItem;
-  // const quantity = currItem?.quantity ?? 0;
 
   const price = getPrice(product);
   const discountPrice = getDiscountPrice(price);

@@ -37,8 +37,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions);
+    // .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -526,7 +526,7 @@ class ApiBuilder {
         ?.me()
         .carts()
         .post({
-          body: { currency: 'EUR' },
+          body: { currency: 'USD' },
         })
         .execute();
     } catch (error) {
@@ -560,6 +560,38 @@ class ApiBuilder {
                 action: 'addLineItem',
                 productId,
                 quantity: 1,
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async changeItemQuantity(
+    ID: string,
+    version: number,
+    lineItemId: string,
+    count: number,
+  ) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'changeLineItemQuantity',
+                lineItemId,
+                quantity: count,
               },
             ],
           },

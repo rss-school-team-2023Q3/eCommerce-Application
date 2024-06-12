@@ -43,3 +43,21 @@
   align-items: center;
   width: calc(100% - 12rem);
 }
+
+.cart-item-quantity {
+  cursor: default;
+  user-select: none;
+}
+
+.cart-item-arrow {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cart-item-arrow:hover {
+  color: red;
+}
+
+.removed {
+  display: none;
+}
