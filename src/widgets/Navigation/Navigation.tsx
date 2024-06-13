@@ -1,8 +1,11 @@
+import { Cart } from '@commercetools/platform-sdk';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import { Toolbar, Button, Tooltip } from '@mui/material';
+import {
+  Toolbar, Button, Tooltip, Typography,
+} from '@mui/material';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import './Navigation.modules.css';
@@ -10,6 +13,12 @@ import { RootState } from 'shared/api/store';
 
 export default function Navigation() {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
+  const cartStore: Cart | null = useSelector(
+    (state: RootState) => state.cart.cart,
+  );
+
+  const countItems = cartStore?.lineItems.length;
 
   return (
     <Toolbar>
@@ -47,6 +56,7 @@ export default function Navigation() {
             variant="outlined"
           >
             <span className="button-text">Basket</span>
+            <Typography sx={{ mt: '3px' }}>{countItems}</Typography>
           </Button>
         </Tooltip>
       </NavLink>
