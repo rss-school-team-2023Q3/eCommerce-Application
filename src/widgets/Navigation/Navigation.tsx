@@ -56,7 +56,7 @@ export default function Navigation() {
             variant="outlined"
           >
             <span className="button-text">Basket</span>
-            <Typography sx={{ mt: '3px' }}>{countItems}</Typography>
+            <Typography className="number-cart">{countItems}</Typography>
           </Button>
         </Tooltip>
       </NavLink>
