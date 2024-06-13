@@ -45,9 +45,6 @@ function App() {
           localStorage.setItem('cartId', resp?.body.id as string);
         });
       }
-      // else {
-      //   currentClient.getCartList();
-      // }
     };
 
     fetchData();
