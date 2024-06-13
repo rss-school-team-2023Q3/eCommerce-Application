@@ -24,6 +24,6 @@ export default async function addToCart(
     const name = res?.body.lineItems.find((el) => el.productId === productId)?.name.en
       || '';
 
-    toastInfo(`${name} add to cart`);
+    toastInfo(`${name} added to cart`);
   }
 }

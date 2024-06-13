@@ -31,7 +31,7 @@ export default async function removeFromCart(
 
         const name = cart.body.lineItems.find((el) => el.id === lineItemId)?.name.en || '';
 
-        toastInfo(`${name} remove from cart`);
+        toastInfo(`${name} removed from cart`);
       }
     }
   }

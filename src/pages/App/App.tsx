@@ -9,9 +9,9 @@ import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
+import { setCart } from 'shared/api/cartApi/cartSlice';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import Loader from 'widgets/Loader/Loader';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage/NotFound'));
@@ -38,11 +38,15 @@ function App() {
         await currentClient.createAnonymousClient();
       }
 
-      const carts = await currentClient.getCarts();
+      const cartsRes = await currentClient.getCarts();
 
-      if (!carts) {
+      if (!cartsRes) {
         currentClient.createCart().then((resp) => {
           localStorage.setItem('cartId', resp?.body.id as string);
+
+          if (resp?.statusCode === 201) {
+            dispatch(setCart({ cart: resp.body }));
+          }
         });
       }
     };
