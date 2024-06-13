@@ -603,6 +603,10 @@ class ApiBuilder {
 
     return resp;
   }
+
+  public async removeItemCart(ID: string, version: number, lineItemId: string) {
+    return this.changeItemQuantity(ID, version, lineItemId, 0);
+  }
 }
 
 export const currentClient = new ApiBuilder();
