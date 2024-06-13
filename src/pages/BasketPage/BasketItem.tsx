@@ -12,26 +12,22 @@ import {
 } from '@mui/material';
 import './Basket.modules.css';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCart } from 'shared/api/cartApi/cartSlice';
 import { RootState } from 'shared/api/store';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
+import getCurrentCart from 'shared/utils/getCurrentCart';
 import { toastInfo } from 'shared/utils/notifications';
 
 function BasketItem({ item }: { item: LineItem }) {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const id = localStorage.getItem('cartId') as string;
+  const dispatch = useDispatch();
   const img = item.variant.images && item.variant.images[0].url;
   const [quantity, setQuantity] = useState(item.quantity);
   const [cost, setCost] = useState(item.totalPrice.centAmount);
 
   async function changeQuantity(count: number) {
-    let cart;
-
-    if (isLoggedIn) {
-      cart = await currentClient.getActiveCart();
-    } else {
-      cart = await currentClient.getCartById(id);
-    }
+    const cart = await getCurrentCart(isLoggedIn);
 
     const body = cart?.body;
 
@@ -45,6 +41,8 @@ function BasketItem({ item }: { item: LineItem }) {
       const itemResp = response?.body.lineItems.filter(
         (lineItem) => lineItem.id === item.id,
       );
+
+      if (response?.statusCode === 200) dispatch(setCart({ cart: response.body }));
 
       if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
     }

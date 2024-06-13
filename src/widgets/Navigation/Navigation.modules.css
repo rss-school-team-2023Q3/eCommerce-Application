@@ -2,6 +2,10 @@
   color: white;
 }
 
+.number-cart {
+  padding-left: 0.5rem;
+}
+
 @media (width <= 650px) {
   .nav-button {
     color: white;
@@ -10,5 +14,9 @@
 
   .button-text {
     display: none;
+  }
+
+  .number-cart {
+    padding: 2px 0 0;
   }
 }
