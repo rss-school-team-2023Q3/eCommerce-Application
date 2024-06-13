@@ -4,7 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import {
-  Toolbar, Button, Tooltip, Typography,
+  Toolbar, Button, Tooltip, Badge,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -50,13 +50,23 @@ export default function Navigation() {
       <NavLink to="/basket">
         <Tooltip title="Basket">
           <Button
-            startIcon={<ShoppingBasketIcon />}
+            startIcon={(
+              <Badge
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                badgeContent={countItems}
+                color="primary"
+              >
+                <ShoppingBasketIcon />
+              </Badge>
+            )}
             className="nav-button"
             sx={{ color: 'white' }}
             variant="outlined"
           >
             <span className="button-text">Basket</span>
-            <Typography className="number-cart">{countItems}</Typography>
           </Button>
         </Tooltip>
       </NavLink>

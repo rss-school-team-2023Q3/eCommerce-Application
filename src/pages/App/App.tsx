@@ -1,5 +1,4 @@
 import './App.css';
-import { Customer } from '@commercetools/platform-sdk';
 import SharedLayout from 'pages/App/layouts/SharedLayout/SharedLayout';
 import PrivateRoute from 'pages/App/routes/PrivateRoute/PrivateRoute';
 import RestrictedRoute from 'pages/App/routes/RestrictedRoute/RestrictedRoute';
@@ -8,9 +7,8 @@ import { lazy, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { setCredentials } from 'shared/api/authApi/store/authSlice';
-import { setCart } from 'shared/api/cartApi/cartSlice';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
+import fetchDataApp from 'shared/utils/fetchDataApp';
 import Loader from 'widgets/Loader/Loader';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -27,31 +25,7 @@ function App() {
   const isRefreshing = false;
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (localStorage.getItem('tokenCacheGG')) {
-        const body: Customer | null = await currentClient.createRefreshTokenClient();
-
-        if (body) {
-          dispatch(setCredentials({ user: body }));
-        }
-      } else {
-        await currentClient.createAnonymousClient();
-      }
-
-      const cartsRes = await currentClient.getCarts();
-
-      if (!cartsRes) {
-        currentClient.createCart().then((resp) => {
-          localStorage.setItem('cartId', resp?.body.id as string);
-
-          if (resp?.statusCode === 201) {
-            dispatch(setCart({ cart: resp.body }));
-          }
-        });
-      }
-    };
-
-    fetchData();
+    fetchDataApp(dispatch);
   }, []);
 
   return (
