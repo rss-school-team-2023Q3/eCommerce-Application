@@ -17,7 +17,7 @@ import IProductData from 'pages/App/types/interfaces/IProductData';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { RootState } from 'shared/api/store';
+// import { RootState } from 'shared/api/store';
 import CarouselComponent from 'shared/components/CarouselComponent/CarouselComponent';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import addToCart from 'shared/utils/addToCart';
@@ -42,9 +42,13 @@ function ProductPage() {
   const [cart, setCart] = useState<Cart | null>(null);
   // const [isInCart, setIsInCart] = useState(false);
 
-  const country = useSelector(
+  // const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  // const country = useSelector(
+  //   (state: RootState) => state.auth.user?.addresses[0].country
+  // );
+<!--   const country = useSelector(
     (state: RootState) => state.auth.user?.addresses[0].country,
-  );
+  ); -->
   const product = productData && createProduct(productData);
 
   const handleClickOpen = () => {
@@ -56,39 +60,47 @@ function ProductPage() {
   };
 
   const setProductPrice = (item: IProductData) => {
-    const price: {
-      fullPrice: string | undefined | null;
-      discountPrice: string | undefined | null;
-    } = {
+    const price = {
       fullPrice: '',
       discountPrice: '',
     };
 
-    const currentCountry = item.variant.prices?.find(
-      (value) => value.country === country,
-    );
+    // const currentCountry = item.variant.prices?.find(
+    //   (value) => value.country === country,
+    // );
 
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency:
-        country === 'US' || country === 'CA' || country == null ? 'USD' : 'EUR',
-    });
+    // const formatter = new Intl.NumberFormat('en-US', {
+    //   style: 'currency',
+    //   currency:
+    //     country === 'US' || country === 'CA' || country == null ? 'USD' : 'EUR',
+    // });
 
-    const getPrice = (priceData: TypedMoney | undefined) => {
-      if (!priceData) return null;
+    // const getPrice = (priceData: TypedMoney | undefined) => {
+    //   if (!priceData) return null;
 
-      const amount = priceData.centAmount / 100;
+    //   const amount = priceData.centAmount / 100;
 
-      return formatter.format(amount);
-    };
+    //   return formatter.format(amount);
+    // };
 
-    if (isLoggedIn && country) {
-      price.fullPrice = getPrice(currentCountry?.value);
-      price.discountPrice = getPrice(currentCountry?.discounted?.value);
-    } else if (item.variant.prices) {
-      price.fullPrice = getPrice(item.variant.prices[0]?.value);
-      price.discountPrice = getPrice(item.variant.prices[0]?.discounted?.value);
-    }
+    // if (isLoggedIn && country) {
+    //   price.fullPrice = getPrice(currentCountry?.value);
+    //   price.discountPrice = getPrice(currentCountry?.discounted?.value);
+    // } else if (item.variant.prices) {
+    // price.fullPrice = getPrice(item.variant.prices[0]?.value);
+    // price.discountPrice = getPrice(item.variant.prices[0]?.discounted?.value);
+    price.fullPrice = `$${
+      item.variant.prices
+      && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+    }`;
+    price.discountPrice = `$${
+      item.variant.prices
+      && item.variant.prices[0].discounted
+      && String(
+        (item.variant.prices[0].discounted.value.centAmount / 100).toFixed(2),
+      )
+    }`;
+    // }
 
     return price;
   };
@@ -227,13 +239,14 @@ function ProductPage() {
             <div className="card-price">
               <Typography
                 sx={{
-                  textDecorationLine: discountPrice ? 'line-through' : 'none',
+                  textDecorationLine:
+                    discountPrice !== '$undefined' ? 'line-through' : 'none',
                 }}
                 variant="h5"
               >
                 {fullPrice}
               </Typography>
-              {discountPrice ? (
+              {discountPrice !== '$undefined' ? (
                 <Typography variant="h5" color="red">
                   {discountPrice}
                 </Typography>

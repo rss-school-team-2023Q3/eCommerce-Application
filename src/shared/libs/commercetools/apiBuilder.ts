@@ -37,8 +37,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions);
+    // .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -175,7 +175,6 @@ class ApiBuilder {
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
-    // console.log(resp);
 
     return resp;
   }
@@ -534,7 +533,7 @@ class ApiBuilder {
         ?.me()
         .carts()
         .post({
-          body: { currency: 'EUR' },
+          body: { currency: 'USD' },
         })
         .execute();
     } catch (error) {
@@ -612,6 +611,30 @@ class ApiBuilder {
     return resp;
   }
 
+  public async recalculateTotalCost(ID: string, version: number) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'recalculate',
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
   public async removeItemCart(ID: string, version: number, lineItemId: string) {
     return this.changeItemQuantity(ID, version, lineItemId, 0);
   }

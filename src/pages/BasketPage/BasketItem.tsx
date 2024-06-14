@@ -19,7 +19,13 @@ import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import getCurrentCart from 'shared/utils/getCurrentCart';
 import { toastInfo } from 'shared/utils/notifications';
 
-function BasketItem({ item }: { item: LineItem }) {
+function BasketItem({
+  item,
+  recalculate,
+}: {
+  item: LineItem;
+  recalculate: () => void;
+}) {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const img = item.variant.images && item.variant.images[0].url;
@@ -42,8 +48,8 @@ function BasketItem({ item }: { item: LineItem }) {
         (lineItem) => lineItem.id === item.id,
       );
 
+      recalculate();
       if (response?.statusCode === 200) dispatch(setCart({ cart: response.body }));
-
       if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
     }
   }
@@ -56,27 +62,24 @@ function BasketItem({ item }: { item: LineItem }) {
         break;
       }
       case 'down': {
-        if (quantity !== 1) {
-          setQuantity(quantity - 1);
-          changeQuantity(quantity - 1);
-        } else {
-          setQuantity(quantity - 1);
-          changeQuantity(quantity - 1);
+        if (quantity === 1) {
           toastInfo('removed from cart');
         }
 
+        setQuantity(quantity - 1);
+        changeQuantity(quantity - 1);
+        break;
+      }
+      case 'zero': {
+        setQuantity(0);
+        changeQuantity(0);
+        toastInfo('removed from cart');
         break;
       }
       default: {
         break;
       }
     }
-  };
-
-  const removeFromCart = () => {
-    setQuantity(0);
-    changeQuantity(0);
-    toastInfo('removed from cart');
   };
 
   return (
@@ -107,7 +110,7 @@ function BasketItem({ item }: { item: LineItem }) {
             Remove from cart
           </Button> */}
           <Tooltip title="Remove from cart">
-            <IconButton onClick={removeFromCart}>
+            <IconButton onClick={() => handleChangeQuantity('zero')}>
               <RemoveShoppingCartIcon />
             </IconButton>
           </Tooltip>
