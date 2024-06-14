@@ -58,27 +58,24 @@ function BasketItem({ item }: { item: LineItem }) {
         break;
       }
       case 'down': {
-        if (quantity !== 1) {
-          setQuantity(quantity - 1);
-          changeQuantity(quantity - 1);
-        } else {
-          setQuantity(quantity - 1);
-          changeQuantity(quantity - 1);
+        if (quantity === 1) {
           toastInfo('removed from cart');
         }
 
+        setQuantity(quantity - 1);
+        changeQuantity(quantity - 1);
+        break;
+      }
+      case 'zero': {
+        setQuantity(0);
+        changeQuantity(0);
+        toastInfo('removed from cart');
         break;
       }
       default: {
         break;
       }
     }
-  };
-
-  const removeFromCart = () => {
-    setQuantity(0);
-    changeQuantity(0);
-    toastInfo('removed from cart');
   };
 
   return (
@@ -109,7 +106,7 @@ function BasketItem({ item }: { item: LineItem }) {
             Remove from cart
           </Button> */}
           <Tooltip title="Remove from cart">
-            <IconButton onClick={removeFromCart}>
+            <IconButton onClick={() => handleChangeQuantity('zero')}>
               <RemoveShoppingCartIcon />
             </IconButton>
           </Tooltip>

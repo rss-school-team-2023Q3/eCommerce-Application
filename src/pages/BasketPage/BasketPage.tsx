@@ -1,4 +1,5 @@
 import { LineItem } from '@commercetools/platform-sdk';
+import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
@@ -26,20 +27,27 @@ function BasketPage() {
   }, []);
 
   return (
-    <div className="basket-page">
-      {cart.length ? (
-        cart.map((item) => <BasketItem key={item.id} item={item} />)
-      ) : (
-        <h1>No items</h1>
-      )}
-      {/* <Button
+    <>
+      <div className="basket-header">
+        <h3>Total items:</h3>
+        <h3>Total cost:</h3>
+        <Button variant="contained">Clear Basket</Button>
+      </div>
+      <div className="basket-page">
+        {cart.length ? (
+          cart.map((item) => <BasketItem key={item.id} item={item} />)
+        ) : (
+          <h1>No items</h1>
+        )}
+        {/* <Button
         onClick={() =>
           currentClient.removeCart('feae7df9-e360-4e6a-aac4-aa3758b334dd', 9)
         }
-      >
+        >
         Remove
       </Button> */}
-    </div>
+      </div>
+    </>
   );
 }
 
