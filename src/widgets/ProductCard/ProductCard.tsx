@@ -13,28 +13,29 @@ import {
 } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
 // import selectPriceIndex from 'shared/utils/selectPriceIndex';
-import { currentClient } from 'shared/libs/commercetools/apiBuilder';
+import addToCart from 'shared/utils/addToCart';
+import removeFromCart from 'shared/utils/removeFromCart';
 
 function ProductCard({
   product,
   discount,
+  isInCartProps,
 }: {
   product: IProductData;
   discount: ProductDiscount | boolean;
+  isInCartProps: boolean;
 }) {
   const img = product.variant.images && product.variant.images[0].url;
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
   // const country = useSelector(
   //   (state: RootState) => state.auth.user?.addresses[0].country
   // );
   const navigate = useNavigate();
-  const [isInCart, setIsInCart] = useState(false);
-  const id = localStorage.getItem('cartId') as string;
 
   function getPrice(item: IProductData) {
     // let price: string | undefined;
@@ -73,28 +74,6 @@ function ProductCard({
     return false;
   }
 
-  async function addToCart(productId: string) {
-    setIsInCart(!isInCart);
-
-    if (isLoggedIn) {
-      const cart = await currentClient.getActiveCart();
-
-      await currentClient.addToCart(
-        cart?.body.id as string,
-        productId,
-        cart?.body.version as number,
-      );
-    } else {
-      const cart = await currentClient.getCartById(id);
-
-      await currentClient.addToCart(
-        cart?.body.id as string,
-        productId,
-        cart?.body.version as number,
-      );
-    }
-  }
-
   function handleProductClick(productId: string | undefined) {
     navigate(`/product/${productId}`);
   }
@@ -114,25 +93,26 @@ function ProductCard({
             && `${product.description.en}: ${product.name.en}`}
         </Typography>
         <div className="card-bottom">
-          {!isInCart && (
+          {!isInCartProps && (
             <IconButton
               className="card-cart"
               aria-label="add in cart"
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(product.id);
+                // setIsInCart(!isInCart);
+                addToCart(product.id, isLoggedIn, dispatch);
               }}
             >
               <AddShoppingCartIcon />
             </IconButton>
           )}
-          {isInCart && (
+          {isInCartProps && (
             <IconButton
               className="card-cart"
               aria-label="remove from cart"
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(product.id);
+                removeFromCart(product.id, isLoggedIn, dispatch);
               }}
             >
               <RemoveShoppingCartIcon />

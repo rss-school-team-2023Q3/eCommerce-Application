@@ -1,10 +1,13 @@
-import { ProductDiscount } from '@commercetools/platform-sdk';
+import { Cart, ProductDiscount } from '@commercetools/platform-sdk';
 import { Divider, useMediaQuery } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './CatalogPage.modules.css';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from 'shared/api/store';
 import { Paginator } from 'shared/components/Paginator/Paginator';
 import { LIMIT_LARGE, LIMIT_TABLET, LIMIT_MOBILE } from 'shared/constants';
+import getCurrentCart from 'shared/utils/getCurrentCart';
 import getDiscounts from 'shared/utils/getDiscounts';
 import getProducts from 'shared/utils/getProducts';
 import { setProductsListArray } from 'shared/utils/setProductsArray';
@@ -23,13 +26,17 @@ function CatalogPage() {
 
   if (isLargeScreen) mediaQueryLimit = LIMIT_LARGE;
 
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const productsList: IProductData[] = [];
   const discountsList: ProductDiscount[] = [];
   const [products, setProducts] = useState(productsList);
   const [discounts, setDiscounts] = useState(discountsList);
   const [isLoad, setIsLoad] = useState(true);
-  // const [isInCart, setIsInCart] = useState(false);
+  const cartStore: Cart | null = useSelector(
+    (state: RootState) => state.cart.cart,
+  );
   const [page, setPage] = useState(1);
+  const [cart, setCart] = useState<Cart | null>(null);
   const [pageQty, setPageQty] = useState(mediaQueryLimit);
 
   function getDiscont(name: string | undefined) {
@@ -71,7 +78,18 @@ function CatalogPage() {
   };
 
   useEffect(() => {
-    fetchData();
+    setCart(cartStore);
+  }, [cartStore?.lineItems.length]);
+
+  useEffect(() => {
+    const fun = async () => {
+      await fetchData();
+      const cartResponse = await getCurrentCart(isLoggedIn);
+
+      if (cartResponse?.statusCode === 200) setCart(cartResponse.body);
+    };
+
+    fun();
   }, []);
 
   useEffect(() => {
@@ -127,6 +145,13 @@ function CatalogPage() {
                     key={item.variant.key}
                     product={item}
                     discount={isDiscont}
+                    isInCartProps={
+                      !!(
+                        cart?.lineItems.find(
+                          (el) => el.productId === item.id,
+                        ) ?? false
+                      )
+                    }
                   />
                 );
               });

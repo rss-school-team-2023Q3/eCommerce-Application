@@ -476,6 +476,10 @@ class ApiBuilder {
     try {
       resp = await this.apiRoot?.me().carts().head().execute();
     } catch (error) {
+      if (error instanceof Error && 'code' in error && error?.code === 404) {
+        return null;
+      }
+
       if (error instanceof Error) toastError(error.message);
     }
 
@@ -512,6 +516,10 @@ class ApiBuilder {
       resp = await this.apiRoot?.me().carts().withId({ ID }).get()
         .execute();
     } catch (error) {
+      if (error instanceof Error && 'code' in error && error?.code === 404) {
+        return null;
+      }
+
       if (error instanceof Error) toastError(error.message);
     }
 
@@ -626,6 +634,9 @@ class ApiBuilder {
     }
 
     return resp;
+  }
+  public async removeItemCart(ID: string, version: number, lineItemId: string) {
+    return this.changeItemQuantity(ID, version, lineItemId, 0);
   }
 }
 
