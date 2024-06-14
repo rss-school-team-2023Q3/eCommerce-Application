@@ -17,7 +17,13 @@ import { RootState } from 'shared/api/store';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import { toastInfo } from 'shared/utils/notifications';
 
-function BasketItem({ item }: { item: LineItem }) {
+function BasketItem({
+  item,
+  recalculate,
+}: {
+  item: LineItem;
+  recalculate: () => void;
+}) {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const id = localStorage.getItem('cartId') as string;
   const img = item.variant.images && item.variant.images[0].url;
@@ -45,6 +51,8 @@ function BasketItem({ item }: { item: LineItem }) {
       const itemResp = response?.body.lineItems.filter(
         (lineItem) => lineItem.id === item.id,
       );
+
+      recalculate();
 
       if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
     }

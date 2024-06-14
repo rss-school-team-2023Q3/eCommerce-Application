@@ -602,6 +602,31 @@ class ApiBuilder {
 
     return resp;
   }
+
+  public async recalculateTotalCost(ID: string, version: number) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'recalculate',
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
 }
 
 export const currentClient = new ApiBuilder();
