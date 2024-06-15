@@ -192,7 +192,7 @@ export default function Navigation() {
                     badgeContent={countItems}
                     color="primary"
                   >
-                    <DeadBasket />
+                    <DeadBasket className={countItems ? 'shake-rotate' : ''} />
                   </Badge>
                 )}
                 className="nav-button"

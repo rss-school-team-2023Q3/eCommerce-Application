@@ -18,7 +18,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
-// import { RootState } from 'shared/api/store';
 import CarouselComponent from 'shared/components/CarouselComponent/CarouselComponent';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import addToCart from 'shared/utils/addToCart';
