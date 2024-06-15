@@ -49,7 +49,9 @@ function BasketItem({
       );
 
       recalculate();
+
       if (response?.statusCode === 200) dispatch(setCart({ cart: response.body }));
+
       if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
     }
   }

@@ -2,7 +2,7 @@ import { Cart } from '@commercetools/platform-sdk';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+// import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import {
   Toolbar, Button, Tooltip, Badge,
 } from '@mui/material';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import './Navigation.modules.css';
 import { RootState } from 'shared/api/store';
+import DeadBasket from 'shared/components/DeadBasket/DeadBasket';
 
 export default function Navigation() {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -25,7 +26,7 @@ export default function Navigation() {
       <NavLink to="/main">
         <Tooltip title="Home">
           <Button
-            startIcon={<HomeIcon />}
+            startIcon={<HomeIcon className="nav-icon" />}
             className="nav-button"
             variant="outlined"
             sx={{ color: 'white' }}
@@ -38,7 +39,7 @@ export default function Navigation() {
       <NavLink to="/catalog">
         <Tooltip title="Catalog">
           <Button
-            startIcon={<FormatListBulletedIcon />}
+            startIcon={<FormatListBulletedIcon className="nav-icon" />}
             className="nav-button"
             sx={{ color: 'white' }}
             variant="outlined"
@@ -59,7 +60,10 @@ export default function Navigation() {
                 badgeContent={countItems}
                 color="primary"
               >
-                <ShoppingBasketIcon />
+                <DeadBasket
+                  className={countItems ? 'shake-rotate' : ''}
+                  fontSize="large"
+                />
               </Badge>
             )}
             className="nav-button"
@@ -76,7 +80,7 @@ export default function Navigation() {
             <Button
               sx={{ color: 'white' }}
               className="nav-button"
-              startIcon={<ManageAccountsIcon />}
+              startIcon={<ManageAccountsIcon className="nav-icon" />}
               variant="outlined"
             >
               <span className="button-text">Profile</span>

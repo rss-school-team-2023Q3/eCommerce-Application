@@ -1,0 +1,48 @@
+svg.bg-cart {
+  width: 100%;
+  height: 100vh;
+}
+
+.cart-drop {
+  animation: drop-fail 3s linear infinite;
+  fill: white;
+}
+
+.cart-cloud {
+  animation: wind1 3s linear infinite;
+  fill: white;
+}
+
+.cart-cloud:nth-child(1) {
+  animation: wind2 3s linear infinite;
+}
+
+@keyframes drop-fail {
+  0% {
+    transform: translate(5%, 2.1vh);
+  }
+
+  100% {
+    transform: translate(5%, 3.7vh);
+  }
+}
+
+@keyframes wind1 {
+  0% {
+    transform: translateX(-2%);
+  }
+
+  100% {
+    transform: translateX(5%);
+  }
+}
+
+@keyframes wind2 {
+  0% {
+    transform: translateX(-3%);
+  }
+
+  100% {
+    transform: translateX(7%);
+  }
+}
