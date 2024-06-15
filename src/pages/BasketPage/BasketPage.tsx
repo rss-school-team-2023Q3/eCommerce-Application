@@ -12,7 +12,6 @@ import getCartData from 'shared/utils/getCartData.ts';
 import BasketItem from './BasketItem.tsx';
 
 function BasketPage() {
-  // const [cart, setCartList] = useState(Array<LineItem>);
   const cartCart = useSelector(
     (state: RootState) => state.cart.cart?.lineItems,
   );
@@ -25,7 +24,7 @@ function BasketPage() {
     const resp = await getCartData();
 
     if (resp) {
-      // setCartList(resp.lineItems);
+      dispatch(setCart({ cart: resp }));
       setTotalPrice(+(resp.totalPrice.centAmount / 100).toFixed(2));
     }
   }
@@ -60,7 +59,6 @@ function BasketPage() {
 
       if (resp?.statusCode === 201) {
         dispatch(setCart({ cart: resp.body }));
-        // setCartList(resp.body.lineItems);
       }
     });
   };

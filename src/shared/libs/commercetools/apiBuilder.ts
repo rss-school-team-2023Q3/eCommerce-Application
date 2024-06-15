@@ -122,7 +122,7 @@ class ApiBuilder {
           response?.body.results.map((item) => {
             if (item.cartState !== 'Active') this.removeCart(item.id, item.version);
 
-            return false;
+            return true;
           });
         });
         setTimeout(() => {
