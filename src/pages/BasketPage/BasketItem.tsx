@@ -49,7 +49,9 @@ function BasketItem({
       );
 
       recalculate();
+
       if (response?.statusCode === 200) dispatch(setCart({ cart: response.body }));
+
       if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
     }
   }
@@ -83,7 +85,7 @@ function BasketItem({
   };
 
   return (
-    <Card className={quantity > 0 ? 'cart-item' : 'removed'}>
+    <Card className="cart-item">
       <CardMedia className="cart-item-img" image={img} title={item.name.en} />
       <CardContent className="cart-item-content">
         <Typography gutterBottom variant="body1" component="div">
@@ -105,10 +107,6 @@ function BasketItem({
             total: $
             {(cost / 100).toFixed(2)}
           </div>
-          {/* <RemoveShoppingCartIcon />
-          <Button onClick={removeFromCart} variant="contained">
-            Remove from cart
-          </Button> */}
           <Tooltip title="Remove from cart">
             <IconButton onClick={() => handleChangeQuantity('zero')}>
               <RemoveShoppingCartIcon />

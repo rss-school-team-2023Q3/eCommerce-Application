@@ -1,4 +1,4 @@
-import { Cart, Product, TypedMoney } from '@commercetools/platform-sdk';
+import { Cart, Product } from '@commercetools/platform-sdk';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,7 +17,7 @@ import IProductData from 'pages/App/types/interfaces/IProductData';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-// import { RootState } from 'shared/api/store';
+import { RootState } from 'shared/api/store';
 import CarouselComponent from 'shared/components/CarouselComponent/CarouselComponent';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import addToCart from 'shared/utils/addToCart';
@@ -46,9 +46,9 @@ function ProductPage() {
   // const country = useSelector(
   //   (state: RootState) => state.auth.user?.addresses[0].country
   // );
-<!--   const country = useSelector(
-    (state: RootState) => state.auth.user?.addresses[0].country,
-  ); -->
+  // <!--   const country = useSelector(
+  //     (state: RootState) => state.auth.user?.addresses[0].country,
+  //   ); -->
   const product = productData && createProduct(productData);
 
   const handleClickOpen = () => {
