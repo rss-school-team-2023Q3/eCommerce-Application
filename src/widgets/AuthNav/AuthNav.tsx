@@ -9,7 +9,7 @@ export default function AuthNav() {
       <NavLink to="/signup">
         <Button
           startIcon={<HowToRegIcon />}
-          sx={{ color: 'white' }}
+          sx={{ color: 'white', fontFamily: 'Montserrat, sans-serif' }}
           variant="outlined"
         >
           Register
@@ -19,7 +19,7 @@ export default function AuthNav() {
       <NavLink to="/signin">
         <Button
           startIcon={<LoginIcon />}
-          sx={{ color: 'white' }}
+          sx={{ color: 'white', fontFamily: 'Montserrat, sans-serif' }}
           variant="outlined"
         >
           LogIn

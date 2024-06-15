@@ -19,13 +19,13 @@
   flex-direction: column;
   width: 100%;
   padding: 2.5rem;
-  border: 0.0063rem solid #1342fe;
+  border: 0.0063rem solid #1569bd;
   border-radius: 0.3125rem;
   box-shadow:
-    0 0 0.2rem #1342fe,
-    0 0 0.2rem #1342fe,
-    0 0 2rem #1342fe,
-    0 0 0.8rem #1342fe;
+    0 0 0.2rem #1569bd,
+    0 0 0.2rem #1569bd,
+    0 0 2rem #1569bd,
+    0 0 0.8rem #1569bd;
   margin-bottom: 1.25rem;
 }
 
