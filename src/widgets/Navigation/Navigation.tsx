@@ -1,5 +1,5 @@
-import CloseIcon from '@mui/icons-material/Close';
 import { Cart } from '@commercetools/platform-sdk';
+import CloseIcon from '@mui/icons-material/Close';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HomeIcon from '@mui/icons-material/Home';
@@ -23,7 +23,7 @@ export default function Navigation() {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:992px)');
-  
+
   const cartStore: Cart | null = useSelector(
     (state: RootState) => state.cart.cart,
   );
