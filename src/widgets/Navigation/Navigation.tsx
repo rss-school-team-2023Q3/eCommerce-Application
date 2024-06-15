@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
+import { Cart } from '@commercetools/platform-sdk';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HomeIcon from '@mui/icons-material/Home';
@@ -6,7 +7,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import {
-  Toolbar, Button, Tooltip, Container,
+  Toolbar, Button, Tooltip, Container, Badge,
 } from '@mui/material';
 import {
   Drawer, IconButton, useMediaQuery, useTheme,
@@ -22,6 +23,12 @@ export default function Navigation() {
   const [isMobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:992px)');
+  
+  const cartStore: Cart | null = useSelector(
+    (state: RootState) => state.cart.cart,
+  );
+
+  const countItems = cartStore?.lineItems.length;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!isMobileOpen);
@@ -69,15 +76,27 @@ export default function Navigation() {
         </Button>
       </NavLink>
       <NavLink to="/basket">
-        {' '}
-        <Button
-          startIcon={<ShoppingBasketIcon />}
-          className="nav-button"
-          sx={{ color: 'white' }}
-          variant="outlined"
-        >
-          <span>Basket</span>
-        </Button>
+        <Tooltip title="Basket">
+          <Button
+            startIcon={(
+              <Badge
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                badgeContent={countItems}
+                color="primary"
+              >
+                <ShoppingBasketIcon />
+              </Badge>
+            )}
+            className="nav-button"
+            sx={{ color: 'white' }}
+            variant="outlined"
+          >
+            <span className="button-text">Basket</span>
+          </Button>
+        </Tooltip>
       </NavLink>
       <NavLink to="/about-us">
         {' '}
@@ -92,15 +111,16 @@ export default function Navigation() {
       </NavLink>
       {isLoggedIn ? (
         <NavLink to="/profile">
-          {' '}
-          <Button
-            sx={{ color: 'white' }}
-            className="nav-button"
-            startIcon={<ManageAccountsIcon />}
-            variant="outlined"
-          >
-            <span>Profile</span>
-          </Button>
+          <Tooltip title="Profile">
+            <Button
+              sx={{ color: 'white' }}
+              className="nav-button"
+              startIcon={<ManageAccountsIcon />}
+              variant="outlined"
+            >
+              <span className="button-text">Profile</span>
+            </Button>
+          </Tooltip>
         </NavLink>
       ) : null}
     </Container>
@@ -160,7 +180,18 @@ export default function Navigation() {
           <NavLink to="/basket">
             <Tooltip title="Basket">
               <Button
-                startIcon={<ShoppingBasketIcon />}
+                startIcon={(
+                  <Badge
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                    badgeContent={countItems}
+                    color="primary"
+                  >
+                    <ShoppingBasketIcon />
+                  </Badge>
+                )}
                 className="nav-button"
                 sx={{ color: 'white' }}
                 variant="outlined"

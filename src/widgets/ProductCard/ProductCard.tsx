@@ -13,47 +13,48 @@ import {
 } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './ProductCard.modules.css';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
 // import selectPriceIndex from 'shared/utils/selectPriceIndex';
-import { currentClient } from 'shared/libs/commercetools/apiBuilder';
+import addToCart from 'shared/utils/addToCart';
+import removeFromCart from 'shared/utils/removeFromCart';
 
 function ProductCard({
   product,
   discount,
+  isInCartProps,
 }: {
   product: IProductData;
   discount: ProductDiscount | boolean;
+  isInCartProps: boolean;
 }) {
   const img = product.variant.images && product.variant.images[0].url;
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const country = useSelector(
-    (state: RootState) => state.auth.user?.addresses[0].country,
-  );
+  const dispatch = useDispatch();
+  // const country = useSelector(
+  //   (state: RootState) => state.auth.user?.addresses[0].country
+  // );
   const navigate = useNavigate();
-  const [isInCart, setIsInCart] = useState(false);
-  const id = localStorage.getItem('cartId') as string;
 
   function getPrice(item: IProductData) {
-    let price: string | undefined;
+    // let price: string | undefined;
 
-    if (isLoggedIn && country) {
-      //   price =
-      //     item.variant.prices &&
-      //     `${selectPriceIndex(country)}${String(
-      //       (
-      //         item.variant.prices.filter((value) => value.country === country)[0]
-      //           .value.centAmount / 100
-      //       ).toFixed(2)
-      //     )}`;
-      // } else {
-      price = `$${
-        item.variant.prices
-        && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
-      }`;
-    }
+    // if (isLoggedIn && country) {
+    //   price =
+    //     item.variant.prices &&
+    //     `${selectPriceIndex(country)}${String(
+    //       (
+    //         item.variant.prices.filter((value) => value.country === country)[0]
+    //           .value.centAmount / 100
+    //       ).toFixed(2)
+    //     )}`;
+    // } else {
+    const price = `$${
+      item.variant.prices
+      && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+    }`;
+    // }
 
     return price;
   }
@@ -73,24 +74,9 @@ function ProductCard({
     return false;
   }
 
-  async function addToCart(cartId: string, productId: string) {
-    setIsInCart(!isInCart);
-    const cart = await currentClient.getCartById(id);
-
-    await currentClient.addToCart(
-      cartId,
-      productId,
-      cart?.body.version as number,
-    );
-  }
-
   function handleProductClick(productId: string | undefined) {
     navigate(`/product/${productId}`);
   }
-
-  // const { lineItems } = cart;
-  // const currItem = lineItems?.find((item) => item?.productId === productId) as LineItem;
-  // const quantity = currItem?.quantity ?? 0;
 
   const price = getPrice(product);
   const discountPrice = getDiscountPrice(price);
@@ -98,8 +84,8 @@ function ProductCard({
   return (
     <Card className="card" onClick={() => handleProductClick(product.id)}>
       <CardMedia className="card-img" image={img} />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+      <CardContent sx={{ p: 1.5 }}>
+        <Typography gutterBottom variant="h5" component="h5">
           {product.variant.key}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -107,25 +93,26 @@ function ProductCard({
             && `${product.description.en}: ${product.name.en}`}
         </Typography>
         <div className="card-bottom">
-          {!isInCart && (
+          {!isInCartProps && (
             <IconButton
               className="card-cart"
               aria-label="add in cart"
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(id, product.id);
+                // setIsInCart(!isInCart);
+                addToCart(product.id, isLoggedIn, dispatch);
               }}
             >
               <AddShoppingCartIcon />
             </IconButton>
           )}
-          {isInCart && (
+          {isInCartProps && (
             <IconButton
               className="card-cart"
               aria-label="remove from cart"
               onClick={(e) => {
                 e.stopPropagation();
-                addToCart(id, product.id);
+                removeFromCart(product.id, isLoggedIn, dispatch);
               }}
             >
               <RemoveShoppingCartIcon />

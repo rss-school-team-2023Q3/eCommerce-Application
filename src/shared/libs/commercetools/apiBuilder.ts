@@ -13,6 +13,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { Client, ClientBuilder } from '@commercetools/sdk-client-v2';
 import IDataActions from 'pages/App/types/interfaces/IDataAction.ts';
+import { LIMIT_MOBILE, OFFSET } from 'shared/constants';
 import capitalizeFirstLetter from 'shared/utils/capitalizeFirstLetter.ts';
 import { toastError } from 'shared/utils/notifications.ts';
 
@@ -36,8 +37,8 @@ class ApiBuilder {
   private buildClient() {
     return new ClientBuilder()
       .withProjectKey(this.projectKey)
-      .withHttpMiddleware(httpMiddlewareOptions)
-      .withLoggerMiddleware();
+      .withHttpMiddleware(httpMiddlewareOptions);
+    // .withLoggerMiddleware();
   }
 
   private createApiRoot(client: Client) {
@@ -141,7 +142,12 @@ class ApiBuilder {
     return resp;
   }
 
-  public async getProducts(filterQuery: string, sortQuery: string) {
+  public async getProducts(
+    filterQuery: string,
+    sortQuery: string,
+    offset: number = OFFSET,
+    limit: number = LIMIT_MOBILE,
+  ) {
     let resp;
     try {
       resp = filterQuery.length
@@ -151,7 +157,8 @@ class ApiBuilder {
             queryArgs: {
               where: filterQuery,
               sort: sortQuery,
-              limit: 50,
+              limit,
+              offset,
             },
           })
           .execute()
@@ -159,7 +166,8 @@ class ApiBuilder {
           ?.products()
           .get({
             queryArgs: {
-              limit: 50,
+              limit,
+              offset,
               sort: sortQuery,
             },
           })
@@ -186,6 +194,8 @@ class ApiBuilder {
     filterQuery: string[],
     sortQuery: string,
     searchQuery: string,
+    offset: number = OFFSET,
+    limit: number = LIMIT_MOBILE,
   ) {
     let resp;
     try {
@@ -199,7 +209,8 @@ class ApiBuilder {
               'text.en': searchQuery,
               filter: filterQuery,
               sort: sortQuery,
-              limit: 50,
+              limit,
+              offset,
             },
           })
           .execute()
@@ -211,7 +222,8 @@ class ApiBuilder {
               fuzzy: true,
               'text.en': searchQuery,
               sort: sortQuery,
-              limit: 50,
+              limit,
+              offset,
             },
           })
           .execute());
@@ -464,6 +476,10 @@ class ApiBuilder {
     try {
       resp = await this.apiRoot?.me().carts().head().execute();
     } catch (error) {
+      if (error instanceof Error && 'code' in error && error?.code === 404) {
+        return null;
+      }
+
       if (error instanceof Error) toastError(error.message);
     }
 
@@ -500,6 +516,10 @@ class ApiBuilder {
       resp = await this.apiRoot?.me().carts().withId({ ID }).get()
         .execute();
     } catch (error) {
+      if (error instanceof Error && 'code' in error && error?.code === 404) {
+        return null;
+      }
+
       if (error instanceof Error) toastError(error.message);
     }
 
@@ -513,7 +533,7 @@ class ApiBuilder {
         ?.me()
         .carts()
         .post({
-          body: { currency: 'EUR' },
+          body: { currency: 'USD' },
         })
         .execute();
     } catch (error) {
@@ -557,6 +577,66 @@ class ApiBuilder {
     }
 
     return resp;
+  }
+
+  public async changeItemQuantity(
+    ID: string,
+    version: number,
+    lineItemId: string,
+    count: number,
+  ) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'changeLineItemQuantity',
+                lineItemId,
+                quantity: count,
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+
+  public async recalculateTotalCost(ID: string, version: number) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'recalculate',
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
+  public async removeItemCart(ID: string, version: number, lineItemId: string) {
+    return this.changeItemQuantity(ID, version, lineItemId, 0);
   }
 }
 
