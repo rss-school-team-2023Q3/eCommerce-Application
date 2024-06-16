@@ -15,7 +15,7 @@ export default async function actionsAddressAddSDK(
   type: 'billing' | 'shipping',
   id: string,
   vers: number,
-  dispatch: Dispatch
+  dispatch: Dispatch,
 ) {
   // const version = vers;
   const idAddress = `new${capitalizeFirstLetter(type)}Address`;
@@ -24,7 +24,7 @@ export default async function actionsAddressAddSDK(
   // if (!formAddress) throw new Error("formData.addresses doesn't exist");
 
   const addressMap: IMapAddresses | undefined = formAddress?.find(
-    (el) => el.id === idAddress
+    (el) => el.id === idAddress,
   );
 
   if (!addressMap) {
@@ -34,15 +34,14 @@ export default async function actionsAddressAddSDK(
   const address: Address = Object.entries(addressMap.value).reduce(
     (acc, entry) => {
       const [key, value] = entry;
-      const val =
-        key === FormField.country
-          ? selectCountryCode(value.value)
-          : value.value;
+      const val = key === FormField.country
+        ? selectCountryCode(value.value)
+        : value.value;
       const prop = { [key]: val };
 
       return { ...acc, ...prop };
     },
-    {}
+    {},
   ) as Address;
 
   const resp = await currentClient.addNewAddress(id, vers, address);
@@ -50,10 +49,9 @@ export default async function actionsAddressAddSDK(
   if (resp?.statusCode === 200) {
     const { addresses } = resp.body;
     const addedAddressId = addresses.find(
-      ({ streetName, postalCode, city }) =>
-        address.streetName === streetName &&
-        address.postalCode === postalCode &&
-        address.city === city
+      ({ streetName, postalCode, city }) => address.streetName === streetName
+        && address.postalCode === postalCode
+        && address.city === city,
     )?.id;
 
     if (!addedAddressId) return null;
@@ -63,7 +61,7 @@ export default async function actionsAddressAddSDK(
       id,
       addedAddressId,
       newVersion,
-      type
+      type,
     );
 
     if (response?.statusCode === 200) {

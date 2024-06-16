@@ -9,7 +9,7 @@ describe('Simple working test', () => {
     render(
       <BrowserRouter basename="/">
         <NotFound />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     expect(screen.getByText('Not Found')).toBeInTheDocument();
   });
@@ -17,7 +17,7 @@ describe('Simple working test', () => {
     render(
       <BrowserRouter basename="/">
         <NotFound />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
     expect(screen.getByText('Return Home')).toBeInTheDocument();
   });

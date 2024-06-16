@@ -42,10 +42,10 @@ function BasketItem({
         body.id,
         body.version,
         item.id,
-        count
+        count,
       );
       const itemResp = response?.body.lineItems.filter(
-        (lineItem) => lineItem.id === item.id
+        (lineItem) => lineItem.id === item.id,
       );
 
       recalculate();
@@ -104,7 +104,8 @@ function BasketItem({
             />
           </div>
           <div className="cart-item-cost">
-            total: ${(cost / 100).toFixed(2)}
+            total: $
+            {(cost / 100).toFixed(2)}
           </div>
           <Tooltip title="Remove from cart">
             <IconButton onClick={() => handleChangeQuantity('zero')}>

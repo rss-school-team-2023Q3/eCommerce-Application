@@ -6,12 +6,11 @@ afterEach(() => {
   cleanup();
 });
 
-const customRender = (ui: React.ReactElement, options = {}) =>
-  render(ui, {
-    // wrap provider(s) here if needed
-    wrapper: ({ children }) => children,
-    ...options,
-  });
+const customRender = (ui: React.ReactElement, options = {}) => render(ui, {
+  // wrap provider(s) here if needed
+  wrapper: ({ children }) => children,
+  ...options,
+});
 
 export * from '@testing-library/react';
 

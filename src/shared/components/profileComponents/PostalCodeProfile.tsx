@@ -24,16 +24,15 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   const [isValid, setIsValid] = useState(true);
   const user = useSelector((state: RootState) => state.auth.user);
   const userAddress = user?.addresses.find(
-    ({ id }) => postalProps.addressId === id
+    ({ id }) => postalProps.addressId === id,
   );
 
   // if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
 
   const formAddress = formData.addresses?.find(
-    (el) => postalProps.addressId === el.id
+    (el) => postalProps.addressId === el.id,
   );
-  const initialPostalProfile =
-    formAddress?.value.postalCode.value || userAddress?.postalCode || '';
+  const initialPostalProfile = formAddress?.value.postalCode.value || userAddress?.postalCode || '';
   const [postalProfile, setPostalProfile] = useState(initialPostalProfile);
 
   // const [country, setCountry] = useState(formAddress?.value.country.value);
@@ -53,7 +52,7 @@ function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
     if (formAddress?.value) {
       formAddress.value.postalCode.isValid = postcodeValidator(
         value,
-        countryCode
+        countryCode,
       );
       formAddress.value.postalCode.value = value;
     }

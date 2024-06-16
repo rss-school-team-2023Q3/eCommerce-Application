@@ -35,11 +35,11 @@ function BasketPage() {
     if (cartResp) {
       const response = await currentClient.recalculateTotalCost(
         cartResp?.id,
-        cartResp?.version
+        cartResp?.version,
       );
 
       setTotalPrice(
-        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0
+        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0,
       );
     }
   };
@@ -72,7 +72,6 @@ function BasketPage() {
       {cartCart && cartCart.length ? (
         <>
           <div className="basket-header">
-            <h3>Total items:</h3>
             <h3>
               Total cost: $
               {totalPrice}
