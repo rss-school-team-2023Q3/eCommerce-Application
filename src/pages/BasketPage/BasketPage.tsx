@@ -1,5 +1,7 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button } from '@mui/material';
+import {
+  Button, Dialog, DialogActions, DialogTitle,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +21,15 @@ function BasketPage() {
   const dispatch = useDispatch();
   // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [isOpenModal, setOpenModal] = useState(false);
+
+  const handleOpenConfirm = () => {
+    setOpenModal(true);
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   async function getCartItems() {
     const resp = await getCartData();
@@ -76,9 +87,33 @@ function BasketPage() {
               Total cost: $
               {totalPrice}
             </h3>
-            <Button onClick={clearCart} variant="contained">
+            <Button onClick={handleOpenConfirm} variant="contained">
               Clear Basket
             </Button>
+            <Dialog
+              open={isOpenModal}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">Clear cart?</DialogTitle>
+
+              <DialogActions>
+                <Button sx={{ margin: '10px' }} onClick={handleClose}>
+                  No
+                </Button>
+                <Button
+                  sx={{ margin: '10px' }}
+                  onClick={() => {
+                    handleClose();
+                    clearCart();
+                  }}
+                  autoFocus
+                >
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
           {cartCart.map((item) => (
             <BasketItem key={item.id} item={item} recalculate={recalculate} />
