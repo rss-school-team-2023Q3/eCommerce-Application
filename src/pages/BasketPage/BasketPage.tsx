@@ -1,8 +1,13 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-  Button, Dialog, DialogActions, DialogTitle,Typography
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  TextField,
+  Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -18,17 +23,27 @@ function BasketPage() {
     (state: RootState) => state.cart.cart?.lineItems,
   );
   const [totalPrice, setTotalPrice] = useState(0);
+  // const [promoPrice, setPromoPrice] = useState(0);
   const dispatch = useDispatch();
   // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [isOpenModal, setOpenModal] = useState(false);
+  const [isOpenClear, setOpenClear] = useState(false);
+  const [isOpenPromo, setOpenPromo] = useState(false);
+  const [promocode, setPromocode] = useState('');
 
-  const handleOpenConfirm = () => {
-    setOpenModal(true);
+  const handleOpenClear = () => {
+    setOpenClear(true);
   };
 
-  const handleClose = () => {
-    setOpenModal(false);
+  const handleCloseClear = () => {
+    setOpenClear(false);
+  };
+  const handleOpenPromo = () => {
+    setOpenPromo(true);
+  };
+
+  const handleClosePromo = () => {
+    setOpenPromo(false);
   };
 
   async function getCartItems() {
@@ -74,6 +89,18 @@ function BasketPage() {
     });
   };
 
+  const applyPromocode = async () => {
+    const cartData = await getCartData();
+
+    if (cartData) {
+      await currentClient.applyPromocode(
+        cartData?.id,
+        cartData?.version,
+        promocode,
+      );
+    }
+  };
+
   useEffect(() => {
     getCartItems();
   }, []);
@@ -97,33 +124,75 @@ function BasketPage() {
                 {totalPrice}
               </span>
             </h3>
-            <Button onClick={handleOpenConfirm} variant="contained">
-              Clear Basket
-            </Button>
-            <Dialog
-              open={isOpenModal}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">Clear cart?</DialogTitle>
-
-              <DialogActions>
-                <Button sx={{ margin: '10px' }} onClick={handleClose}>
-                  No
-                </Button>
-                <Button
+            <div className="basket-header-buttons">
+              <Button
+                sx={{ marginRight: '5px' }}
+                onClick={handleOpenPromo}
+                variant="contained"
+              >
+                Apply Promo
+              </Button>
+              <Dialog
+                open={isOpenPromo}
+                onClose={handleClosePromo}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  Do you have Promo?
+                </DialogTitle>
+                <TextField
+                  color="success"
+                  focused
                   sx={{ margin: '10px' }}
-                  onClick={() => {
-                    handleClose();
-                    clearCart();
+                  value={promocode}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    setPromocode(event.target.value);
                   }}
-                  autoFocus
-                >
-                  Yes
-                </Button>
-              </DialogActions>
-            </Dialog>
+                />
+                <DialogActions>
+                  <Button sx={{ margin: '10px' }} onClick={handleClosePromo}>
+                    Close
+                  </Button>
+                  <Button
+                    sx={{ margin: '10px' }}
+                    onClick={() => {
+                      handleClosePromo();
+                      applyPromocode();
+                    }}
+                    autoFocus
+                  >
+                    Apply promo
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Button onClick={handleOpenClear} variant="contained">
+                Clear Basket
+              </Button>
+              <Dialog
+                open={isOpenClear}
+                onClose={handleCloseClear}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">Clear cart?</DialogTitle>
+                <DialogActions>
+                  <Button sx={{ margin: '10px' }} onClick={handleCloseClear}>
+                    No
+                  </Button>
+                  <Button
+                    sx={{ margin: '10px' }}
+                    onClick={() => {
+                      handleCloseClear();
+                      clearCart();
+                    }}
+                    autoFocus
+                  >
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
           </div>
           {cartCart.map((item) => (
             <BasketItem key={item.id} item={item} recalculate={recalculate} />

@@ -120,7 +120,6 @@ class ApiBuilder {
         this.createWithPasswordClient(email, password);
         this.getCartList().then((response) => {
           response?.body.results.map((item) => {
-         
             if (item.cartState !== 'Active') this.removeCart(item.id, item.version);
 
             return true;
@@ -639,6 +638,32 @@ class ApiBuilder {
 
   public async removeItemCart(ID: string, version: number, lineItemId: string) {
     return this.changeItemQuantity(ID, version, lineItemId, 0);
+  }
+
+  public async applyPromocode(ID: string, version: number, promo: string) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'addDiscountCode',
+                code: promo,
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
   }
 }
 
