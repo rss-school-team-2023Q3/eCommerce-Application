@@ -9,7 +9,6 @@ import BasketItem from './BasketItem.tsx';
 function BasketPage() {
   const [cart, setCart] = useState(Array<LineItem>);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     async function getCartItems() {
@@ -26,12 +25,6 @@ function BasketPage() {
       if (resp) {
         setCart(resp.body.lineItems);
         setTotalPrice(+(resp.body.totalPrice.centAmount / 100).toFixed(2));
-        setTotalItems(
-          resp.body.lineItems.reduce(
-            (total, lineItem) => total + lineItem.quantity,
-            0
-          )
-        );
       }
     }
     getCartItems();
@@ -51,15 +44,6 @@ function BasketPage() {
       setTotalPrice(
         response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0
       );
-
-      setTotalItems(
-        response
-          ? response.body.lineItems.reduce(
-              (total, lineItem) => total + lineItem.quantity,
-              0
-            )
-          : 0
-      );
     }
   };
 
@@ -67,14 +51,13 @@ function BasketPage() {
     <>
       <div className="basket-header">
         <h3>
-          Total items:&nbsp;
-          {totalItems}
+          Total items:&nbsp; 0
         </h3>
         <h3>Total cost: ${totalPrice}</h3>
         <Button variant="contained">Clear Basket</Button>
       </div>
       <div className="basket-page">
-        {totalItems > 0 ? (
+        {cart.length ? (
           cart.map((item) => (
             <BasketItem key={item.id} item={item} recalculate={recalculate} />
           ))
