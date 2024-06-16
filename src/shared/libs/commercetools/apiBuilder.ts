@@ -120,7 +120,6 @@ class ApiBuilder {
         this.createWithPasswordClient(email, password);
         this.getCartList().then((response) => {
           response?.body.results.map((item) => {
-         
             if (item.cartState !== 'Active') this.removeCart(item.id, item.version);
 
             return true;
