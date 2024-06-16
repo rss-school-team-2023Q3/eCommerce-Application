@@ -166,6 +166,7 @@ function CatalogPage() {
                   <h2 style={{ alignSelf: 'center', width: '100%' }}>
                     No items
                   </h2>
+
                 );
               })()}
             </div>

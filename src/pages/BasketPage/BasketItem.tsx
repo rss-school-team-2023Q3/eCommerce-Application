@@ -88,7 +88,13 @@ function BasketItem({
     <Card className="cart-item">
       <CardMedia className="cart-item-img" image={img} title={item.name.en} />
       <CardContent className="cart-item-content">
-        <Typography gutterBottom variant="body1" component="div">
+        <Typography
+          gutterBottom
+          variant="body1"
+          component="div"
+          fontFamily="Montserrat, sans-serif"
+          textAlign="left"
+        >
           {item.variant.key}
         </Typography>
         <div className="cart-item-data">
@@ -104,8 +110,13 @@ function BasketItem({
             />
           </div>
           <div className="cart-item-cost">
-            total: $
-            {(cost / 100).toFixed(2)}
+
+            total:
+            {' '}
+            <b>
+              $
+              {(cost / 100).toFixed(2)}
+            </b>
           </div>
           <Tooltip title="Remove from cart">
             <IconButton onClick={() => handleChangeQuantity('zero')}>

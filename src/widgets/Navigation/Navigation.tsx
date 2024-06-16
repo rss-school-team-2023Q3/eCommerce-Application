@@ -69,7 +69,7 @@ export default function Navigation() {
       <NavLink to="/main">
         {' '}
         <Button
-          startIcon={<HomeIcon />}
+          startIcon={<HomeIcon sx={{ width: '24px' }} />}
           className="nav-button"
           variant="outlined"
           sx={{ color: 'white' }}
@@ -81,12 +81,13 @@ export default function Navigation() {
       <NavLink to="/catalog">
         <Tooltip title="Catalog">
           <Button
-            startIcon={<FormatListBulletedIcon />}
+            startIcon={<FormatListBulletedIcon sx={{ width: '24px' }} />}
             className="nav-button"
             sx={{ color: 'white' }}
             variant="outlined"
+            onClick={handleDrawerToggle}
           >
-            <span className="button-text">Catalog</span>
+            <span>Catalog</span>
           </Button>
         </Tooltip>
       </NavLink>
@@ -117,7 +118,7 @@ export default function Navigation() {
       <NavLink to="/about-us">
         {' '}
         <Button
-          startIcon={<GroupsOutlinedIcon />}
+          startIcon={<GroupsOutlinedIcon sx={{ width: '24px' }} />}
           className="nav-button"
           sx={{ color: 'white' }}
           variant="outlined"
@@ -132,7 +133,7 @@ export default function Navigation() {
             <Button
               sx={{ color: 'white' }}
               className="nav-button"
-              startIcon={<ManageAccountsIcon />}
+              startIcon={<ManageAccountsIcon sx={{ width: '24px' }} />}
               variant="outlined"
               onClick={handleDrawerToggle}
             >
