@@ -110,6 +110,7 @@ function BasketItem({
             />
           </div>
           <div className="cart-item-cost">
+
             total:
             {' '}
             <b>

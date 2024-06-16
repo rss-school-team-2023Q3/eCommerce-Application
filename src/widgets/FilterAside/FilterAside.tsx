@@ -32,6 +32,7 @@ interface IFilterInterface {
     setLoadState: (state: boolean) => void;
     setTotal: (total: number) => void;
     offset: number;
+    resetPage: () => void;
   };
 }
 
@@ -72,6 +73,7 @@ function FilterAside({ props }: IFilterInterface) {
     setSort('name.en asc');
     setFilterQuery([]);
     setSearchValue('');
+    props.resetPage();
     const filtered = await getProducts(
       '',
       'masterData.current.name.en asc',
@@ -120,7 +122,7 @@ function FilterAside({ props }: IFilterInterface) {
       filterArray,
       sort,
       searchValue,
-      props.offset,
+      0,
       mediaQueryLimit,
     );
 

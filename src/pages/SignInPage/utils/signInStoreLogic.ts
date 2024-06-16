@@ -2,6 +2,7 @@ import { Customer } from '@commercetools/platform-sdk';
 import { Dispatch } from '@reduxjs/toolkit';
 
 import { setCredentials } from 'shared/api/authApi/store/authSlice';
+import { setCart } from 'shared/api/cartApi/cartSlice';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
 import { toastError } from 'shared/utils/notifications';
@@ -33,6 +34,9 @@ export default async function signInStoreLogic(
       }
 
       dispatch(setCredentials({ user: customer }));
+      currentClient.getActiveCart().then((response) => {
+        if (response) dispatch(setCart({ cart: response.body }));
+      });
     }
   } catch (error) {
     if (error instanceof Error) {

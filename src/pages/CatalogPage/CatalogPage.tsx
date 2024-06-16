@@ -20,7 +20,7 @@ function CatalogPage() {
   const isLargeScreen = useMediaQuery('(min-width: 1174px)');
   const isTabletScreen = useMediaQuery('(min-width: 890px)');
 
-  const isMobileScreen = useMediaQuery('(min-width: 580px)');
+  // const isMobileScreen = useMediaQuery('(min-width: 580px)');
 
   if (isTabletScreen) mediaQueryLimit = LIMIT_TABLET;
 
@@ -92,15 +92,19 @@ function CatalogPage() {
     fun();
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      const paginator: Element | null = document.querySelector('.paginator');
+  const resetPage = () => {
+    setPage(1);
+  };
 
-      if (paginator) {
-        paginator.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 0);
-  }, [products[0], mediaQueryLimit]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const paginator: Element | null = document.querySelector('.paginator');
+
+  //     if (paginator) {
+  //       paginator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  //     }
+  //   }, 0);
+  // }, [products[0], mediaQueryLimit]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -108,15 +112,15 @@ function CatalogPage() {
     }, 200);
   }, [mediaQueryLimit]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      const paginator: Element | null = document.querySelector('.paginator');
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const paginator: Element | null = document.querySelector('.paginator');
 
-      if (paginator) {
-        paginator.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 200);
-  }, [isMobileScreen]);
+  //     if (paginator) {
+  //       paginator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  //     }
+  //   }, 200);
+  // }, [isMobileScreen]);
 
   return (
     <div className="catalog-page">
@@ -126,46 +130,50 @@ function CatalogPage() {
           setLoadState,
           offset: (page - 1) * mediaQueryLimit,
           setTotal: setPageQty,
+          resetPage,
         }}
       />
       <Divider orientation="vertical" flexItem />
       <div className="card-paginator-wrap">
-        <div className="catalog">
-          {(() => {
-            if (isLoad) {
-              return <Loader />;
-            }
+        {isLoad ? (
+          <Loader />
+        ) : (
+          <>
+            <div className="catalog">
+              {(() => {
+                if (products.length) {
+                  return products.map((item) => {
+                    const isDiscont = getDiscont(item.variant.sku);
 
-            if (products.length) {
-              return products.map((item) => {
-                const isDiscont = getDiscont(item.variant.sku);
+                    return (
+                      <ProductCard
+                        key={item.variant.key}
+                        product={item}
+                        discount={isDiscont}
+                        isInCartProps={
+                          !!(
+                            cart?.lineItems.find(
+                              (el) => el.productId === item.id,
+                            ) ?? false
+                          )
+                        }
+                      />
+                    );
+                  });
+                }
 
                 return (
-                  <ProductCard
-                    key={item.variant.key}
-                    product={item}
-                    discount={isDiscont}
-                    isInCartProps={
-                      !!(
-                        cart?.lineItems.find(
-                          (el) => el.productId === item.id,
-                        ) ?? false
-                      )
-                    }
-                  />
-                );
-              });
-            }
+                  <h2 style={{ alignSelf: 'center', width: '100%' }}>
+                    No items
+                  </h2>
 
-            return (
-              <h2 style={{ alignSelf: 'center', width: '100%' }}>No items</h2>
-            );
-          })()}
-        </div>
-        {!!products.length && (
-          <div className="paginator">
-            <Paginator pageQty={pageQty} page={page} setPage={setPage} />
-          </div>
+                );
+              })()}
+            </div>
+            <div className="paginator">
+              <Paginator pageQty={pageQty} page={page} setPage={setPage} />
+            </div>
+          </>
         )}
       </div>
     </div>
