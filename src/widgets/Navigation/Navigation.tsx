@@ -5,7 +5,7 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import MenuIcon from '@mui/icons-material/Menu';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+// import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import {
   Toolbar, Button, Tooltip, Container, Badge,
 } from '@mui/material';
@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import './Navigation.modules.css';
 import { RootState } from 'shared/api/store';
+import DeadBasket from 'shared/components/DeadBasket/DeadBasket';
 
 export default function Navigation() {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -66,14 +67,16 @@ export default function Navigation() {
         </Button>
       </NavLink>
       <NavLink to="/catalog">
-        <Button
-          startIcon={<FormatListBulletedIcon />}
-          className="nav-button"
-          sx={{ color: 'white' }}
-          variant="outlined"
-        >
-          <span>Catalog</span>
-        </Button>
+        <Tooltip title="Catalog">
+          <Button
+            startIcon={<FormatListBulletedIcon />}
+            className="nav-button"
+            sx={{ color: 'white' }}
+            variant="outlined"
+          >
+            <span className="button-text">Catalog</span>
+          </Button>
+        </Tooltip>
       </NavLink>
       <NavLink to="/basket">
         <Tooltip title="Basket">
@@ -87,7 +90,7 @@ export default function Navigation() {
                 badgeContent={countItems}
                 color="primary"
               >
-                <ShoppingBasketIcon />
+                <DeadBasket className={countItems ? 'shake-rotate' : ''} />
               </Badge>
             )}
             className="nav-button"
@@ -189,7 +192,7 @@ export default function Navigation() {
                     badgeContent={countItems}
                     color="primary"
                   >
-                    <ShoppingBasketIcon />
+                    <DeadBasket className={countItems ? 'shake-rotate' : ''} />
                   </Badge>
                 )}
                 className="nav-button"
