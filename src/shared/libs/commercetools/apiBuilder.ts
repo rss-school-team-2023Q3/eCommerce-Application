@@ -123,7 +123,7 @@ class ApiBuilder {
             if (item.cartState !== 'Active')
               this.removeCart(item.id, item.version);
 
-            return false;
+            return true;
           });
         });
         setTimeout(() => {
@@ -637,6 +637,7 @@ class ApiBuilder {
 
     return resp;
   }
+
   public async removeItemCart(ID: string, version: number, lineItemId: string) {
     return this.changeItemQuantity(ID, version, lineItemId, 0);
   }
