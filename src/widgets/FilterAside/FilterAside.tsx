@@ -58,7 +58,7 @@ function FilterAside({ props }: IFilterInterface) {
     setIsOnSale(event.target.checked);
   };
   const handleChangeManufacture = (
-    event: SelectChangeEvent<typeof manufacture>
+    event: SelectChangeEvent<typeof manufacture>,
   ) => {
     setManufacture(event.target.value);
   };
@@ -76,11 +76,11 @@ function FilterAside({ props }: IFilterInterface) {
       '',
       'masterData.current.name.en asc',
       0,
-      mediaQueryLimit
+      mediaQueryLimit,
     );
 
     props.setTotal(
-      Math.ceil((filtered?.body?.total ?? mediaQueryLimit) / mediaQueryLimit)
+      Math.ceil((filtered?.body?.total ?? mediaQueryLimit) / mediaQueryLimit),
     );
     props.filteredList(setProductsListArray(filtered?.body.results));
     props.setLoadState(false);
@@ -94,11 +94,11 @@ function FilterAside({ props }: IFilterInterface) {
       event.target.value,
       searchValue,
       props.offset,
-      mediaQueryLimit
+      mediaQueryLimit,
     );
 
     const filtered = setProductsProjectionArray(
-      response?.body.results as ProductProjection[]
+      response?.body.results as ProductProjection[],
     );
 
     if (filtered) props.filteredList(filtered);
@@ -121,17 +121,17 @@ function FilterAside({ props }: IFilterInterface) {
       sort,
       searchValue,
       props.offset,
-      mediaQueryLimit
+      mediaQueryLimit,
     );
 
     const filtered = setProductsProjectionArray(
-      response?.body.results as ProductProjection[]
+      response?.body.results as ProductProjection[],
     );
 
     if (filtered) props.filteredList(filtered);
 
     props.setTotal(
-      Math.ceil((response?.body?.total ?? mediaQueryLimit) / mediaQueryLimit)
+      Math.ceil((response?.body?.total ?? mediaQueryLimit) / mediaQueryLimit),
     );
     props.setLoadState(false);
   };
@@ -150,7 +150,7 @@ function FilterAside({ props }: IFilterInterface) {
         sort,
         searchValue,
         props.offset,
-        mediaQueryLimit
+        mediaQueryLimit,
       );
 
       return response;
@@ -160,13 +160,13 @@ function FilterAside({ props }: IFilterInterface) {
       .then((res) => res?.body)
       .then((body) => {
         const filtered = setProductsProjectionArray(
-          body?.results as ProductProjection[]
+          body?.results as ProductProjection[],
         );
 
         if (filtered) props.filteredList(filtered);
 
         props.setTotal(
-          Math.ceil((body?.total ?? mediaQueryLimit) / mediaQueryLimit)
+          Math.ceil((body?.total ?? mediaQueryLimit) / mediaQueryLimit),
         );
         props.setLoadState(false);
       })
@@ -199,13 +199,13 @@ function FilterAside({ props }: IFilterInterface) {
       <FormControlLabel
         checked={isOnSale}
         value="start"
-        control={
+        control={(
           <Switch
             checked={isOnSale}
             onChange={handleChangeSale}
             color="primary"
           />
-        }
+        )}
         label="On sale!"
         labelPlacement="end"
       />

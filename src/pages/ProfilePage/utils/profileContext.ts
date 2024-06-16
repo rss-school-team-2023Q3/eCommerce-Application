@@ -25,7 +25,7 @@ export const initialContextProfile: IFormContextType = {
 };
 
 const profileContext: Context<IFormContextType> = createContext(
-  initialContextProfile
+  initialContextProfile,
 );
 
 export default profileContext;

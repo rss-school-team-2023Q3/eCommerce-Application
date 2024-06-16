@@ -214,13 +214,13 @@ function SignUp({ client }: IClient) {
                   />
                   <FormControlLabel
                     className="switch-field"
-                    control={
+                    control={(
                       <Checkbox
                         size="small"
                         checked={isBillingDefaut}
                         onChange={() => setBillingDefault(!isBillingDefaut)}
                       />
-                    }
+                    )}
                     label="Use as default adress"
                   />
                 </div>
@@ -251,13 +251,13 @@ function SignUp({ client }: IClient) {
                     />
                     <FormControlLabel
                       className="switch-field"
-                      control={
+                      control={(
                         <Checkbox
                           size="small"
                           checked={isShippingDefaut}
                           onChange={() => setShippingDefault(!isShippingDefaut)}
                         />
-                      }
+                      )}
                       label="Use as default adress"
                     />
                   </div>
@@ -268,13 +268,13 @@ function SignUp({ client }: IClient) {
               <div className="adress-switch-field">
                 <FormControlLabel
                   className="switch-field"
-                  control={
+                  control={(
                     <Checkbox
                       size="small"
                       checked={isSameAdress}
                       onChange={() => toogleSameAdress()}
                     />
-                  }
+                  )}
                   label="Use same billing & shipping adress"
                 />
               </div>

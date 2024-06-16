@@ -12,7 +12,7 @@ export function Paginator({ pageQty, page, setPage }: IPaginatorProps) {
     (_: React.ChangeEvent<unknown>, num: number) => {
       setPage(num);
     },
-    [setPage]
+    [setPage],
   );
 
   return (

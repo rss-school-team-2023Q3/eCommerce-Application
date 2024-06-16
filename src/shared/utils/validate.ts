@@ -33,8 +33,7 @@ export default function validate(inputType: string, value: string) {
       } else if (!/[!@#$%^&*]/.test(value)) {
         errorMessage = 'Password must contain at least one special character';
       } else if (!/^\S(?:.*\S)?$/.test(value)) {
-        errorMessage =
-          'Password must not contain leading or trailing whitespace';
+        errorMessage = 'Password must not contain leading or trailing whitespace';
       } else if (!/.{8,}/.test(value)) {
         errorMessage = 'Password must be at least 8 characters long';
       }
@@ -45,8 +44,7 @@ export default function validate(inputType: string, value: string) {
       if (!value) {
         errorMessage = 'Enter city name';
       } else if (!/^[a-zA-Z]+$/.test(value)) {
-        errorMessage =
-          "City name mustn't contain special characters or numbers";
+        errorMessage = "City name mustn't contain special characters or numbers";
       }
 
       break;

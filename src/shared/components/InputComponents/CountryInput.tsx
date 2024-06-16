@@ -1,4 +1,6 @@
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import {
+  FormControl, InputLabel, Select, MenuItem,
+} from '@mui/material';
 import formContext from 'pages/SignUpPage/formContext';
 import { useContext } from 'react';
 

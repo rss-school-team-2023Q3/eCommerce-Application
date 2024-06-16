@@ -3,7 +3,7 @@ import IMapAddresses from 'pages/App/types/interfaces/IValidateAddress';
 
 export default function createNewAddress(
   id: string,
-  addresses: IMapAddresses[]
+  addresses: IMapAddresses[],
 ): Address {
   const newFormAddress: IMapAddresses = {
     id,

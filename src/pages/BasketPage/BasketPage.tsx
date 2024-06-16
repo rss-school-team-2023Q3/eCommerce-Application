@@ -1,5 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -35,11 +35,11 @@ function BasketPage() {
     if (cartResp) {
       const response = await currentClient.recalculateTotalCost(
         cartResp?.id,
-        cartResp?.version
+        cartResp?.version,
       );
 
       setTotalPrice(
-        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0
+        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0,
       );
     }
   };
@@ -74,10 +74,31 @@ function BasketPage() {
           <div className="basket-header">
             <h3>Total items:</h3>
             <h3>
-              Total cost: $
-              {totalPrice}
+              Total cost:&nbsp;
+              <span
+                style={{
+                  color: 'black',
+                  fontFamily: 'monospace',
+                  fontSize: '20px',
+                  fontWeight: 600,
+                }}
+              >
+                $
+                {totalPrice}
+              </span>
             </h3>
-            <Button onClick={clearCart} variant="contained">
+            <Button
+              onClick={clearCart}
+              variant="contained"
+              sx={{
+                marginTop: '10px',
+                alignSelf: 'flex-end',
+                '@media (min-width: 600px)': {
+                  marginTop: '0',
+                  alignSelf: 'center',
+                },
+              }}
+            >
               Clear Basket
             </Button>
           </div>
@@ -87,10 +108,19 @@ function BasketPage() {
         </>
       ) : (
         <>
-          <h1>No items</h1>
+          <Typography
+            fontFamily="Montserrat, sans-serif"
+            variant="h4"
+            fontWeight={500}
+            color="lightgrey"
+            marginBottom={5}
+            marginTop={5}
+          >
+            No items...
+          </Typography>
           <Button
             startIcon={<ArrowBackIcon />}
-            sx={{ width: '300px' }}
+            sx={{ width: '250px' }}
             onClick={() => navigate('/catalog')}
             variant="contained"
           >
