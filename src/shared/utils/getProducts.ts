@@ -5,13 +5,13 @@ async function getProducts(
   filterQuery = '',
   sortQuery = 'masterData.current.name.en asc',
   offset: number = 0,
-  limit: number = LIMIT_MOBILE,
+  limit: number = LIMIT_MOBILE
 ) {
   const res = await currentClient.getProducts(
     filterQuery,
     sortQuery,
     offset,
-    limit,
+    limit
   );
 
   return res;

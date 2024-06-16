@@ -46,7 +46,7 @@ export const initialContext: IFormContextType = {
 };
 
 const formContext: Context<IFormContextType> = createContext(
-  structuredClone(initialContext),
+  structuredClone(initialContext)
 );
 
 export default formContext;

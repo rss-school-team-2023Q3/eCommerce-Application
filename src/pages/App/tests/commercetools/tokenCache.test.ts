@@ -1,8 +1,6 @@
 import { TokenStore } from '@commercetools/sdk-client-v2';
 import { tokenCache } from 'shared/libs/commercetools/tokenCache';
-import {
-  describe, expect, it, beforeEach,
-} from 'vitest';
+import { describe, expect, it, beforeEach } from 'vitest';
 
 describe('MyTokenCache', () => {
   beforeEach(() => {

@@ -1,7 +1,5 @@
 import GitHubIcon from '@mui/icons-material/GitHub';
-import {
-  Card, CardContent, Typography, Link, Grid,
-} from '@mui/material';
+import { Card, CardContent, Typography, Link, Grid } from '@mui/material';
 import { ITeamMember } from 'pages/App/types/interfaces/ITeamMember';
 
 function TeamMemberCard({
@@ -94,8 +92,7 @@ function TeamMemberCard({
               marginBottom={1}
               fontWeight={600}
             >
-              Bio
-              {' '}
+              Bio{' '}
             </Typography>
             <Typography
               fontFamily="Montserrat, sans-serif"
@@ -111,8 +108,7 @@ function TeamMemberCard({
               marginBottom={1}
               fontWeight={600}
             >
-              Contributions
-              {' '}
+              Contributions{' '}
             </Typography>
             <Typography
               fontFamily="Montserrat, sans-serif"

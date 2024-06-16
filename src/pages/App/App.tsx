@@ -42,12 +42,12 @@ function App() {
 
             <Route
               path="/signup"
-              element={(
+              element={
                 <RestrictedRoute
                   redirectTo="/main"
                   component={<SignUp client={currentClient} />}
                 />
-              )}
+              }
             />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/basket" element={<BasketPage />} />
@@ -55,12 +55,12 @@ function App() {
 
             <Route
               path="/signin"
-              element={(
+              element={
                 <RestrictedRoute
                   redirectTo="/main"
                   component={<SignInPage />}
                 />
-              )}
+              }
             />
 
             <Route

@@ -1,7 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {
-  Toolbar, Typography, Link, Button, Grid,
-} from '@mui/material';
+import { Toolbar, Typography, Link, Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import TeamMemberCard from 'shared/components/TeamMemberComponent/TeamMemberComponent';
 

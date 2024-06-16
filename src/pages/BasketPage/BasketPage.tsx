@@ -1,5 +1,5 @@
 import { LineItem } from '@commercetools/platform-sdk';
-import { Button } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 
@@ -9,6 +9,7 @@ import BasketItem from './BasketItem.tsx';
 function BasketPage() {
   const [cart, setCart] = useState(Array<LineItem>);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     async function getCartItems() {
@@ -25,6 +26,12 @@ function BasketPage() {
       if (resp) {
         setCart(resp.body.lineItems);
         setTotalPrice(+(resp.body.totalPrice.centAmount / 100).toFixed(2));
+        setTotalItems(
+          resp.body.lineItems.reduce(
+            (total, lineItem) => total + lineItem.quantity,
+            0
+          )
+        );
       }
     }
     getCartItems();
@@ -38,11 +45,20 @@ function BasketPage() {
     if (cartResp) {
       const response = await currentClient.recalculateTotalCost(
         cartResp?.id,
-        cartResp?.version,
+        cartResp?.version
       );
 
       setTotalPrice(
-        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0,
+        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0
+      );
+
+      setTotalItems(
+        response
+          ? response.body.lineItems.reduce(
+              (total, lineItem) => total + lineItem.quantity,
+              0
+            )
+          : 0
       );
     }
   };
@@ -50,20 +66,30 @@ function BasketPage() {
   return (
     <>
       <div className="basket-header">
-        <h3>Total items:</h3>
         <h3>
-          Total cost: $
-          {totalPrice}
+          Total items:&nbsp;
+          {totalItems}
         </h3>
+        <h3>Total cost: ${totalPrice}</h3>
         <Button variant="contained">Clear Basket</Button>
       </div>
       <div className="basket-page">
-        {cart.length ? (
+        {totalItems > 0 ? (
           cart.map((item) => (
             <BasketItem key={item.id} item={item} recalculate={recalculate} />
           ))
         ) : (
-          <h1>No items</h1>
+          <Grid container justifyContent="center">
+            <Typography
+              fontFamily="Montserrat, sans-serif"
+              fontWeight={500}
+              variant="h4"
+              color="lightgrey"
+              marginTop={10}
+            >
+              No items
+            </Typography>
+          </Grid>
         )}
         {/* <Button
         onClick={() =>
