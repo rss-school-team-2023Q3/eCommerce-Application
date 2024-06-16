@@ -46,9 +46,9 @@ function ProductPage() {
   // const country = useSelector(
   //   (state: RootState) => state.auth.user?.addresses[0].country
   // );
-  // <!--   const country = useSelector(
-  //     (state: RootState) => state.auth.user?.addresses[0].country,
-  //   ); -->
+  // const country = useSelector(
+  //   (state: RootState) => state.auth.user?.addresses[0].country,
+  // );
   const product = productData && createProduct(productData);
 
   const handleClickOpen = () => {

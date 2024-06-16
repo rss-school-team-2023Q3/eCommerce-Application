@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import Header from 'widgets/Header/Header';
 import Loader from 'widgets/Loader/Loader';
 import './SharedLayout.modules.css';
+import ModalCart from 'widgets/ModalCart/ModalCart';
 
 // import { Footer } from 'components/Footer/Footer';
 // import Header from 'components/Header/Header';
@@ -13,6 +14,7 @@ function SharedLayout() {
     <div>
       <Header />
       <Suspense fallback={<Loader />}>
+        <ModalCart />
         <main className="main">
           <Outlet />
           <ToastContainer />
