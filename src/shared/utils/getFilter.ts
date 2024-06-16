@@ -6,14 +6,14 @@ async function getFilterProducts(
   sortQuery: string,
   searchQuery = '',
   offset: number = 0,
-  limit: number = LIMIT_MOBILE
+  limit: number = LIMIT_MOBILE,
 ) {
   return currentClient.getFilterProducts(
     filterQuery,
     sortQuery,
     searchQuery,
     offset,
-    limit
+    limit,
   );
 }
 

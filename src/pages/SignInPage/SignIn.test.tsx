@@ -13,7 +13,7 @@ describe('Simple working test', () => {
         <BrowserRouter basename="/">
           <SignIn />
         </BrowserRouter>
-      </Provider>
+      </Provider>,
     );
     expect(screen.getByText('Email')).toBeInTheDocument();
   });
@@ -23,7 +23,7 @@ describe('Simple working test', () => {
         <BrowserRouter basename="/">
           <SignIn />
         </BrowserRouter>
-      </Provider>
+      </Provider>,
     );
     expect(screen.getByText('Password')).toBeInTheDocument();
   });

@@ -37,19 +37,19 @@ export default function ProfileAddress({
 }) {
   const dispatch = useDispatch();
   const customer: Customer | null = useSelector(
-    (state: RootState) => state.auth.user
+    (state: RootState) => state.auth.user,
   );
   const formData = useContext(profileContext);
 
   const [isChanged, setIsChanged] = useState(false);
 
   let address: Address | undefined = customer?.addresses.find(
-    (addr) => addr.id === addressId
+    (addr) => addr.id === addressId,
   );
 
   if (
-    (addressId === 'newShippingAddress' || addressId === 'newBillingAddress') &&
-    formData.addresses
+    (addressId === 'newShippingAddress' || addressId === 'newBillingAddress')
+    && formData.addresses
   ) {
     address = createNewAddress(addressId, formData.addresses);
   }
@@ -58,10 +58,10 @@ export default function ProfileAddress({
 
   const formAddr = formData.addresses?.find((el) => el.id === addressId)?.value;
   const [isBillingCountryChange, setBillingCountryChange] = useState(
-    !!customer?.defaultBillingAddressId
+    !!customer?.defaultBillingAddressId,
   );
   const [isShippingCountryChange, setShippingCountryChange] = useState(
-    !!customer?.defaultShippingAddressId
+    !!customer?.defaultShippingAddressId,
   );
 
   useEffect(() => {
@@ -73,8 +73,7 @@ export default function ProfileAddress({
 
         const newVal = k === 'country' ? selectCountryCode(v.value) : v.value;
 
-        if (typeof k === 'string' && address)
-          return newVal !== address[k as keyof Address];
+        if (typeof k === 'string' && address) return newVal !== address[k as keyof Address];
 
         return false;
       });
@@ -108,13 +107,13 @@ export default function ProfileAddress({
     let res;
 
     if (
-      typeof customer?.id === 'string' &&
-      typeof customer?.version === 'number'
+      typeof customer?.id === 'string'
+      && typeof customer?.version === 'number'
     ) {
       res = await currentClient.removeAddress(
         addressId,
         customer.id,
-        customer.version
+        customer.version,
       );
     }
 
@@ -124,7 +123,7 @@ export default function ProfileAddress({
 
       if (formData.addresses) {
         formData.addresses = formData.addresses.filter(
-          (el) => el.id !== addressId
+          (el) => el.id !== addressId,
         );
       }
     }
@@ -134,15 +133,14 @@ export default function ProfileAddress({
     let res;
 
     if (
-      typeof customer?.id === 'string' &&
-      typeof customer?.version === 'number'
+      typeof customer?.id === 'string'
+      && typeof customer?.version === 'number'
     ) {
       if (!formAddr) return null;
 
       const newAddress = Object.entries(formAddr).reduce((acc, entry) => {
         const [k, v] = entry;
-        const val =
-          k === FormField.country ? selectCountryCode(v.value) : v.value;
+        const val = k === FormField.country ? selectCountryCode(v.value) : v.value;
         const newEntity = {
           [k as keyof Address]: val,
         };
@@ -154,7 +152,7 @@ export default function ProfileAddress({
         newAddress,
         addressId,
         customer.id,
-        customer.version
+        customer.version,
       );
 
       if (res?.statusCode === 200) {
@@ -171,25 +169,25 @@ export default function ProfileAddress({
     <div className="data-field-input">
       <p>{`${index + 1} Address`}</p>
 
-      {addressId !== 'newShippingAddress' &&
-        addressId !== 'newBillingAddress' && (
-          <div className="label-address-wrap">
-            <FormControlLabel
-              control={<Radio value={addressId} />}
-              label=" default address"
-            />
-            {isChanged && (
-              <IconButton onClick={() => changeAddress()} aria-label="delete">
-                <SaveAsIcon />
-              </IconButton>
-            )}
-            {!isDisable && (
-              <IconButton onClick={() => removeAddress()} aria-label="delete">
-                <DeleteForeverIcon />
-              </IconButton>
-            )}
-          </div>
-        )}
+      {addressId !== 'newShippingAddress'
+        && addressId !== 'newBillingAddress' && (
+        <div className="label-address-wrap">
+          <FormControlLabel
+            control={<Radio value={addressId} />}
+            label=" default address"
+          />
+          {isChanged && (
+            <IconButton onClick={() => changeAddress()} aria-label="delete">
+              <SaveAsIcon />
+            </IconButton>
+          )}
+          {!isDisable && (
+            <IconButton onClick={() => removeAddress()} aria-label="delete">
+              <DeleteForeverIcon />
+            </IconButton>
+          )}
+        </div>
+      )}
       <StreetInputProfile
         streetProps={{
           type,
