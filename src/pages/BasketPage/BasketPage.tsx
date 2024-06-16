@@ -17,19 +17,19 @@ import { currentClient } from 'shared/libs/commercetools/apiBuilder';
 import getCartData from 'shared/utils/getCartData.ts';
 
 import BasketItem from './BasketItem.tsx';
-// import ClearCartModal from './ClearCartModal.tsx';
 
 function BasketPage() {
   const cartCart = useSelector(
     (state: RootState) => state.cart.cart?.lineItems,
   );
   const [totalPrice, setTotalPrice] = useState(0);
+  // const [promoPrice, setPromoPrice] = useState(0);
   const dispatch = useDispatch();
   // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [isOpenClear, setOpenClear] = useState(false);
   const [isOpenPromo, setOpenPromo] = useState(false);
-  const [name, setName] = useState('');
+  const [promocode, setPromocode] = useState('');
 
   const handleOpenClear = () => {
     setOpenClear(true);
@@ -89,6 +89,18 @@ function BasketPage() {
     });
   };
 
+  const applyPromocode = async () => {
+    const cartData = await getCartData();
+
+    if (cartData) {
+      await currentClient.applyPromocode(
+        cartData?.id,
+        cartData?.version,
+        promocode,
+      );
+    }
+  };
+
   useEffect(() => {
     getCartItems();
   }, []);
@@ -113,8 +125,12 @@ function BasketPage() {
               </span>
             </h3>
             <div className="basket-header-buttons">
-              <Button onClick={handleOpenPromo} variant="contained">
-                Clear Basket
+              <Button
+                sx={{ marginRight: '5px' }}
+                onClick={handleOpenPromo}
+                variant="contained"
+              >
+                Apply Promo
               </Button>
               <Dialog
                 open={isOpenPromo}
@@ -129,9 +145,9 @@ function BasketPage() {
                   color="success"
                   focused
                   sx={{ margin: '10px' }}
-                  value={name}
+                  value={promocode}
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    setName(event.target.value);
+                    setPromocode(event.target.value);
                   }}
                 />
                 <DialogActions>
@@ -142,7 +158,7 @@ function BasketPage() {
                     sx={{ margin: '10px' }}
                     onClick={() => {
                       handleClosePromo();
-                      clearCart();
+                      applyPromocode();
                     }}
                     autoFocus
                   >
