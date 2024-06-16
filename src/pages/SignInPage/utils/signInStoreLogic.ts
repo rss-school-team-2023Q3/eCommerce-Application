@@ -9,7 +9,7 @@ import { toastError } from 'shared/utils/notifications';
 export default async function signInStoreLogic(
   email: string,
   password: string,
-  dispatch: Dispatch,
+  dispatch: Dispatch
 ) {
   let resp;
   try {
@@ -17,8 +17,9 @@ export default async function signInStoreLogic(
 
     if (resp?.statusCode === 200) {
       const customer: Customer = resp?.body.customer;
-      const isStringProps = typeof customer.firstName === 'string'
-        && typeof customer.lastName === 'string';
+      const isStringProps =
+        typeof customer.firstName === 'string' &&
+        typeof customer.lastName === 'string';
 
       if (isStringProps) {
         // const user: IUser = {

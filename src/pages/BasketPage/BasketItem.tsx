@@ -42,10 +42,10 @@ function BasketItem({
         body.id,
         body.version,
         item.id,
-        count,
+        count
       );
       const itemResp = response?.body.lineItems.filter(
-        (lineItem) => lineItem.id === item.id,
+        (lineItem) => lineItem.id === item.id
       );
 
       recalculate();
@@ -65,7 +65,7 @@ function BasketItem({
       }
       case 'down': {
         if (quantity === 1) {
-          toastInfo('removed from cart');
+          toastInfo('Removed from cart');
         }
 
         setQuantity(quantity - 1);
@@ -75,7 +75,7 @@ function BasketItem({
       case 'zero': {
         setQuantity(0);
         changeQuantity(0);
-        toastInfo('removed from cart');
+        toastInfo('Removed from cart');
         break;
       }
       default: {
@@ -104,8 +104,7 @@ function BasketItem({
             />
           </div>
           <div className="cart-item-cost">
-            total: $
-            {(cost / 100).toFixed(2)}
+            total: ${(cost / 100).toFixed(2)}
           </div>
           <Tooltip title="Remove from cart">
             <IconButton onClick={() => handleChangeQuantity('zero')}>

@@ -33,7 +33,7 @@ function CatalogPage() {
   const [discounts, setDiscounts] = useState(discountsList);
   const [isLoad, setIsLoad] = useState(true);
   const cartStore: Cart | null = useSelector(
-    (state: RootState) => state.cart.cart,
+    (state: RootState) => state.cart.cart
   );
   const [page, setPage] = useState(1);
   const [cart, setCart] = useState<Cart | null>(null);
@@ -65,14 +65,14 @@ function CatalogPage() {
         '',
         'masterData.current.name.en asc',
         0,
-        mediaQueryLimit,
+        mediaQueryLimit
       );
 
       setProducts(setProductsListArray(res?.body.results));
       setDiscounts(await getDiscounts());
       setIsLoad(false);
       setPageQty(
-        Math.ceil((res?.body.total ?? mediaQueryLimit) / mediaQueryLimit),
+        Math.ceil((res?.body.total ?? mediaQueryLimit) / mediaQueryLimit)
       );
     }, 100);
   };
@@ -148,7 +148,7 @@ function CatalogPage() {
                     isInCartProps={
                       !!(
                         cart?.lineItems.find(
-                          (el) => el.productId === item.id,
+                          (el) => el.productId === item.id
                         ) ?? false
                       )
                     }

@@ -38,9 +38,9 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
     const isPasswords = !!passwordOld && formData.password.value;
 
     if (
-      isPasswords
-      && formData.password.isValid
-      && formData.password.value !== passwordOld
+      isPasswords &&
+      formData.password.isValid &&
+      formData.password.value !== passwordOld
     ) {
       formData.fieldChangedSet?.add('password');
     } else formData.fieldChangedSet?.delete('password');
@@ -65,10 +65,11 @@ function PasswordProfile({ isDisable }: { isDisable: boolean }) {
     }
   }
 
-  const isPasswordChanged = passwordOld !== passwordNew
-    && formData.password.isValid
-    && passwordOld
-    && passwordNew;
+  const isPasswordChanged =
+    passwordOld !== passwordNew &&
+    formData.password.isValid &&
+    passwordOld &&
+    passwordNew;
 
   return (
     !isDisable && (

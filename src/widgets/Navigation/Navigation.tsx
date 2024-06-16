@@ -5,13 +5,9 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import HomeIcon from '@mui/icons-material/Home';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import MenuIcon from '@mui/icons-material/Menu';
-// import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
-import {
-  Toolbar, Button, Tooltip, Container, Badge,
-} from '@mui/material';
-import {
-  Drawer, IconButton, useMediaQuery, useTheme,
-} from '@mui/material';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import { Toolbar, Button, Tooltip, Container, Badge } from '@mui/material';
+import { Drawer, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -26,7 +22,7 @@ export default function Navigation() {
   const isMobile = useMediaQuery('(max-width:992px)');
 
   const cartStore: Cart | null = useSelector(
-    (state: RootState) => state.cart.cart,
+    (state: RootState) => state.cart.cart
   );
 
   const countItems = cartStore?.lineItems.length;
@@ -62,11 +58,13 @@ export default function Navigation() {
           className="nav-button"
           variant="outlined"
           sx={{ color: 'white' }}
+          onClick={handleDrawerToggle}
         >
           <span>Home</span>
         </Button>
       </NavLink>
       <NavLink to="/catalog">
+
         <Tooltip title="Catalog">
           <Button
             startIcon={<FormatListBulletedIcon />}
@@ -81,7 +79,7 @@ export default function Navigation() {
       <NavLink to="/basket">
         <Tooltip title="Basket">
           <Button
-            startIcon={(
+            startIcon={
               <Badge
                 anchorOrigin={{
                   vertical: 'top',
@@ -90,14 +88,16 @@ export default function Navigation() {
                 badgeContent={countItems}
                 color="primary"
               >
+               
                 <DeadBasket className={countItems ? 'shake-rotate' : ''} />
               </Badge>
-            )}
+            }
             className="nav-button"
             sx={{ color: 'white' }}
             variant="outlined"
+            onClick={handleDrawerToggle}
           >
-            <span className="button-text">Basket</span>
+            <span>Basket</span>
           </Button>
         </Tooltip>
       </NavLink>
@@ -108,6 +108,7 @@ export default function Navigation() {
           className="nav-button"
           sx={{ color: 'white' }}
           variant="outlined"
+          onClick={handleDrawerToggle}
         >
           <span>Team</span>
         </Button>
@@ -120,8 +121,9 @@ export default function Navigation() {
               className="nav-button"
               startIcon={<ManageAccountsIcon />}
               variant="outlined"
+              onClick={handleDrawerToggle}
             >
-              <span className="button-text">Profile</span>
+              <span>Profile</span>
             </Button>
           </Tooltip>
         </NavLink>
@@ -183,7 +185,7 @@ export default function Navigation() {
           <NavLink to="/basket">
             <Tooltip title="Basket">
               <Button
-                startIcon={(
+                startIcon={
                   <Badge
                     anchorOrigin={{
                       vertical: 'top',
@@ -194,7 +196,7 @@ export default function Navigation() {
                   >
                     <DeadBasket className={countItems ? 'shake-rotate' : ''} />
                   </Badge>
-                )}
+                }
                 className="nav-button"
                 sx={{ color: 'white' }}
                 variant="outlined"

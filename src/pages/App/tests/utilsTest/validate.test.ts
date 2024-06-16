@@ -24,7 +24,7 @@ describe('validate', () => {
     const errorMessage = validate(inputType, value);
 
     expect(errorMessage).toBe(
-      'Password must contain at least one special character',
+      'Password must contain at least one special character'
     );
   });
 
@@ -42,7 +42,7 @@ describe('validate', () => {
     const errorMessage = validate(inputType, value);
 
     expect(errorMessage).toBe(
-      "City name mustn't contain special characters or numbers",
+      "City name mustn't contain special characters or numbers"
     );
   });
 

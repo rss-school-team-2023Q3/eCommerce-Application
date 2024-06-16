@@ -63,7 +63,7 @@ class ApiBuilder {
     const options = refreshAuthMiddlewareOptions;
 
     options.refreshToken = JSON.parse(
-      localStorage.getItem('tokenCacheGG') as string,
+      localStorage.getItem('tokenCacheGG') as string
     ).refreshToken;
     try {
       this.client = this.buildClient().withRefreshTokenFlow(options).build();
@@ -120,7 +120,8 @@ class ApiBuilder {
         this.createWithPasswordClient(email, password);
         this.getCartList().then((response) => {
           response?.body.results.map((item) => {
-            if (item.cartState !== 'Active') this.removeCart(item.id, item.version);
+            if (item.cartState !== 'Active')
+              this.removeCart(item.id, item.version);
 
             return true;
           });
@@ -128,7 +129,7 @@ class ApiBuilder {
         setTimeout(() => {
           localStorage.setItem(
             'tokenCacheGG',
-            JSON.stringify(tokenCache.get()),
+            JSON.stringify(tokenCache.get())
           );
         }, 1000);
       }
@@ -146,32 +147,32 @@ class ApiBuilder {
     filterQuery: string,
     sortQuery: string,
     offset: number = OFFSET,
-    limit: number = LIMIT_MOBILE,
+    limit: number = LIMIT_MOBILE
   ) {
     let resp;
     try {
       resp = filterQuery.length
         ? await this.apiRoot
-          ?.products()
-          .get({
-            queryArgs: {
-              where: filterQuery,
-              sort: sortQuery,
-              limit,
-              offset,
-            },
-          })
-          .execute()
+            ?.products()
+            .get({
+              queryArgs: {
+                where: filterQuery,
+                sort: sortQuery,
+                limit,
+                offset,
+              },
+            })
+            .execute()
         : await this.apiRoot
-          ?.products()
-          .get({
-            queryArgs: {
-              limit,
-              offset,
-              sort: sortQuery,
-            },
-          })
-          .execute();
+            ?.products()
+            .get({
+              queryArgs: {
+                limit,
+                offset,
+                sort: sortQuery,
+              },
+            })
+            .execute();
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
@@ -195,38 +196,38 @@ class ApiBuilder {
     sortQuery: string,
     searchQuery: string,
     offset: number = OFFSET,
-    limit: number = LIMIT_MOBILE,
+    limit: number = LIMIT_MOBILE
   ) {
     let resp;
     try {
       resp = filterQuery.length
         ? await this.apiRoot
-          ?.productProjections()
-          .search()
-          .get({
-            queryArgs: {
-              fuzzy: true,
-              'text.en': searchQuery,
-              filter: filterQuery,
-              sort: sortQuery,
-              limit,
-              offset,
-            },
-          })
-          .execute()
+            ?.productProjections()
+            .search()
+            .get({
+              queryArgs: {
+                fuzzy: true,
+                'text.en': searchQuery,
+                filter: filterQuery,
+                sort: sortQuery,
+                limit,
+                offset,
+              },
+            })
+            .execute()
         : (resp = await this.apiRoot
-          ?.productProjections()
-          .search()
-          .get({
-            queryArgs: {
-              fuzzy: true,
-              'text.en': searchQuery,
-              sort: sortQuery,
-              limit,
-              offset,
-            },
-          })
-          .execute());
+            ?.productProjections()
+            .search()
+            .get({
+              queryArgs: {
+                fuzzy: true,
+                'text.en': searchQuery,
+                sort: sortQuery,
+                limit,
+                offset,
+              },
+            })
+            .execute());
     } catch (error) {
       if (error instanceof Error) throw new Error(error.message);
     }
@@ -237,7 +238,7 @@ class ApiBuilder {
   public async updateUserData(
     actions: IDataActions[],
     ID: string,
-    version: number,
+    version: number
   ) {
     let resp;
     const body = {
@@ -320,12 +321,14 @@ class ApiBuilder {
     ID: string,
     addressId: string,
     version: number,
-    type: 'shipping' | 'billing',
+    type: 'shipping' | 'billing'
   ) {
     type AddressIdType = 'addShippingAddressId' | 'addBillingAddressId';
-    const action = `add${capitalizeFirstLetter(type)}AddressId` as AddressIdType;
+    const action =
+      `add${capitalizeFirstLetter(type)}AddressId` as AddressIdType;
 
-    if (action !== 'addShippingAddressId' && action !== 'addBillingAddressId') return null;
+    if (action !== 'addShippingAddressId' && action !== 'addBillingAddressId')
+      return null;
 
     const actions: CustomerUpdateAction[] = [
       {
@@ -357,7 +360,7 @@ class ApiBuilder {
     newAddress: Address,
     addressId: string,
     ID: string,
-    version: number,
+    version: number
   ) {
     let resp;
     const changeAddressAction: MyCustomerChangeAddressAction = {
@@ -414,7 +417,7 @@ class ApiBuilder {
   public async setDefaultBillingAddr(
     addressId: string,
     ID: string,
-    version: number,
+    version: number
   ) {
     let resp;
     const setDefaultAddressAction: MyCustomerSetDefaultBillingAddressAction = {
@@ -444,7 +447,7 @@ class ApiBuilder {
   public async setDefaultShippingAddr(
     addressId: string,
     ID: string,
-    version: number,
+    version: number
   ) {
     let resp;
     const setDefaultAddressAction: MyCustomerSetDefaultShippingAddressAction = {
@@ -513,8 +516,7 @@ class ApiBuilder {
 
     let resp;
     try {
-      resp = await this.apiRoot?.me().carts().withId({ ID }).get()
-        .execute();
+      resp = await this.apiRoot?.me().carts().withId({ ID }).get().execute();
     } catch (error) {
       if (error instanceof Error && 'code' in error && error?.code === 404) {
         return null;
@@ -583,7 +585,7 @@ class ApiBuilder {
     ID: string,
     version: number,
     lineItemId: string,
-    count: number,
+    count: number
   ) {
     let resp;
     try {

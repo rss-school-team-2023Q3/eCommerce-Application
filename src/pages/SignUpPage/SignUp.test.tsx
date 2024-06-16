@@ -14,10 +14,10 @@ describe('Simple working test', () => {
         <BrowserRouter basename="/">
           <SignUp client={currentClient} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(
-      screen.getByText('Already have an account? Sign In'),
+      screen.getByText('Already have an account? Sign In')
     ).toBeInTheDocument();
   });
   it('the input is visible', () => {
@@ -26,7 +26,7 @@ describe('Simple working test', () => {
         <BrowserRouter basename="/">
           <SignUp client={currentClient} />
         </BrowserRouter>
-      </Provider>,
+      </Provider>
     );
     expect(screen.getByText('Password')).toBeInTheDocument();
   });

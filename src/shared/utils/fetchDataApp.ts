@@ -8,7 +8,8 @@ import getCurrentCart from './getCurrentCart.ts';
 
 const fetchDataApp = async (dispatch: Dispatch) => {
   if (localStorage.getItem('tokenCacheGG')) {
-    const body: Customer | null = await currentClient.createRefreshTokenClient();
+    const body: Customer | null =
+      await currentClient.createRefreshTokenClient();
 
     if (body) {
       dispatch(setCredentials({ user: body }));
@@ -29,7 +30,7 @@ const fetchDataApp = async (dispatch: Dispatch) => {
     });
   } else {
     const response = await getCurrentCart(
-      !!localStorage.getItem('tokenCacheGG'),
+      !!localStorage.getItem('tokenCacheGG')
     );
 
     if (response?.statusCode === 200) {

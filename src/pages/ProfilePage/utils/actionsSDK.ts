@@ -11,7 +11,7 @@ export default async function actionsSDK(
   formData: IFormContextType,
   id: string,
   vers: number,
-  dispatch: Dispatch,
+  dispatch: Dispatch
 ) {
   let version = vers;
 
@@ -68,7 +68,7 @@ export default async function actionsSDK(
 
     const loginResponse = await currentClient.loginUser(
       formData.email.value,
-      formData.password.value,
+      formData.password.value
     );
 
     if (loginResponse?.statusCode === 200) {

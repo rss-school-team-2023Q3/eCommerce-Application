@@ -24,17 +24,18 @@ export default function CityInputProfile({ cityProps }: ICityInterface) {
 
   const user = useSelector((state: RootState) => state.auth.user);
   const userAddress = user?.addresses.find(
-    ({ id }) => cityProps.addressId === id,
+    ({ id }) => cityProps.addressId === id
   );
 
   // if (!formData.addresses) throw new Error("formData.addresses doesn't undefined");
 
   const formAddress = formData.addresses?.find(
-    (el) => cityProps.addressId === el.id,
+    (el) => cityProps.addressId === el.id
   );
 
   useEffect(() => {
-    const initialCityProfile = formAddress?.value.city.value || userAddress?.city || '';
+    const initialCityProfile =
+      formAddress?.value.city.value || userAddress?.city || '';
 
     setCityProfile(initialCityProfile);
   }, [formAddress, userAddress]);

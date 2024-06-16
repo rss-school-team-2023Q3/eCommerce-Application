@@ -11,15 +11,16 @@ interface IPostalPropsInterface {
 function PostalCodeInput({ postalProps }: IPostalPropsInterface) {
   const formData = useContext(formContext);
   const [isValid, setIsValid] = useState(true);
-  const country = postalProps.type === 'shipping'
-    ? formData.shippingCountry.value
-    : formData.billingCountry.value;
+  const country =
+    postalProps.type === 'shipping'
+      ? formData.shippingCountry.value
+      : formData.billingCountry.value;
   const [code, setCode] = useState('1');
 
   function setPostalPropsContext(
     value: string,
     countryCode: string,
-    type: string,
+    type: string
   ) {
     if (postcodeValidator(value, countryCode) && type === 'shipping') {
       formData.shippingCode.value = value;

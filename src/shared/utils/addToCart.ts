@@ -8,21 +8,22 @@ import { toastInfo } from './notifications.ts';
 export default async function addToCart(
   productId: string,
   isLoggedIn: boolean,
-  dispatch: Dispatch,
+  dispatch: Dispatch
 ) {
   const cart = await getCurrentCart(isLoggedIn);
 
   const res = await currentClient.addToCart(
     cart?.body.id as string,
     productId,
-    cart?.body.version as number,
+    cart?.body.version as number
   );
 
   if (res?.statusCode === 200) {
     dispatch(setCart({ cart: res.body }));
 
-    const name = res?.body.lineItems.find((el) => el.productId === productId)?.name.en
-      || '';
+    const name =
+      res?.body.lineItems.find((el) => el.productId === productId)?.name.en ||
+      '';
 
     toastInfo(`${name} added to cart`);
   }

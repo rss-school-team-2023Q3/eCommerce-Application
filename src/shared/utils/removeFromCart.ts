@@ -8,7 +8,7 @@ import { toastInfo } from './notifications.ts';
 export default async function removeFromCart(
   productId: string,
   isLoggedIn: boolean,
-  dispatch: Dispatch,
+  dispatch: Dispatch
 ) {
   const cart = await getCurrentCart(isLoggedIn);
 
@@ -16,20 +16,21 @@ export default async function removeFromCart(
 
   if (body) {
     const lineItemId: string | undefined = body.lineItems.find(
-      (lineItem) => lineItem.productId === productId,
+      (lineItem) => lineItem.productId === productId
     )?.id;
 
     if (lineItemId) {
       const res = await currentClient.removeItemCart(
         body.id,
         body.version,
-        lineItemId,
+        lineItemId
       );
 
       if (res?.statusCode === 200) {
         dispatch(setCart({ cart: res.body }));
 
-        const name = cart.body.lineItems.find((el) => el.id === lineItemId)?.name.en || '';
+        const name =
+          cart.body.lineItems.find((el) => el.id === lineItemId)?.name.en || '';
 
         toastInfo(`${name} removed from cart`);
       }

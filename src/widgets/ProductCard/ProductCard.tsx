@@ -51,8 +51,8 @@ function ProductCard({
     //     )}`;
     // } else {
     const price = `$${
-      item.variant.prices
-      && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+      item.variant.prices &&
+      String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
     }`;
     // }
 
@@ -65,7 +65,8 @@ function ProductCard({
     }
 
     if (typeof discount !== 'boolean' && price) {
-      const discountAmount = +(discount.value as ProductDiscountValueRelative).permyriad / 100;
+      const discountAmount =
+        +(discount.value as ProductDiscountValueRelative).permyriad / 100;
       const moneyIndex = price.slice(0, 1);
 
       return `${moneyIndex}${String((+price.slice(1) - +price.slice(1) * (discountAmount / 100)).toFixed(2))}`;
@@ -89,8 +90,8 @@ function ProductCard({
           {product.variant.key}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {product.description
-            && `${product.description.en}: ${product.name.en}`}
+          {product.description &&
+            `${product.description.en}: ${product.name.en}`}
         </Typography>
         <div className="card-bottom">
           {!isInCartProps && (

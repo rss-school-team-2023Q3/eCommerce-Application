@@ -23,7 +23,7 @@ interface IFormContextType {
 
 export default function toogleSameAdress(
   form: IFormContextType,
-  isSameAdress: boolean,
+  isSameAdress: boolean
 ) {
   const formData = form;
 
