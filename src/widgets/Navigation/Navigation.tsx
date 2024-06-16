@@ -28,7 +28,19 @@ export default function Navigation() {
     (state: RootState) => state.cart.cart,
   );
 
-  const countItems = cartStore?.lineItems.length;
+  function getCountItems() {
+    let count = 0;
+
+    cartStore?.lineItems.map((item) => {
+      count += item.quantity;
+
+      return true;
+    });
+
+    return count;
+  }
+
+  const countItems = getCountItems();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!isMobileOpen);
