@@ -8,6 +8,8 @@ import {
   RadioGroup,
   Button,
   IconButton,
+  Paper,
+  Typography,
 } from '@mui/material';
 import IMapAddresses from 'pages/App/types/interfaces/IValidateAddress.ts';
 import actionsSDK from 'pages/ProfilePage/utils/actionsSDK';
@@ -289,196 +291,209 @@ export default function Profile() {
   }
 
   return (
-    <div className="profile-wrapper">
-      <profileContext.Provider value={formData}>
-        <div className="profile-form-field">
-          <form className="profile-form" onChange={onChangeUserForm}>
-            <div className="switcher-wrap">
-              <FormControlLabel
-                control={(
-                  <Switch
-                    checked={!isDisable}
-                    className="disable-switch"
-                    onChange={() => setIsDisable(!isDisable)}
+    <>
+      <Typography className="page-title" variant="h2">
+        Profile
+      </Typography>
+      <div className="profile-wrapper">
+        <profileContext.Provider value={formData}>
+          <div className="profile-form-field">
+            <Paper elevation={24} className="profile-paper">
+              <form className="profile-form" onChange={onChangeUserForm}>
+                <div className="switcher-wrap">
+                  <FormControlLabel
+                    control={(
+                      <Switch
+                        sx={{ ml: '.5rem' }}
+                        checked={!isDisable}
+                        className="disable-switch"
+                        onChange={() => setIsDisable(!isDisable)}
+                      />
+                    )}
+                    label={isDisable ? 'Edit user data' : 'Cancel data editing'}
                   />
-                )}
-                label={isDisable ? 'Edit user data' : 'Cancel data editing'}
-              />
-              <IconButton
-                size="large"
-                // color="secondary"
-                className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
-                onClick={() => onUpdate()}
-              >
-                <SaveAsIcon />
-                save
-              </IconButton>
-            </div>
-            <div className="user-field-profile">
-              User Data
-              <EmailProfile isDisable={isDisable} />
-              <FirstNameProfile isDisable={isDisable} />
-              <LastNameProfile isDisable={isDisable} />
-              <DateInputProfile
-                dateProps={{
-                  isChange: dateChange,
-                  isDisable,
-                }}
-              />
-              <PasswordProfile isDisable={isDisable} />
-            </div>
-          </form>
-          <form className="profile-form" onChange={onChangeAddressForm}>
-            <div className="address-field">
-              <div className="switcher-wrap">
-                <FormControlLabel
-                  control={(
-                    <Switch
-                      checked={!isDisableAddr}
-                      className="disable-switch"
-                      onChange={() => setIsDisableAddr(!isDisableAddr)}
+                  <IconButton
+                    size="large"
+                    // color="secondary"
+                    className={`save-icon ${isChanged ? 'save-visible' : 'save-unvisible'}`}
+                    onClick={() => onUpdate()}
+                  >
+                    <SaveAsIcon />
+                    save
+                  </IconButton>
+                </div>
+                <div className="user-field-profile">
+                  User Data
+                  <EmailProfile isDisable={isDisable} />
+                  <FirstNameProfile isDisable={isDisable} />
+                  <LastNameProfile isDisable={isDisable} />
+                  <DateInputProfile
+                    dateProps={{
+                      isChange: dateChange,
+                      isDisable,
+                    }}
+                  />
+                  <PasswordProfile isDisable={isDisable} />
+                </div>
+              </form>
+            </Paper>
+            <Paper elevation={24} className="profile-paper">
+              <form className="profile-form" onChange={onChangeAddressForm}>
+                <div className="address-field">
+                  <div className="switcher-wrap">
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          sx={{ ml: '.5rem' }}
+                          checked={!isDisableAddr}
+                          className="disable-switch"
+                          onChange={() => setIsDisableAddr(!isDisableAddr)}
+                        />
+                      )}
+                      label={
+                        isDisableAddr
+                          ? 'Edit address data'
+                          : 'Cancel data editing'
+                      }
                     />
-                  )}
-                  label={
-                    isDisableAddr ? 'Edit address data' : 'Cancel data editing'
-                  }
-                />
-                <Button
-                  size="large"
-                  // color="secondary"
-                  className={`save-icon ${isChangedAddr ? 'save-visible' : 'save-unvisible'}`}
-                  onClick={() => onUpdateAddr()}
-                >
-                  <SaveAsIcon />
-                  save
-                </Button>
-              </div>
-              <div className="address-input-field">
-                <FormControl
-                  className="data-field-profile"
-                  disabled={isDisableAddr}
-                >
-                  <RadioGroup
-                    defaultValue={
-                      customer?.defaultBillingAddressId
-                        ? customer.defaultBillingAddressId
-                        : ''
-                    }
-                    value={defaultBiilingAddr}
-                    onChange={(e) => changeDefaultAddress(e, 'billing')}
-                    aria-labelledby="radio-buttons-group-label"
-                    name="radio-buttons-billing"
-                  >
-                    <ul className="data-field-list">
-                      <p> Billing Addresses</p>
-                      {billingAddresses.map((id, index) => (
-                        <li key={id}>
-                          {customer?.addresses.find(
-                            (el) => el.id === id || id === 'newBillingAddress',
-                          ) && (
-                            <ProfileAddress
-                              type="billing"
-                              addressId={id}
-                              index={index}
-                              isDisable={isDisableAddr}
-                            />
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {!isAddBilling && !isDisableAddr && (
-                      <Button
-                        onClick={() => addAddress('billing')}
-                        className="add-address-button"
-                        variant="outlined"
-                        startIcon={<AddLocationAltIcon />}
+                    <Button
+                      size="large"
+                      // color="secondary"
+                      className={`save-icon ${isChangedAddr ? 'save-visible' : 'save-unvisible'}`}
+                      onClick={() => onUpdateAddr()}
+                    >
+                      <SaveAsIcon />
+                      save
+                    </Button>
+                  </div>
+                  <div className="address-input-field">
+                    <FormControl
+                      className="data-field-profile"
+                      disabled={isDisableAddr}
+                    >
+                      <RadioGroup
+                        defaultValue={
+                          customer?.defaultBillingAddressId
+                            ? customer.defaultBillingAddressId
+                            : ''
+                        }
+                        value={defaultBiilingAddr}
+                        onChange={(e) => changeDefaultAddress(e, 'billing')}
+                        aria-labelledby="radio-buttons-group-label"
+                        name="radio-buttons-billing"
                       >
-                        Add billing address
-                      </Button>
-                    )}
-                    {isAddBilling && isValidBilling && (
-                      <Button
-                        onClick={() => saveAddress('billing')}
-                        className="add-address-button"
-                        variant="outlined"
-                        startIcon={<AddLocationAltIcon />}
-                      >
-                        Save billing address
-                      </Button>
-                    )}
+                        <ul className="data-field-list">
+                          <p> Billing Addresses</p>
+                          {billingAddresses.map((id, index) => (
+                            <li key={id}>
+                              {customer?.addresses.find(
+                                (el) => el.id === id || id === 'newBillingAddress',
+                              ) && (
+                                <ProfileAddress
+                                  type="billing"
+                                  addressId={id}
+                                  index={index}
+                                  isDisable={isDisableAddr}
+                                />
+                              )}
+                            </li>
+                          ))}
+                        </ul>
 
-                    {/* {!isDisableAddr && (
+                        {!isAddBilling && !isDisableAddr && (
+                          <Button
+                            onClick={() => addAddress('billing')}
+                            className="add-address-button"
+                            variant="outlined"
+                            startIcon={<AddLocationAltIcon />}
+                          >
+                            Add billing address
+                          </Button>
+                        )}
+                        {isAddBilling && isValidBilling && (
+                          <Button
+                            onClick={() => saveAddress('billing')}
+                            className="add-address-button"
+                            variant="outlined"
+                            startIcon={<AddLocationAltIcon />}
+                          >
+                            Save billing address
+                          </Button>
+                        )}
+
+                        {/* {!isDisableAddr && (
                       <FormControlLabel
                         control={<Radio value="" />}
                         label="reset default address"
                       />
                     )} */}
-                  </RadioGroup>
-                </FormControl>
+                      </RadioGroup>
+                    </FormControl>
 
-                <FormControl
-                  className="data-field-profile"
-                  disabled={isDisableAddr}
-                >
-                  <RadioGroup
-                    defaultValue={customer?.defaultShippingAddressId}
-                    value={defaultShippingAddr}
-                    onChange={(e) => changeDefaultAddress(e, 'shipping')}
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    name="radio-buttons-shipping"
-                  >
-                    <ul className="data-field-list">
-                      <p> Shipping Addresses</p>
-                      {shippingAddresses.map((id, index) => (
-                        <li key={id}>
-                          {customer?.addresses.find(
-                            (el) => el.id === id || id === 'newShippingAddress',
-                          ) && (
-                            <ProfileAddress
-                              type="shipping"
-                              addressId={id}
-                              index={index}
-                              isDisable={isDisableAddr}
-                            />
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                    {isAddShipping && isValidShipping && (
-                      <Button
-                        onClick={() => saveAddress('shipping')}
-                        className="add-address-button"
-                        variant="outlined"
-                        startIcon={<AddLocationAltIcon />}
+                    <FormControl
+                      className="data-field-profile"
+                      disabled={isDisableAddr}
+                    >
+                      <RadioGroup
+                        defaultValue={customer?.defaultShippingAddressId}
+                        value={defaultShippingAddr}
+                        onChange={(e) => changeDefaultAddress(e, 'shipping')}
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        name="radio-buttons-shipping"
                       >
-                        Save shipping address
-                      </Button>
-                    )}
+                        <ul className="data-field-list">
+                          <p> Shipping Addresses</p>
+                          {shippingAddresses.map((id, index) => (
+                            <li key={id}>
+                              {customer?.addresses.find(
+                                (el) => el.id === id || id === 'newShippingAddress',
+                              ) && (
+                                <ProfileAddress
+                                  type="shipping"
+                                  addressId={id}
+                                  index={index}
+                                  isDisable={isDisableAddr}
+                                />
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                        {isAddShipping && isValidShipping && (
+                          <Button
+                            onClick={() => saveAddress('shipping')}
+                            className="add-address-button"
+                            variant="outlined"
+                            startIcon={<AddLocationAltIcon />}
+                          >
+                            Save shipping address
+                          </Button>
+                        )}
 
-                    {!isAddShipping && !isDisableAddr && (
-                      <Button
-                        onClick={() => addAddress('shipping')}
-                        className="add-address-button"
-                        variant="outlined"
-                        startIcon={<AddLocationAltIcon />}
-                      >
-                        Add shipping address
-                      </Button>
-                    )}
-                    {/* {!isDisableAddr && (
+                        {!isAddShipping && !isDisableAddr && (
+                          <Button
+                            onClick={() => addAddress('shipping')}
+                            className="add-address-button"
+                            variant="outlined"
+                            startIcon={<AddLocationAltIcon />}
+                          >
+                            Add shipping address
+                          </Button>
+                        )}
+                        {/* {!isDisableAddr && (
                       <FormControlLabel
                         control={<Radio value="" />}
                         label="reset default address"
                       />
                     )} */}
-                  </RadioGroup>
-                </FormControl>
-              </div>
-            </div>
-          </form>
-        </div>
-      </profileContext.Provider>
-    </div>
+                      </RadioGroup>
+                    </FormControl>
+                  </div>
+                </div>
+              </form>
+            </Paper>
+          </div>
+        </profileContext.Provider>
+      </div>
+    </>
   );
 }

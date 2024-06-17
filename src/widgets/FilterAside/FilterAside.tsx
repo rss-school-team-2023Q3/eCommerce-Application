@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   SelectChangeEvent,
   Stack,
@@ -176,106 +177,112 @@ function FilterAside({ props }: IFilterInterface) {
   }, [props.offset, mediaQueryLimit]);
 
   return (
-    <aside className="catalog-aside">
-      <TextField
-        id="search"
-        label="Search"
-        value={searchValue}
-        onChange={handleSearchValue}
-        variant="outlined"
-      />
-      <FormControl className="sort-select">
-        <InputLabel id="sort">Sort</InputLabel>
-        <Select
-          labelId="sort"
-          value={sort}
-          label="Sort"
-          onChange={handleChangeSort}
+    <aside>
+      <Paper className="catalog-aside" elevation={24}>
+        <TextField
+          id="search"
+          label="Search"
+          value={searchValue}
+          onChange={handleSearchValue}
+          variant="outlined"
+        />
+        <FormControl className="sort-select">
+          <InputLabel id="sort">Sort</InputLabel>
+          <Select
+            labelId="sort"
+            value={sort}
+            label="Sort"
+            onChange={handleChangeSort}
+          >
+            <MenuItem value="name.en asc">Name A-Z</MenuItem>
+            <MenuItem value="name.en desc">Name Z-A</MenuItem>
+            <MenuItem value="price asc">Price ↑</MenuItem>
+            <MenuItem value="price desc">Price ↓</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControlLabel
+          checked={isOnSale}
+          value="start"
+          control={(
+            <Switch
+              checked={isOnSale}
+              onChange={handleChangeSale}
+              color="primary"
+            />
+          )}
+          label="On sale!"
+          labelPlacement="end"
+        />
+        <Divider variant="middle" />
+        <span>Manufacturer</span>
+        <FormControl className="manufacture-select">
+          <InputLabel id="manufacturer">Manufacturer</InputLabel>
+          <Select
+            labelId="manufacturer"
+            value={manufacture}
+            label="Manufacturer"
+            onChange={handleChangeManufacture}
+          >
+            <MenuItem value="All">All</MenuItem>
+            <MenuItem value="Palit">Palit</MenuItem>
+            <MenuItem value="ASUS">ASUS</MenuItem>
+            <MenuItem value="Sapphire">Sapphire</MenuItem>
+            <MenuItem value="be quiet!">be quiet!</MenuItem>
+            <MenuItem value="ASRock">ASRock</MenuItem>
+            <MenuItem value="AMD">AMD</MenuItem>
+            <MenuItem value="MSI">MSI</MenuItem>
+            <MenuItem value="Intel">Intel</MenuItem>
+            <MenuItem value="Seagate">Seagate</MenuItem>
+            <MenuItem value="Toshiba">Toshiba</MenuItem>
+            <MenuItem value="DeepCool">DeepCool</MenuItem>
+          </Select>
+        </FormControl>
+        <Divider variant="middle" />
+        <span>Price</span>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          <MenuItem value="name.en asc">Name A-Z</MenuItem>
-          <MenuItem value="name.en desc">Name Z-A</MenuItem>
-          <MenuItem value="price asc">Price ↑</MenuItem>
-          <MenuItem value="price desc">Price ↓</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControlLabel
-        checked={isOnSale}
-        value="start"
-        control={(
-          <Switch
-            checked={isOnSale}
-            onChange={handleChangeSale}
-            color="primary"
+          <TextField
+            label="min"
+            type="number"
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            InputProps={{
+              inputProps: {
+                min: 0,
+              },
+            }}
+            sx={{ width: '90px' }}
+            value={minCost}
+            onChange={(e) => {
+              setMinCost(Number(e.target.value));
+            }}
           />
-        )}
-        label="On sale!"
-        labelPlacement="end"
-      />
-      <Divider variant="middle" />
-      <span>Manufacturer</span>
-      <FormControl className="manufacture-select">
-        <InputLabel id="manufacturer">Manufacturer</InputLabel>
-        <Select
-          labelId="manufacturer"
-          value={manufacture}
-          label="Manufacturer"
-          onChange={handleChangeManufacture}
-        >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Palit">Palit</MenuItem>
-          <MenuItem value="ASUS">ASUS</MenuItem>
-          <MenuItem value="Sapphire">Sapphire</MenuItem>
-          <MenuItem value="be quiet!">be quiet!</MenuItem>
-          <MenuItem value="ASRock">ASRock</MenuItem>
-          <MenuItem value="AMD">AMD</MenuItem>
-          <MenuItem value="MSI">MSI</MenuItem>
-          <MenuItem value="Intel">Intel</MenuItem>
-          <MenuItem value="Seagate">Seagate</MenuItem>
-          <MenuItem value="Toshiba">Toshiba</MenuItem>
-          <MenuItem value="DeepCool">DeepCool</MenuItem>
-        </Select>
-      </FormControl>
-      <Divider variant="middle" />
-      <span>Price</span>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <TextField
-          label="min"
-          type="number"
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-          InputProps={{
-            inputProps: {
-              min: 0,
-            },
-          }}
-          sx={{ width: '90px' }}
-          value={minCost}
-          onChange={(e) => {
-            setMinCost(Number(e.target.value));
-          }}
-        />
-        <Typography>-</Typography>
-        <TextField
-          label="max"
-          type="number"
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-          sx={{ width: '90px' }}
-          value={maxCost}
-          onChange={(e) => {
-            setMaxCost(Number(e.target.value));
-          }}
-        />
-      </Stack>
-      <Divider variant="middle" />
-      <div className="aside-buttons">
-        <Button onClick={filterProductsList} variant="contained">
-          Filter
-        </Button>
-        <Button onClick={resetFilters} variant="contained">
-          Reset
-        </Button>
-      </div>
+          <Typography>-</Typography>
+          <TextField
+            label="max"
+            type="number"
+            variant="outlined"
+            InputLabelProps={{ shrink: true }}
+            sx={{ width: '90px' }}
+            value={maxCost}
+            onChange={(e) => {
+              setMaxCost(Number(e.target.value));
+            }}
+          />
+        </Stack>
+        <Divider variant="middle" />
+        <div className="aside-buttons">
+          <Button onClick={filterProductsList} variant="contained">
+            Filter
+          </Button>
+          <Button onClick={resetFilters} variant="contained">
+            Reset
+          </Button>
+        </div>
+      </Paper>
     </aside>
   );
 }

@@ -5,7 +5,8 @@
   margin: 0 auto;
   text-align: center;
   width: 100%;
-  color: black;
+
+  /* color: black; */
 }
 
 * {
@@ -14,10 +15,15 @@
   scrollbar-width: thin;
   scrollbar-color: #1976d2 transparent;
   user-select: none;
+
+  /* -webkit-text-stroke: .2px red */
 }
 
 body {
   overflow-y: scroll;
+  background-image: url('../../../public/assets/images/motherboard.png');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 ::-webkit-scrollbar {

@@ -4,6 +4,7 @@
   align-items: center;
   gap: 0.3125rem;
   width: 100%;
+  padding-bottom: 1.5rem;
 }
 
 .cart-item {
@@ -63,7 +64,8 @@
   b {
     font-family: monospace;
     font-size: large;
-    color: black;
+
+    /* color: black; */
   }
 }
 
@@ -86,7 +88,8 @@
 }
 
 .basket-header h3 {
-  color: rgb(139 138 138);
+  /* color: rgb(139 138 138); */
+  color: white;
   font-weight: 500;
 }
 

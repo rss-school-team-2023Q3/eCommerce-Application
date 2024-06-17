@@ -4,15 +4,17 @@
   width: 12.5rem;
   margin-right: 0.3125rem;
   gap: 0.625rem;
+  padding: 0.5rem;
 }
 
 .catalog-aside-title {
   width: 12.5rem;
 }
 
+/* 
 .manufacture-select {
   width: 12.5rem;
-}
+} */
 
 .aside-buttons {
   display: flex;

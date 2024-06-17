@@ -1,5 +1,5 @@
 import { Cart, ProductDiscount } from '@commercetools/platform-sdk';
-import { Divider, useMediaQuery } from '@mui/material';
+import { Divider, Typography, useMediaQuery } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import './CatalogPage.modules.css';
 import { useEffect, useState } from 'react';
@@ -123,59 +123,67 @@ function CatalogPage() {
   // }, [isMobileScreen]);
 
   return (
-    <div className="catalog-page">
-      <FilterAside
-        props={{
-          filteredList,
-          setLoadState,
-          offset: (page - 1) * mediaQueryLimit,
-          setTotal: setPageQty,
-          resetPage,
-        }}
-      />
-      <Divider orientation="vertical" flexItem />
-      <div className="card-paginator-wrap">
-        {isLoad ? (
-          <Loader />
-        ) : (
-          <>
-            <div className="catalog">
-              {(() => {
-                if (products.length) {
-                  return products.map((item) => {
-                    const isDiscont = getDiscont(item.variant.sku);
+    <>
+      <Typography className="page-title" variant="h2">
+        Catalog
+      </Typography>
+      <div className="catalog-page">
+        <FilterAside
+          props={{
+            filteredList,
+            setLoadState,
+            offset: (page - 1) * mediaQueryLimit,
+            setTotal: setPageQty,
+            resetPage,
+          }}
+        />
+        <Divider orientation="vertical" flexItem />
+        <div className="card-paginator-wrap">
+          {isLoad ? (
+            <Loader />
+          ) : (
+            <>
+              <div className="catalog">
+                {(() => {
+                  if (products.length) {
+                    return products.map((item) => {
+                      const isDiscont = getDiscont(item.variant.sku);
 
-                    return (
-                      <ProductCard
-                        key={item.variant.key}
-                        product={item}
-                        discount={isDiscont}
-                        isInCartProps={
-                          !!(
-                            cart?.lineItems.find(
-                              (el) => el.productId === item.id,
-                            ) ?? false
-                          )
-                        }
-                      />
-                    );
-                  });
-                }
+                      return (
+                        <ProductCard
+                          key={item.variant.key}
+                          product={item}
+                          discount={isDiscont}
+                          isInCartProps={
+                            !!(
+                              cart?.lineItems.find(
+                                (el) => el.productId === item.id,
+                              ) ?? false
+                            )
+                          }
+                        />
+                      );
+                    });
+                  }
 
-                return (
-                  <h2 style={{ alignSelf: 'center', width: '100%' }}>
-                    No items
-                  </h2>
-                );
-              })()}
-            </div>
-            <div className="paginator">
-              <Paginator pageQty={pageQty} page={page} setPage={setPage} />
-            </div>
-          </>
-        )}
+                  return (
+                    <h2
+                      style={{ alignSelf: 'center', width: '100%' }}
+                      className="no-item"
+                    >
+                      No items
+                    </h2>
+                  );
+                })()}
+              </div>
+              <div className="paginator">
+                <Paginator pageQty={pageQty} page={page} setPage={setPage} />
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

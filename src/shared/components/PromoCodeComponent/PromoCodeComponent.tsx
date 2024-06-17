@@ -15,18 +15,21 @@ function PromoCodeComponent() {
 
   return (
     <Card
+      elevation={24}
+      sx={{ my: '3rem' }}
       style={{
         maxWidth: 400,
-        margin: 'auto',
+        marginLeft: 'auto',
+        marginRight: 'auto',
         textAlign: 'center',
         boxShadow: '12px 12px 20px -12px rgba(58, 91, 182, 0.815)',
-        background:
-          'radial-gradient(circle, rgba(197,224,255,1) 0%, rgba(221,212,255,1) 100%)',
+        // background:
+        //   'radial-gradient(circle, rgba(197,224,255,1) 0%, rgba(221,212,255,1) 100%)',
       }}
     >
       <CardContent>
         <Typography
-          color="#44367b"
+          // color="#44367b"
           fontWeight={500}
           textAlign="left"
           fontFamily="Montserrat, sans-serif"
@@ -39,13 +42,17 @@ function PromoCodeComponent() {
           fontFamily="Montserrat, sans-serif"
           m="10px 0"
           fontWeight={800}
-          sx={{ background: '#ffffff', borderRadius: '5px' }}
+          sx={{
+            background: '#ffffff',
+            borderRadius: '5px',
+            border: '2px solid',
+          }}
           color="#1569bd"
         >
           SUMMER
         </Typography>
         <Typography
-          color="textSecondary"
+          // color="textSecondary"
           fontFamily="Montserrat, sans-serif"
           marginBottom={2}
           fontWeight={500}

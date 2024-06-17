@@ -29,12 +29,7 @@ function AboutUsPage() {
         >
           Back
         </Button>
-        <Typography
-          fontFamily="Montserrat"
-          variant="h4"
-          fontWeight={600}
-          sx={{ flexGrow: 1, color: '#1569bd' }}
-        >
+        <Typography className="page-title" variant="h2">
           About us
         </Typography>
         <Link href="https://rs.school/">
@@ -49,13 +44,14 @@ function AboutUsPage() {
           marginBottom={2}
           marginLeft={5}
           justifyItems="flex-end"
+          color="white"
         >
           Collaboration & Success
         </Typography>
         <Typography
           fontFamily="Montserrat, sans-serif"
           variant="subtitle1"
-          color="#666"
+          color="white"
           marginBottom={5}
         >
           Our team worked well together through clear talks, meetings, and
@@ -71,11 +67,16 @@ function AboutUsPage() {
           variant="h5"
           marginBottom={2}
           marginLeft={5}
+          color="white"
         >
           Our Team
         </Typography>
       </Grid>
-      <Grid container spacing={5} sx={{ justifyContent: 'center' }}>
+      <Grid
+        container
+        spacing={5}
+        sx={{ justifyContent: 'center', mb: '1.5rem' }}
+      >
         {teamMembers.map((member) => (
           <Grid item key={member.name} sx={{}}>
             <TeamMemberCard

@@ -124,6 +124,9 @@ function BasketPage() {
 
   return (
     <div className="basket-page">
+      <Typography className="page-title" variant="h2">
+        Basket
+      </Typography>
       {cartCart && cartCart.length ? (
         <>
           <div className="basket-header">
@@ -148,7 +151,6 @@ function BasketPage() {
               &nbsp;
               <span
                 style={{
-                  color: 'black',
                   fontFamily: 'monospace',
                   fontSize: '20px',
                   fontWeight: 600,
@@ -235,12 +237,9 @@ function BasketPage() {
       ) : (
         <>
           <Typography
+            className="no-item"
             fontFamily="Montserrat, sans-serif"
             variant="h4"
-            fontWeight={500}
-            color="lightgrey"
-            marginBottom={5}
-            marginTop={5}
           >
             No items...
           </Typography>
