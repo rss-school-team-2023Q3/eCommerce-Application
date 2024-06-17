@@ -72,7 +72,11 @@ function AboutUsPage() {
           Our Team
         </Typography>
       </Grid>
-      <Grid container spacing={5} sx={{ justifyContent: 'center' }}>
+      <Grid
+        container
+        spacing={5}
+        sx={{ justifyContent: 'center', mb: '1.5rem' }}
+      >
         {teamMembers.map((member) => (
           <Grid item key={member.name} sx={{}}>
             <TeamMemberCard

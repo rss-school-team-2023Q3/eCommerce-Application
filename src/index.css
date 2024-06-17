@@ -64,6 +64,16 @@ h2.page-title {
   letter-spacing: 0.25rem;
 }
 
+.no-item {
+  font-family: Montserrat, sans-serif;
+  font-weight: 900;
+  font-size: 3rem !important;
+  color: 'lightgrey';
+  margin-bottom: 2.5rem;
+  margin-top: 2.5rem;
+  -webkit-text-stroke: 1px black;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

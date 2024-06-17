@@ -237,12 +237,9 @@ function BasketPage() {
       ) : (
         <>
           <Typography
+            className="no-item"
             fontFamily="Montserrat, sans-serif"
             variant="h4"
-            fontWeight={500}
-            color="lightgrey"
-            marginBottom={5}
-            marginTop={5}
           >
             No items...
           </Typography>

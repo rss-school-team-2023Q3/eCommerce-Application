@@ -167,7 +167,10 @@ function CatalogPage() {
                   }
 
                   return (
-                    <h2 style={{ alignSelf: 'center', width: '100%' }}>
+                    <h2
+                      style={{ alignSelf: 'center', width: '100%' }}
+                      className="no-item"
+                    >
                       No items
                     </h2>
                   );
