@@ -1,3 +1,4 @@
+import { Cart } from '@commercetools/platform-sdk';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   Button,
@@ -23,7 +24,7 @@ function BasketPage() {
     (state: RootState) => state.cart.cart?.lineItems,
   );
   const [totalPrice, setTotalPrice] = useState(0);
-  // const [promoPrice, setPromoPrice] = useState(0);
+  const [beforePromoPrice, setBeforePromoPrice] = useState(0);
   const dispatch = useDispatch();
   // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -44,14 +45,28 @@ function BasketPage() {
 
   const handleClosePromo = () => {
     setOpenPromo(false);
+    setPromocode('');
   };
+
+  function setCartPrice(respData: Cart) {
+    setTotalPrice(+(respData.totalPrice.centAmount / 100).toFixed(2));
+    setBeforePromoPrice(
+      respData.discountOnTotalPrice
+        ? +(
+          (respData.discountOnTotalPrice.discountedAmount.centAmount
+              + +respData.totalPrice.centAmount)
+            / 100
+        ).toFixed(2)
+        : 0,
+    );
+  }
 
   async function getCartItems() {
     const resp = await getCartData();
 
     if (resp) {
       dispatch(setCart({ cart: resp }));
-      setTotalPrice(+(resp.totalPrice.centAmount / 100).toFixed(2));
+      setCartPrice(resp);
     }
   }
 
@@ -64,9 +79,7 @@ function BasketPage() {
         cartResp?.version,
       );
 
-      setTotalPrice(
-        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0,
-      );
+      if (response) setCartPrice(response.body);
     }
   };
 
@@ -93,11 +106,15 @@ function BasketPage() {
     const cartData = await getCartData();
 
     if (cartData) {
-      await currentClient.applyPromocode(
+      const resp = await currentClient.applyPromocode(
         cartData?.id,
         cartData?.version,
         promocode,
       );
+
+      if (resp?.statusCode === 200) {
+        setCartPrice(resp.body);
+      }
     }
   };
 
@@ -112,6 +129,23 @@ function BasketPage() {
           <div className="basket-header">
             <h3>
               Total cost:&nbsp;
+              {beforePromoPrice ? (
+                <span
+                  style={{
+                    color: 'red',
+                    fontFamily: 'monospace',
+                    fontSize: '20px',
+                    fontWeight: 600,
+                    textDecorationLine: 'line-through',
+                  }}
+                >
+                  $
+                  {beforePromoPrice}
+                </span>
+              ) : (
+                ''
+              )}
+              &nbsp;
               <span
                 style={{
                   color: 'black',
