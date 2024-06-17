@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { NavLink, Navigate } from 'react-router-dom';
 import './Main.modules.css';
 import { RootState } from 'shared/api/store';
+import PromoCodeComponent from 'shared/components/PromoCodeComponent/PromoCodeComponent';
 
 export default function Main() {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -13,6 +14,7 @@ export default function Main() {
       <Typography className="page-title" variant="h2">
         Main page
       </Typography>
+      <PromoCodeComponent />
       <Paper className="main-links">
         <NavLink color="second" className="login-link" to="/catalog">
           Catalog

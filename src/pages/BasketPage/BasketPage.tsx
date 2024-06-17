@@ -1,12 +1,14 @@
+import { Cart } from '@commercetools/platform-sdk';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   Button,
   Dialog,
   DialogActions,
   DialogTitle,
+  TextField,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -22,25 +24,49 @@ function BasketPage() {
     (state: RootState) => state.cart.cart?.lineItems,
   );
   const [totalPrice, setTotalPrice] = useState(0);
+  const [beforePromoPrice, setBeforePromoPrice] = useState(0);
   const dispatch = useDispatch();
   // const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const [isOpenModal, setOpenModal] = useState(false);
+  const [isOpenClear, setOpenClear] = useState(false);
+  const [isOpenPromo, setOpenPromo] = useState(false);
+  const [promocode, setPromocode] = useState('');
 
-  const handleOpenConfirm = () => {
-    setOpenModal(true);
+  const handleOpenClear = () => {
+    setOpenClear(true);
   };
 
-  const handleClose = () => {
-    setOpenModal(false);
+  const handleCloseClear = () => {
+    setOpenClear(false);
   };
+  const handleOpenPromo = () => {
+    setOpenPromo(true);
+  };
+
+  const handleClosePromo = () => {
+    setOpenPromo(false);
+    setPromocode('');
+  };
+
+  function setCartPrice(respData: Cart) {
+    setTotalPrice(+(respData.totalPrice.centAmount / 100).toFixed(2));
+    setBeforePromoPrice(
+      respData.discountOnTotalPrice
+        ? +(
+          (respData.discountOnTotalPrice.discountedAmount.centAmount
+              + +respData.totalPrice.centAmount)
+            / 100
+        ).toFixed(2)
+        : 0,
+    );
+  }
 
   async function getCartItems() {
     const resp = await getCartData();
 
     if (resp) {
       dispatch(setCart({ cart: resp }));
-      setTotalPrice(+(resp.totalPrice.centAmount / 100).toFixed(2));
+      setCartPrice(resp);
     }
   }
 
@@ -53,9 +79,7 @@ function BasketPage() {
         cartResp?.version,
       );
 
-      setTotalPrice(
-        response ? +(response.body.totalPrice.centAmount / 100).toFixed(2) : 0,
-      );
+      if (response) setCartPrice(response.body);
     }
   };
 
@@ -78,6 +102,22 @@ function BasketPage() {
     });
   };
 
+  const applyPromocode = async () => {
+    const cartData = await getCartData();
+
+    if (cartData) {
+      const resp = await currentClient.applyPromocode(
+        cartData?.id,
+        cartData?.version,
+        promocode,
+      );
+
+      if (resp?.statusCode === 200) {
+        setCartPrice(resp.body);
+      }
+    }
+  };
+
   useEffect(() => {
     getCartItems();
   }, []);
@@ -92,6 +132,23 @@ function BasketPage() {
           <div className="basket-header">
             <h3>
               Total cost:&nbsp;
+              {beforePromoPrice ? (
+                <span
+                  style={{
+                    color: 'red',
+                    fontFamily: 'monospace',
+                    fontSize: '20px',
+                    fontWeight: 600,
+                    textDecorationLine: 'line-through',
+                  }}
+                >
+                  $
+                  {beforePromoPrice}
+                </span>
+              ) : (
+                ''
+              )}
+              &nbsp;
               <span
                 style={{
                   fontFamily: 'monospace',
@@ -103,33 +160,75 @@ function BasketPage() {
                 {totalPrice}
               </span>
             </h3>
-            <Button onClick={handleOpenConfirm} variant="contained">
-              Clear Basket
-            </Button>
-            <Dialog
-              open={isOpenModal}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">Clear cart?</DialogTitle>
-
-              <DialogActions>
-                <Button sx={{ margin: '10px' }} onClick={handleClose}>
-                  No
-                </Button>
-                <Button
+            <div className="basket-header-buttons">
+              <Button
+                sx={{ marginRight: '5px' }}
+                onClick={handleOpenPromo}
+                variant="contained"
+              >
+                Apply Promo
+              </Button>
+              <Dialog
+                open={isOpenPromo}
+                onClose={handleClosePromo}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  Do you have Promo?
+                </DialogTitle>
+                <TextField
+                  color="success"
+                  focused
                   sx={{ margin: '10px' }}
-                  onClick={() => {
-                    handleClose();
-                    clearCart();
+                  value={promocode}
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    setPromocode(event.target.value);
                   }}
-                  autoFocus
-                >
-                  Yes
-                </Button>
-              </DialogActions>
-            </Dialog>
+                />
+                <DialogActions>
+                  <Button sx={{ margin: '10px' }} onClick={handleClosePromo}>
+                    Close
+                  </Button>
+                  <Button
+                    sx={{ margin: '10px' }}
+                    onClick={() => {
+                      handleClosePromo();
+                      applyPromocode();
+                    }}
+                    autoFocus
+                  >
+                    Apply promo
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Button onClick={handleOpenClear} variant="contained">
+                Clear Basket
+              </Button>
+              <Dialog
+                open={isOpenClear}
+                onClose={handleCloseClear}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">Clear cart?</DialogTitle>
+                <DialogActions>
+                  <Button sx={{ margin: '10px' }} onClick={handleCloseClear}>
+                    No
+                  </Button>
+                  <Button
+                    sx={{ margin: '10px' }}
+                    onClick={() => {
+                      handleCloseClear();
+                      clearCart();
+                    }}
+                    autoFocus
+                  >
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </div>
           </div>
           {cartCart.map((item) => (
             <BasketItem key={item.id} item={item} recalculate={recalculate} />

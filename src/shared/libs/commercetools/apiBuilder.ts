@@ -639,6 +639,32 @@ class ApiBuilder {
   public async removeItemCart(ID: string, version: number, lineItemId: string) {
     return this.changeItemQuantity(ID, version, lineItemId, 0);
   }
+
+  public async applyPromocode(ID: string, version: number, promo: string) {
+    let resp;
+    try {
+      resp = await this.apiRoot
+        ?.me()
+        .carts()
+        .withId({ ID })
+        .post({
+          body: {
+            version,
+            actions: [
+              {
+                action: 'addDiscountCode',
+                code: promo,
+              },
+            ],
+          },
+        })
+        .execute();
+    } catch (error) {
+      if (error instanceof Error) toastError(error.message);
+    }
+
+    return resp;
+  }
 }
 
 export const currentClient = new ApiBuilder();

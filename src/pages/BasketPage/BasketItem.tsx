@@ -30,7 +30,8 @@ function BasketItem({
   const dispatch = useDispatch();
   const img = item.variant.images && item.variant.images[0].url;
   const [quantity, setQuantity] = useState(item.quantity);
-  const [cost, setCost] = useState(item.totalPrice.centAmount);
+  const [cost, setCost] = useState(item.price.value.centAmount);
+  const [totalCost, setTotalCost] = useState(item.totalPrice.centAmount);
 
   async function changeQuantity(count: number) {
     const cart = await getCurrentCart(isLoggedIn);
@@ -52,7 +53,10 @@ function BasketItem({
 
       if (response?.statusCode === 200) dispatch(setCart({ cart: response.body }));
 
-      if (itemResp && itemResp.length) setCost(itemResp[0].totalPrice.centAmount);
+      if (itemResp && itemResp.length) {
+        setTotalCost(itemResp[0].totalPrice.centAmount);
+        setCost(itemResp[0].price.value.centAmount);
+      }
     }
   }
 
@@ -110,11 +114,19 @@ function BasketItem({
             />
           </div>
           <div className="cart-item-cost">
-            total:
+            per item:
             {' '}
             <b>
               $
               {(cost / 100).toFixed(2)}
+            </b>
+          </div>
+          <div className="cart-item-cost">
+            total:
+            {' '}
+            <b>
+              $
+              {(totalCost / 100).toFixed(2)}
             </b>
           </div>
           <Tooltip title="Remove from cart">

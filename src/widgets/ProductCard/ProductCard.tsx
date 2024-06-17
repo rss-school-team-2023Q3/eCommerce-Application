@@ -32,29 +32,13 @@ function ProductCard({
   const img = product.variant.images && product.variant.images[0].url;
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
-  // const country = useSelector(
-  //   (state: RootState) => state.auth.user?.addresses[0].country
-  // );
   const navigate = useNavigate();
 
   function getPrice(item: IProductData) {
-    // let price: string | undefined;
-
-    // if (isLoggedIn && country) {
-    //   price =
-    //     item.variant.prices &&
-    //     `${selectPriceIndex(country)}${String(
-    //       (
-    //         item.variant.prices.filter((value) => value.country === country)[0]
-    //           .value.centAmount / 100
-    //       ).toFixed(2)
-    //     )}`;
-    // } else {
     const price = `$${
       item.variant.prices
       && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
     }`;
-    // }
 
     return price;
   }
@@ -99,7 +83,6 @@ function ProductCard({
               aria-label="add in cart"
               onClick={(e) => {
                 e.stopPropagation();
-                // setIsInCart(!isInCart);
                 addToCart(product.id, isLoggedIn, dispatch);
               }}
             >
