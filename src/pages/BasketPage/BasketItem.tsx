@@ -89,7 +89,7 @@ function BasketItem({
   };
 
   return (
-    <Card className="cart-item">
+    <Card elevation={24} className="cart-item">
       <CardMedia className="cart-item-img" image={img} title={item.name.en} />
       <CardContent className="cart-item-content">
         <Typography

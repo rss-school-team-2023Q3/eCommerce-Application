@@ -159,7 +159,7 @@ function SignUp({ client }: IClient) {
       <Typography className="page-title" variant="h2">
         Register
       </Typography>
-      <Paper className="registration-paper">
+      <Paper className="registration-paper" elevation={24}>
         <formContext.Provider value={formData}>
           <form
             className="registration-form"

@@ -15,6 +15,7 @@ function PromoCodeComponent() {
 
   return (
     <Card
+      elevation={24}
       sx={{ my: '3rem' }}
       style={{
         maxWidth: 400,

@@ -21,8 +21,9 @@
 
 body {
   overflow-y: scroll;
-  background-image: url('../../../public/assets/images/motherboard.jpeg');
+  background-image: url('../../../public/assets/images/motherboard.png');
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 ::-webkit-scrollbar {

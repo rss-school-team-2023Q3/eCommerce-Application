@@ -15,7 +15,7 @@ export default function Main() {
         Main page
       </Typography>
       <PromoCodeComponent />
-      <Paper className="main-links">
+      <Paper className="main-links" elevation={24}>
         <NavLink color="second" className="login-link" to="/catalog">
           Catalog
         </NavLink>

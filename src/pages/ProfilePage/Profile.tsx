@@ -298,7 +298,7 @@ export default function Profile() {
       <div className="profile-wrapper">
         <profileContext.Provider value={formData}>
           <div className="profile-form-field">
-            <Paper className="profile-paper">
+            <Paper elevation={24} className="profile-paper">
               <form className="profile-form" onChange={onChangeUserForm}>
                 <div className="switcher-wrap">
                   <FormControlLabel
@@ -337,7 +337,7 @@ export default function Profile() {
                 </div>
               </form>
             </Paper>
-            <Paper className="profile-paper">
+            <Paper elevation={24} className="profile-paper">
               <form className="profile-form" onChange={onChangeAddressForm}>
                 <div className="address-field">
                   <div className="switcher-wrap">

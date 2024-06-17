@@ -66,7 +66,11 @@ function ProductCard({
   const discountPrice = getDiscountPrice(price);
 
   return (
-    <Card className="card" onClick={() => handleProductClick(product.id)}>
+    <Card
+      elevation={24}
+      className="card"
+      onClick={() => handleProductClick(product.id)}
+    >
       <CardMedia className="card-img" image={img} />
       <CardContent sx={{ p: 1.5 }}>
         <Typography gutterBottom variant="h5" component="h5">

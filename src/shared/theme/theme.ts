@@ -1,6 +1,20 @@
 import { createTheme } from '@mui/material';
 import { COLOR } from 'shared/constants';
 
+declare module '@mui/material/styles' {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  interface TypeBackground {
+    input?: string;
+  }
+  // type Palette = {
+  //   background: TypeBackground;
+  // }
+
+  // type PaletteOptions = {
+  //   background?: TypeBackground;
+  // }
+}
+
 const lightTheme = createTheme({
   // breakpoints: {
   //   values: {
@@ -29,7 +43,7 @@ const lightTheme = createTheme({
     // middleCube: '#22252a',
     background: {
       default: COLOR.second,
-      // input: 'white',
+      input: 'white',
       // buttonSearch: COLOR.dark,
       // buttonSearchHover: COLOR.main,
       // paginator: '#EBF3D4',
@@ -61,7 +75,7 @@ const darkTheme = createTheme({
     //   main: COLOR.dark,
     // },
     background: {
-      default: '#121212',
+      default: COLOR.primaryText,
       // input: COLOR.darkThemeInput,
       // buttonSearch: COLOR.main,
       // buttonSearchHover: 'transparent',

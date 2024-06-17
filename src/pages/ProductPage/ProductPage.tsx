@@ -9,6 +9,7 @@ import {
   DialogContent,
   Grid,
   IconButton,
+  Paper,
   Typography,
   useMediaQuery,
   useTheme,
@@ -40,15 +41,7 @@ function ProductPage() {
     (state: RootState) => state.cart.cart,
   );
   const [cart, setCart] = useState<Cart | null>(null);
-  // const [isInCart, setIsInCart] = useState(false);
 
-  // const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  // const country = useSelector(
-  //   (state: RootState) => state.auth.user?.addresses[0].country
-  // );
-  // const country = useSelector(
-  //   (state: RootState) => state.auth.user?.addresses[0].country,
-  // );
   const product = productData && createProduct(productData);
 
   const handleClickOpen = () => {
@@ -65,30 +58,6 @@ function ProductPage() {
       discountPrice: '',
     };
 
-    // const currentCountry = item.variant.prices?.find(
-    //   (value) => value.country === country,
-    // );
-
-    // const formatter = new Intl.NumberFormat('en-US', {
-    //   style: 'currency',
-    //   currency:
-    //     country === 'US' || country === 'CA' || country == null ? 'USD' : 'EUR',
-    // });
-
-    // const getPrice = (priceData: TypedMoney | undefined) => {
-    //   if (!priceData) return null;
-
-    //   const amount = priceData.centAmount / 100;
-
-    //   return formatter.format(amount);
-    // };
-
-    // if (isLoggedIn && country) {
-    //   price.fullPrice = getPrice(currentCountry?.value);
-    //   price.discountPrice = getPrice(currentCountry?.discounted?.value);
-    // } else if (item.variant.prices) {
-    // price.fullPrice = getPrice(item.variant.prices[0]?.value);
-    // price.discountPrice = getPrice(item.variant.prices[0]?.discounted?.value);
     price.fullPrice = `$${
       item.variant.prices
       && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
@@ -100,7 +69,6 @@ function ProductPage() {
         (item.variant.prices[0].discounted.value.centAmount / 100).toFixed(2),
       )
     }`;
-    // }
 
     return price;
   };
@@ -171,7 +139,7 @@ function ProductPage() {
   }, []);
 
   return (
-    <div>
+    <Paper elevation={24} sx={{ p: 5 }}>
       <div className="card-top">
         <Button
           startIcon={<ArrowBackIcon />}
@@ -280,7 +248,7 @@ function ProductPage() {
           />
         </DialogContent>
       </Dialog>
-    </div>
+    </Paper>
   );
 }
 

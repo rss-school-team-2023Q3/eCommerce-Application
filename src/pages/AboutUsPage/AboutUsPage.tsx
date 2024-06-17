@@ -44,13 +44,14 @@ function AboutUsPage() {
           marginBottom={2}
           marginLeft={5}
           justifyItems="flex-end"
+          color="white"
         >
           Collaboration & Success
         </Typography>
         <Typography
           fontFamily="Montserrat, sans-serif"
           variant="subtitle1"
-          // color="#666"
+          color="white"
           marginBottom={5}
         >
           Our team worked well together through clear talks, meetings, and
@@ -66,6 +67,7 @@ function AboutUsPage() {
           variant="h5"
           marginBottom={2}
           marginLeft={5}
+          color="white"
         >
           Our Team
         </Typography>

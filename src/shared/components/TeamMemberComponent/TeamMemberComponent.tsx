@@ -14,6 +14,7 @@ function TeamMemberCard({
 }: ITeamMember) {
   return (
     <Card
+      elevation={24}
       sx={{
         display: 'flex',
         maxWidth: 850,

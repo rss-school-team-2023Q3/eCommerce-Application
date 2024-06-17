@@ -60,7 +60,7 @@ function SignIn() {
       <Typography className="page-title" variant="h2">
         Login
       </Typography>
-      <Paper className="login-paper">
+      <Paper className="login-paper" elevation={24}>
         <form className="login-form" action="registration">
           <TextField
             autoComplete="off"

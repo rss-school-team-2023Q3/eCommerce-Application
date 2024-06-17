@@ -178,7 +178,7 @@ function FilterAside({ props }: IFilterInterface) {
 
   return (
     <aside>
-      <Paper className="catalog-aside">
+      <Paper className="catalog-aside" elevation={24}>
         <TextField
           id="search"
           label="Search"

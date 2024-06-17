@@ -17,7 +17,7 @@ export default function Header({ onTheme }: IHeaderProps) {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   return (
-    <AppBar>
+    <AppBar elevation={24}>
       <Container
         sx={{
           display: 'flex',
