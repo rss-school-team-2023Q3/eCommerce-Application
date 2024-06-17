@@ -17,6 +17,14 @@
   flex-direction: column;
   width: 100%;
   padding: 2.5rem;
+  border-radius: 0.3125rem;
+  margin-bottom: 1.25rem;
+}
+
+.profile-paper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   border: 0.0063rem solid #1569bd;
   border-radius: 0.3125rem;
   box-shadow:
@@ -52,7 +60,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  color: #1569bd;
+
+  /* color: #1569bd; */
 }
 
 .address-input-field {
@@ -65,7 +74,8 @@
 .user-field-profile {
   display: flex;
   flex-direction: column;
-  color: #1569bd;
+
+  /* color: #1569bd; */
   width: 100%;
   gap: 0.3125rem;
 
@@ -178,10 +188,6 @@
   .address-input-field {
     flex-direction: column;
     align-items: center;
-  }
-
-  .address-field {
-    width: 100%;
   }
 
   .registration-form-field {

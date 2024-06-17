@@ -1,6 +1,10 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-  Button, Dialog, DialogActions, DialogTitle,Typography
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -82,6 +86,9 @@ function BasketPage() {
     <div className="basket-page">
       {cartCart && cartCart.length ? (
         <>
+          <Typography className="page-title" variant="h2">
+            Basket
+          </Typography>
           <div className="basket-header">
             <h3>
               Total cost:&nbsp;

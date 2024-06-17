@@ -29,12 +29,7 @@ function AboutUsPage() {
         >
           Back
         </Button>
-        <Typography
-          fontFamily="Montserrat"
-          variant="h4"
-          fontWeight={600}
-          sx={{ flexGrow: 1, color: '#1569bd' }}
-        >
+        <Typography className="page-title" variant="h2">
           About us
         </Typography>
         <Link href="https://rs.school/">
@@ -55,7 +50,7 @@ function AboutUsPage() {
         <Typography
           fontFamily="Montserrat, sans-serif"
           variant="subtitle1"
-          color="#666"
+          // color="#666"
           marginBottom={5}
         >
           Our team worked well together through clear talks, meetings, and

@@ -1,3 +1,4 @@
+import { Paper, Typography } from '@mui/material';
 import { NavLink, Navigate } from 'react-router-dom';
 import './Main.modules.css';
 
@@ -5,9 +6,11 @@ export default function Main() {
   return (
     <>
       <Navigate to="/main" />
-      <h2>Main page</h2>
-      <div className="main-links">
-        <NavLink className="login-link" to="/catalog">
+      <Typography className="page-title" variant="h2">
+        Main page
+      </Typography>
+      <Paper className="main-links">
+        <NavLink color="second" className="login-link" to="/catalog">
           Catalog
         </NavLink>
         <NavLink className="login-link" to="/profile">
@@ -19,7 +22,7 @@ export default function Main() {
         <NavLink className="login-link" to="/signininin">
           404
         </NavLink>
-      </div>
+      </Paper>
     </>
   );
 }

@@ -72,13 +72,13 @@ function TeamMemberCard({
             <Typography
               fontFamily="Montserrat, sans-serif"
               variant="subtitle1"
-              color="#666"
+              // color="#666"
               marginBottom={1}
             >
               {role}
             </Typography>
             <Link href={github} target="_blank" rel="noopener">
-              <GitHubIcon sx={{ color: '#000' }} />
+              <GitHubIcon sx={{ color: 'CurrentColor' }} />
             </Link>
           </CardContent>
         </Grid>
@@ -101,7 +101,7 @@ function TeamMemberCard({
               fontFamily="Montserrat, sans-serif"
               variant="body1"
               marginBottom={2}
-              color="#666"
+              // color="#666"
             >
               {bio}
             </Typography>
@@ -117,7 +117,7 @@ function TeamMemberCard({
             <Typography
               fontFamily="Montserrat, sans-serif"
               variant="body1"
-              color="#666"
+              // color="#666"
             >
               {contributions}
             </Typography>

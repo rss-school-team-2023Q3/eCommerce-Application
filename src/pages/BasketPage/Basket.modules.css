@@ -61,7 +61,8 @@
   b {
     font-family: monospace;
     font-size: large;
-    color: black;
+
+    /* color: black; */
   }
 }
 
