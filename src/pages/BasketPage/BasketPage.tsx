@@ -84,17 +84,16 @@ function BasketPage() {
 
   return (
     <div className="basket-page">
+      <Typography className="page-title" variant="h2">
+        Basket
+      </Typography>
       {cartCart && cartCart.length ? (
         <>
-          <Typography className="page-title" variant="h2">
-            Basket
-          </Typography>
           <div className="basket-header">
             <h3>
               Total cost:&nbsp;
               <span
                 style={{
-                  color: 'black',
                   fontFamily: 'monospace',
                   fontSize: '20px',
                   fontWeight: 600,
