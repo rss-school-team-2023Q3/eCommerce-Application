@@ -1,0 +1,1 @@
+.card-top{display:flex;gap:2rem;justify-content:space-evenly}@media screen and (width < 480px){.card-top{align-items:center;flex-direction:column}}
