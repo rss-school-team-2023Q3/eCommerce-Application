@@ -3,7 +3,12 @@ import { LinearProgress } from '@mui/material';
 export default function Loader() {
   return (
     <LinearProgress
-      sx={{ width: '100%', alignSelf: 'center', padding: '10' }}
+      sx={{
+        width: '100%',
+        alignSelf: 'center',
+        padding: '10',
+        marginTop: '30px',
+      }}
     />
   );
 }

@@ -58,9 +58,8 @@ function DateInput({ dateProps }: IDateInterface) {
       setIsDateChanged(false);
       formData.fieldChangedSet?.delete(FormField.dateOfBirth);
     } else if (!dateProps.isDisable) {
-      const isDateHasChanged =
-        isValid &&
-        formData.date.value.format('YYYY-MM-DD') !== user?.dateOfBirth;
+      const isDateHasChanged = isValid
+        && formData.date.value.format('YYYY-MM-DD') !== user?.dateOfBirth;
 
       setIsDateChanged(isDateHasChanged);
 

@@ -2,7 +2,25 @@
   color: white;
 }
 
-@media (width <= 650px) {
+.number-cart {
+  padding-left: 0.5rem;
+}
+
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.nav-button svg.nav-icon {
+  font-size: 2.1875rem;
+  margin-bottom: 0.1875rem;
+}
+
+.shake-rotate {
+  animation: shake-rotate 1s linear infinite;
+  color: var(--stop);
+}
+
+@media (width <= 750px) {
   .nav-button {
     color: white;
     padding: 0;
@@ -10,5 +28,39 @@
 
   .button-text {
     display: none;
+  }
+
+  .number-cart {
+    padding: 2px 0 0;
+  }
+}
+
+@keyframes shake-rotate {
+  15% {
+    transform: rotate(15deg);
+  }
+
+  30% {
+    transform: rotate(-15deg);
+  }
+
+  40% {
+    transform: rotate(10deg);
+  }
+
+  50% {
+    transform: rotate(-10deg);
+  }
+
+  65% {
+    transform: rotate(5deg);
+  }
+
+  85% {
+    transform: rotate(-5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
   }
 }

@@ -1,37 +1,47 @@
-import { Product, TypedMoney } from '@commercetools/platform-sdk';
+import { Cart, Product } from '@commercetools/platform-sdk';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import {
   Button,
   Dialog,
   DialogContent,
   Grid,
   IconButton,
+  Paper,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import IProductData from 'pages/App/types/interfaces/IProductData';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { RootState } from 'shared/api/store';
 import CarouselComponent from 'shared/components/CarouselComponent/CarouselComponent';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
+import addToCart from 'shared/utils/addToCart';
 import createProduct from 'shared/utils/createProduct';
+import getCurrentCart from 'shared/utils/getCurrentCart';
+import removeFromCart from 'shared/utils/removeFromCart';
+
+import './Product.modules.css';
 
 function ProductPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [productData, setProductData] = useState<Product | null>(null);
   const theme = useTheme();
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
   const isMatches = useMediaQuery(theme.breakpoints.up('sm'));
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  const country = useSelector(
-    (state: RootState) => state.auth.user?.addresses[0].country,
+  const cartStore: Cart | null = useSelector(
+    (state: RootState) => state.cart.cart,
   );
+  const [cart, setCart] = useState<Cart | null>(null);
+
   const product = productData && createProduct(productData);
 
   const handleClickOpen = () => {
@@ -43,39 +53,22 @@ function ProductPage() {
   };
 
   const setProductPrice = (item: IProductData) => {
-    const price: {
-      fullPrice: string | undefined | null;
-      discountPrice: string | undefined | null;
-    } = {
+    const price = {
       fullPrice: '',
       discountPrice: '',
     };
 
-    const currentCountry = item.variant.prices?.find(
-      (value) => value.country === country,
-    );
-
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency:
-        country === 'US' || country === 'CA' || country == null ? 'USD' : 'EUR',
-    });
-
-    const getPrice = (priceData: TypedMoney | undefined) => {
-      if (!priceData) return null;
-
-      const amount = priceData.centAmount / 100;
-
-      return formatter.format(amount);
-    };
-
-    if (isLoggedIn && country) {
-      price.fullPrice = getPrice(currentCountry?.value);
-      price.discountPrice = getPrice(currentCountry?.discounted?.value);
-    } else if (item.variant.prices) {
-      price.fullPrice = getPrice(item.variant.prices[0]?.value);
-      price.discountPrice = getPrice(item.variant.prices[0]?.discounted?.value);
-    }
+    price.fullPrice = `$${
+      item.variant.prices
+      && String((item.variant.prices[0].value.centAmount / 100).toFixed(2))
+    }`;
+    price.discountPrice = `$${
+      item.variant.prices
+      && item.variant.prices[0].discounted
+      && String(
+        (item.variant.prices[0].discounted.value.centAmount / 100).toFixed(2),
+      )
+    }`;
 
     return price;
   };
@@ -131,15 +124,60 @@ function ProductPage() {
     setTimeout(fetchProduct, 0);
   }, [id]);
 
+  useEffect(() => {
+    setCart(cartStore);
+  }, [cartStore?.lineItems.length]);
+
+  useEffect(() => {
+    const fun = async () => {
+      const cartResponse = await getCurrentCart(isLoggedIn);
+
+      if (cartResponse?.statusCode === 200) setCart(cartResponse.body);
+    };
+
+    fun();
+  }, []);
+
   return (
-    <div>
-      <Button
-        startIcon={<ArrowBackIcon />}
-        onClick={() => navigate('/catalog')}
-        variant="contained"
-      >
-        Back to catalog
-      </Button>
+    <Paper elevation={24} sx={{ p: 5 }}>
+      <div className="card-top">
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate('/catalog')}
+          variant="contained"
+        >
+          Back to catalog
+        </Button>
+
+        {!(cart?.lineItems.find((el) => el.productId === id) ?? false) && (
+          <Button
+            variant="contained"
+            startIcon={<AddShoppingCartIcon />}
+            aria-label="add in cart"
+            onClick={(e) => {
+              e.stopPropagation();
+              addToCart(id as string, isLoggedIn, dispatch);
+            }}
+          >
+            Add to basket
+          </Button>
+        )}
+        {!!(cart?.lineItems.find((el) => el.productId === id) ?? false) && (
+          <Button
+            variant="contained"
+            startIcon={<RemoveShoppingCartIcon />}
+            // className="card-cart"
+            aria-label="remove from cart"
+            onClick={(e) => {
+              e.stopPropagation();
+              removeFromCart(id as string, isLoggedIn, dispatch);
+            }}
+          >
+            Remove from cart
+          </Button>
+        )}
+      </div>
+
       {product && product.variant.images && (
         <Grid
           container
@@ -169,13 +207,14 @@ function ProductPage() {
             <div className="card-price">
               <Typography
                 sx={{
-                  textDecorationLine: discountPrice ? 'line-through' : 'none',
+                  textDecorationLine:
+                    discountPrice !== '$undefined' ? 'line-through' : 'none',
                 }}
                 variant="h5"
               >
                 {fullPrice}
               </Typography>
-              {discountPrice ? (
+              {discountPrice !== '$undefined' ? (
                 <Typography variant="h5" color="red">
                   {discountPrice}
                 </Typography>
@@ -209,7 +248,7 @@ function ProductPage() {
           />
         </DialogContent>
       </Dialog>
-    </div>
+    </Paper>
   );
 }
 

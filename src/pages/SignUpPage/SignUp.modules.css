@@ -7,24 +7,34 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 3rem;
   font-size: 1.25rem;
   width: 100%;
   max-width: 75rem;
-  max-height: 34.375rem;
+
+  /* max-height: 34.375rem; */
 }
 
 .registration-form {
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+
+.registration-paper {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
   width: 100%;
   padding: 2.5rem;
-  border: 0.0063rem solid #1342fe;
+  border: 0.0063rem solid #1569bd;
   border-radius: 0.3125rem;
   box-shadow:
-    0 0 0.2rem #1342fe,
-    0 0 0.2rem #1342fe,
-    0 0 2rem #1342fe,
-    0 0 0.8rem #1342fe;
+    0 0 0.2rem #1569bd,
+    0 0 0.2rem #1569bd,
+    0 0 2rem #1569bd,
+    0 0 0.8rem #1569bd;
   margin-bottom: 1.25rem;
 }
 
@@ -38,7 +48,7 @@
   display: flex;
   flex-direction: column;
   width: 67%;
-  color: #1342fe;
+  color: #1569bd;
 }
 
 .adress-input-field {
@@ -50,7 +60,7 @@
 .user-field {
   display: flex;
   flex-direction: column;
-  color: #1342fe;
+  color: #1569bd;
   width: 33%;
 }
 

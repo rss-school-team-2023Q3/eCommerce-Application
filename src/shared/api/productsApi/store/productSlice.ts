@@ -3,6 +3,7 @@ import IProductData from 'pages/App/types/interfaces/IProductData';
 
 const initialState: { products: IProductData[] } = {
   products: [],
+  // map: new Map<IProductData, number>();
 };
 
 const productSlice = createSlice({
@@ -18,6 +19,10 @@ const productSlice = createSlice({
 
       state.products = state.products.filter((item) => item !== action.payload);
     },
+
+    // setNumbers: (state, action: PayloadAction<>) => {
+    //   state.map.set()
+    // }
   },
 });
 

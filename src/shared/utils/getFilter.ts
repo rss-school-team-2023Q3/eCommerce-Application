@@ -1,18 +1,20 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { LIMIT_MOBILE } from 'shared/constants';
 import { currentClient } from 'shared/libs/commercetools/apiBuilder';
-
-import { setProductsProjectionArray } from './setProductsArray.ts';
 
 async function getFilterProducts(
   filterQuery: string[],
   sortQuery: string,
   searchQuery = '',
+  offset: number = 0,
+  limit: number = LIMIT_MOBILE,
 ) {
-  return currentClient
-    .getFilterProducts(filterQuery, sortQuery, searchQuery)
-    .then((resp) => resp?.body.results)
-    .then((resp) => resp)
-    .then((resp) => setProductsProjectionArray(resp as ProductProjection[]));
+  return currentClient.getFilterProducts(
+    filterQuery,
+    sortQuery,
+    searchQuery,
+    offset,
+    limit,
+  );
 }
 
 export default getFilterProducts;

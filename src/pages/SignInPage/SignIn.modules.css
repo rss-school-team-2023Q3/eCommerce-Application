@@ -6,7 +6,7 @@
 .login-wrapper {
   display: flex;
   min-height: calc(100vh - 10rem);
-  justify-content: center;
+  gap: 3rem;
   flex-direction: column;
   align-items: center;
   font-size: 1.25rem;
@@ -14,19 +14,27 @@
   max-width: 75rem;
 }
 
+.login-paper {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  padding: 2.5rem;
+  border: 0.0063rem solid #1569bd;
+  border-radius: 0.3125rem;
+  box-shadow:
+    0 0 0.2rem #1569bd,
+    0 0 0.2rem #1569bd,
+    0 0 2rem #1569bd,
+    0 0 0.8rem #1569bd;
+  margin-bottom: 1.25rem;
+}
+
 .login-form {
   display: flex;
   flex-direction: column;
+  gap: 2rem;
   width: 100%;
-  padding: 2.5rem;
-  border: 0.0063rem solid #1342fe;
-  border-radius: 0.3125rem;
-  box-shadow:
-    0 0 0.2rem #1342fe,
-    0 0 0.2rem #1342fe,
-    0 0 2rem #1342fe,
-    0 0 0.8rem #1342fe;
-  margin-bottom: 1.25rem;
 }
 
 @media (width <= 600px) {

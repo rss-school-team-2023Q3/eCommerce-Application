@@ -1,4 +1,4 @@
-import { Button, Container } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 import Image from './assets/NotFound.svg';
@@ -6,9 +6,14 @@ import Image from './assets/NotFound.svg';
 export default function NotFound() {
   return (
     <Container
-      style={{ background: `url(${Image}) center no-repeat`, height: '92vh' }}
+      style={{
+        background: `url(${Image}) center no-repeat transparent`,
+        height: '92vh',
+      }}
     >
-      <h2>Not Found</h2>
+      <Typography className="page-title" variant="h2">
+        Not Found
+      </Typography>
       <NavLink to="/main">
         <Button
           variant="contained"

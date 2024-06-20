@@ -7,12 +7,12 @@
 		<defs>
 			<rect id="SVGID_1_" width="500" height="500"/>
 		</defs>
-		<use xlink:href="#SVGID_1_"  style="overflow:visible;fill:#EBEBEB;"/>
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;fill:transparent;"/>
 		<clipPath id="SVGID_00000017500913435120053460000000138308311664154015_">
 			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
 		</clipPath>
 	</g>
-	<rect style="fill: #EFEFEF;" width="500" height="500"/>
+	<rect style="fill: #EFEFEF; fill-opacity: .4" width="500" height="500"/>
 </g>
 <g id="OBJECTS">
 	<g>
